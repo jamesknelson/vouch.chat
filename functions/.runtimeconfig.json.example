@@ -1,0 +1,17 @@
+{
+  "client_config": {
+    "api_key": "",
+    "auth_domain": "",
+    "project_id": "",
+    "messaging_sender_id": ""
+  },
+  "mailchimp": {
+    "list_id": "",
+    "key": ""
+  },
+  "stripe": {
+    "product_id": "",
+    "secret_key": "",
+    "webhook_secret": ""
+  }
+}

@@ -1,0 +1,8 @@
+yarn run v1.12.3
+$ npm-run-all --parallel start:*
+$ firebase serve --only functions
+$ react-scripts start
+Something is already running on port 3000.
+[1m[33m⚠ [39m[22m Your requested "node" version "10" doesn't match your global version "11"
+[1m[32m✔  functions:[39m[22m Emulator started at [1m[4mhttp://localhost:5000[24m[22m
+[1m[36mi  functions:[39m[22m Watching "/Users/james/bacon/vouch.chat/functions" for Cloud Functions...
