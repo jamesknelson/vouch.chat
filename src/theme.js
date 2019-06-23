@@ -1,6 +1,13 @@
 import { rgba } from 'polished'
 import { css } from 'styled-components/macro'
 
+export const breakpoints = {
+  mediumPhonePlus: 360,
+  tabletPlus: 720,
+  laptopPlus: 1100,
+  widescreenPlus: 1240,
+}
+
 export const colors = {
   structure: {
     bg: '#FFFFFF',
@@ -57,27 +64,18 @@ export const easings = {
   easeOut: 'cubic-bezier(0.165, 0.840, 0.440, 1.000)',
 }
 
+const mediaFactory = query => (...args) => css`
+  @media screen and (${query}) {
+    ${css.apply(null, args)}
+  }
+`
+
 export const media = {
-  mediumPhonePlus: (...args) => css`
-    @media screen and (min-width: 360px) {
-      ${css.apply(null, args)}
-    }
-  `,
-  tabletPlus: (...args) => css`
-    @media screen and (min-width: 720px) {
-      ${css.apply(null, args)}
-    }
-  `,
-  laptopPlus: (...args) => css`
-    @media screen and (min-width: 1100px) {
-      ${css.apply(null, args)}
-    }
-  `,
-  widescreenPlus: (...args) => css`
-    @media screen and (min-width: 1240px) {
-      ${css.apply(null, args)}
-    }
-  `,
+  phoneOnly: mediaFactory(`max-width: ${breakpoints.tabletPlus - 1}px`),
+  mediumPhonePlus: mediaFactory(`min-width: ${breakpoints.mediumPhonePlus}px`),
+  tabletPlus: mediaFactory(`min-width: ${breakpoints.tabletPlus}px`),
+  laptopPlus: mediaFactory(`min-width: ${breakpoints.laptopPlus}px`),
+  widescreenPlus: mediaFactory(`min-width: ${breakpoints.widescreenPlus}px`),
 }
 
 export const radii = {

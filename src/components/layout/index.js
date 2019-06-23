@@ -1,20 +1,23 @@
 import { rgba } from 'polished'
 import React from 'react'
 import { Link } from 'react-navi'
+import { animated, useTransition } from 'react-spring'
 import styled, { css } from 'styled-components/macro'
 import Tippy from '@tippy.js/react'
-import { colors, dimensions, easings, focusRing, shadows } from 'theme'
+import { colors, dimensions, easings, focusRing, media, shadows } from 'theme'
 import { UserAvatar } from 'components/avatar'
 import { PenButtonLink } from 'components/button'
+import Card from 'components/card'
 import Icon from 'components/icon'
+import { Menu, MenuDivider, MenuLink } from 'components/menu'
 import SearchInput from 'components/searchInput'
 import {
+  PopupContext,
   PopupProvider,
   PopupTrigger,
-  Popup,
-  PopupMenuLink,
-  PopupMenuDivider,
+  PopupMenu,
 } from 'components/popup'
+import useTrigger from 'hooks/useTrigger'
 
 const Wrapper = styled.div`
   height: 100%;
@@ -24,38 +27,56 @@ const Wrapper = styled.div`
 const Header = styled.header`
   align-items: center;
   background-color: ${colors.structure.bg};
-  border-bottom: 1px solid ${colors.structure.border};
   box-shadow: ${shadows.card()};
   display: flex;
   height: ${dimensions.bar};
   justify-content: space-between;
-  left: ${dimensions.bar};
-  padding: 1rem;
   position: fixed;
   top: 0;
-  z-index: 3;
-  width: calc(100% - ${dimensions.bar});
+  z-index: 4;
+
+  left: 0;
+  padding: 1rem 0 1rem 0;
+  width: 100%;
+  ${media.tabletPlus`
+    border-bottom: 1px solid ${colors.structure.border};
+    left: ${dimensions.bar};
+    padding: 1rem;
+    width: calc(100% - ${dimensions.bar});
+  `}
 `
 
-const Body = styled.div`
-  height: 100%;
-  min-height: 100%;
-`
-
-const Sidebar = styled.nav`
+const Navbar = styled.nav`
   background-color: ${colors.structure.bg};
   box-shadow: ${shadows.card()};
-  border-right: 1px solid ${colors.structure.border};
-  height: calc(100% - ${dimensions.bar});
-  padding-top: 0.75rem;
   position: fixed;
   top: ${dimensions.bar};
-  width: ${dimensions.bar};
+  z-index: 3;
+
+  ${media.phoneOnly`
+    border-bottom: 1px solid ${colors.structure.border};
+    display: flex;
+    justify-content: stretch;
+    height: ${dimensions.bar};
+    top: ${dimensions.bar};
+    width: 100%;
+  `}
+  ${media.tabletPlus`
+    border-right: 1px solid ${colors.structure.border};
+    height: calc(100% - ${dimensions.bar});
+    padding-top: 0.75rem;
+    width: ${dimensions.bar};
+  `}
 `
 
 const Main = styled.main`
-  padding-left: ${dimensions.bar};
-  padding-top: ${dimensions.bar};
+  ${media.phoneOnly`
+    padding-top: calc(${dimensions.bar} * 2);
+  `}
+  ${media.tabletPlus`
+    padding-left: ${dimensions.bar};
+    padding-top: ${dimensions.bar};
+  `}
 `
 
 const HomeLink = styled(Link)`
@@ -81,26 +102,40 @@ const StyledNavLink = styled(Link)`
   color: ${colors.ink.black};
   display: flex;
   justify-content: center;
-  margin: 0.25rem 0;
-  padding: 0.25rem 0;
-  width: ${dimensions.bar};
   position: relative;
 
   text-shadow: 0 0 0.75rem rgba(84, 96, 108, 0);
-
   transition: text-shadow 200ms ${easings.easeOut};
+
+  ${media.phoneOnly`
+    flex: 1;
+    padding: 0 0.25rem;
+    margin: 0 0.25rem;
+  `}
+  ${media.tabletPlus`
+    width: ${dimensions.bar};
+    padding: 0.25rem 0;
+    margin: 0.25rem 0;
+  `}
 
   ::after {
     content: ' ';
     position: absolute;
-    top: 0;
     bottom: 0;
-    width: 1px;
-    right: 0px;
+    right: 0;
     background-color: ${rgba(colors.ink.black, 0)};
     box-shadow: 0 0 0 0 ${rgba(colors.ink.black, 0)};
     transition: background-color 200ms ${easings.easeOut},
       box-shadow 200ms ${easings.easeOut};
+
+    ${media.tabletPlus`
+      top: 0;
+      width: 1px;
+    `}
+    ${media.phoneOnly`
+      left: 0;
+      height: 1px;
+    `}
   }
 
   &.NavLink-active {
@@ -115,7 +150,13 @@ const StyledNavLink = styled(Link)`
   :focus::after {
     background-color: ${colors.focus.default};
     box-shadow: ${shadows.focusSoft()};
-    width: 2px;
+
+    ${media.tabletPlus`
+      width: 2px;
+    `}
+    ${media.phoneOnly`
+      height: 2px;
+    `}
   }
 
   &:focus {
@@ -174,25 +215,137 @@ const UserDropdown = () => {
           />
         )}
       </PopupTrigger>
-      <Popup placement="bottom-end">
-        <PopupMenuLink href="/account">Account Details</PopupMenuLink>
-        <PopupMenuDivider />
-        <PopupMenuLink href="/logout">Logout</PopupMenuLink>
-      </Popup>
+      <PopupMenu placement="bottom-end">
+        <UserMenuContent />
+      </PopupMenu>
     </PopupProvider>
   )
 }
 
+const UserMenuContent = () => (
+  <>
+    <MenuLink href="/account">Account Details</MenuLink>
+    <MenuDivider />
+    <MenuLink href="/logout">Logout</MenuLink>
+  </>
+)
+
+const AnimatedMenu = animated(Menu)
+
+const StyledUserSidebar = styled(animated(Card))`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 70%;
+  max-width: 250px;
+  z-index: 99;
+`
+
+const StyledSidebarBackdrop = styled(animated.div)`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 98;
+`
+
+const UserSidebar = () => {
+  let trigger = useTrigger({
+    triggerOnSelect: true,
+  })
+
+  let transitions = useTransition(trigger.active, null, {
+    config: { tension: 300, mass: 0.5 },
+    from: { opacity: 0, transform: 'translateX(-100%)' },
+    enter: { opacity: 1, transform: 'translateX(0)' },
+    leave: { opacity: 0, transform: 'translateX(-100%)' },
+  })
+
+  return (
+    <PopupContext.Provider value={{ trigger }}>
+      <div
+        ref={trigger.ref}
+        tabIndex={0}
+        css={css`
+          align-items: center;
+          cursor: pointer;
+          display: flex;
+          height: ${dimensions.bar};
+          justify-content: center;
+          left: 0;
+          position: relative;
+          width: ${dimensions.bar};
+
+          ${focusRing('::before', { padding: '-0.75rem', radius: '9999px' })}
+        `}>
+        <UserAvatar />
+      </div>
+      {transitions.map(
+        ({ item, props: { opacity, transform }, key, state }) =>
+          item && (
+            <React.Fragment key={key}>
+              <StyledSidebarBackdrop
+                style={{
+                  opacity,
+                }}
+              />
+              <StyledUserSidebar
+                radius={0}
+                raised
+                ref={trigger.containerRef}
+                style={{
+                  transform,
+                }}>
+                <AnimatedMenu
+                  readonly={state !== 'update'}
+                  onDidSelect={trigger.close}>
+                  <UserMenuContent />
+                </AnimatedMenu>
+              </StyledUserSidebar>
+            </React.Fragment>
+          ),
+      )}
+    </PopupContext.Provider>
+  )
+}
+
+const TabletPlus = styled.div`
+  display: flex;
+
+  ${media.phoneOnly`
+    display: none;
+  `}
+`
+const PhoneOnly = styled.div`
+  display: flex;
+
+  ${media.tabletPlus`
+    display: none;
+  `}
+`
+
 const Layout = props => (
   <Wrapper>
-    <HomeLink href="/">
-      <Icon glyph="brand" size="2.5rem" />
-    </HomeLink>
+    <TabletPlus>
+      <HomeLink href="/">
+        <Icon glyph="brand" size="2.5rem" />
+      </HomeLink>
+    </TabletPlus>
     <Header>
+      <PhoneOnly
+        css={css`
+          display: flex;
+        `}>
+        <UserSidebar />
+      </PhoneOnly>
       <SearchInput
         label="Search"
         css={css`
-          max-width: 400px;
+          ${media.tabletPlus`
+              max-width: 400px;
+            `}
           flex: 100;
         `}
       />
@@ -202,25 +355,36 @@ const Layout = props => (
         `}
       />
       <AvailableStampsIndicator count={2} />
-      <UserDropdown />
-      <PenButtonLink remaining={1} href="/pen">
-        Pen
-      </PenButtonLink>
+      <TabletPlus>
+        <UserDropdown />
+      </TabletPlus>
+      <TabletPlus>
+        <PenButtonLink remaining={1} href="/pen">
+          Pen
+        </PenButtonLink>
+      </TabletPlus>
     </Header>
-    <Body>
-      <Sidebar>
-        <NavLink href="/notifications" title="Notifications">
-          <Icon glyph="bell" size="1.75rem" />
+    <Navbar>
+      <PhoneOnly
+        css={css`
+          display: flex;
+          flex: 1;
+        `}>
+        <NavLink href="/" title="Home" exact>
+          <Icon glyph="brand" size="1.75rem" />
         </NavLink>
-        <NavLink href="/messages" title="Messages">
-          <Icon glyph="envelope" size="1.75rem" />
-        </NavLink>
-        <NavLink href="/watch" title="Watch">
-          <Icon glyph="glasses" size="1.75rem" />
-        </NavLink>
-      </Sidebar>
-      <Main>{props.children}</Main>
-    </Body>
+      </PhoneOnly>
+      <NavLink href="/notifications" title="Notifications">
+        <Icon glyph="bell" size="1.75rem" />
+      </NavLink>
+      <NavLink href="/messages" title="Messages">
+        <Icon glyph="envelope" size="1.75rem" />
+      </NavLink>
+      <NavLink href="/watch" title="Watch">
+        <Icon glyph="glasses" size="1.75rem" />
+      </NavLink>
+    </Navbar>
+    <Main>{props.children}</Main>
   </Wrapper>
 )
 

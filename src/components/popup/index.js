@@ -1,15 +1,14 @@
 import React, { useContext } from 'react'
-import { Link } from 'react-navi'
 import { useTransition } from 'react-spring/web.cjs'
+import { Menu } from 'components/menu'
 import {
   UnstyledPopupProvider,
   UnstyledPopupTrigger,
   UnstyledPopup,
 } from 'controls/unstyledPopup'
 import useTrigger from 'hooks/useTrigger'
-import { PopupArrow, PopupBox, StyledPopupMenuItem } from './styles'
+import { PopupArrow, PopupBox } from './styles'
 
-export { PopupMenuDivider } from './styles'
 export { UnstyledPopupTrigger as PopupTrigger }
 
 const modifiers = {
@@ -18,9 +17,9 @@ const modifiers = {
   hide: { enabled: false },
 }
 
-const PopupContext = React.createContext({})
+export const PopupContext = React.createContext({})
 
-function useClosePopup() {
+export function useClosePopup() {
   let { trigger } = useContext(PopupContext)
   return trigger.close
 }
@@ -66,8 +65,6 @@ export const PopupProvider = ({
   )
 }
 
-export function PopupItem(props) {}
-
 export function Popup({ children, className, style, id, ...props }) {
   let { transitions } = useContext(PopupContext)
 
@@ -109,8 +106,11 @@ export function Popup({ children, className, style, id, ...props }) {
   )
 }
 
-export function PopupMenuLink(props) {
+export function PopupMenu({ children, ...rest }) {
   let close = useClosePopup()
-
-  return <StyledPopupMenuItem as={Link} onClick={close} {...props} />
+  return (
+    <Popup {...rest}>
+      <Menu onDidSelect={close}>{children}</Menu>
+    </Popup>
+  )
 }

@@ -32,5 +32,6 @@ function Watch(props) {
 }
 
 export default route({
+  title: 'Watch',
   view: <Watch />,
 })

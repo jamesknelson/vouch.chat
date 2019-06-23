@@ -29,5 +29,6 @@ function Landing(props) {
 }
 
 export default route({
+  title: 'Home',
   view: <Landing />,
 })

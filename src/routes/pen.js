@@ -28,5 +28,6 @@ function Pen(props) {
 }
 
 export default route({
+  title: 'Pen',
   view: <Pen />,
 })

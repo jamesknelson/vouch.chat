@@ -10,5 +10,6 @@ function Notifications(props) {
 }
 
 export default route({
+  title: 'Notifications',
   view: <Notifications />,
 })

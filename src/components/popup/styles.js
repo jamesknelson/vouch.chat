@@ -2,7 +2,7 @@ import React from 'react'
 import { animated, interpolate } from 'react-spring/web.cjs'
 import styled from 'styled-components/macro'
 import Card from 'components/card'
-import { colors, focusRing } from 'theme'
+import { colors } from 'theme'
 
 export const PopupArrow = styled.div`
   position: absolute;
@@ -89,7 +89,6 @@ const StyledPopupBox = styled(AnimatedCard)`
   top: 0;
   left: 0;
   z-index: 3;
-  padding: 0.25rem 0;
   transform-origin: top center;
 `
 
@@ -120,26 +119,3 @@ export const PopupBox = React.forwardRef(
     />
   ),
 )
-
-export const PopupMenuDivider = styled.hr`
-  background-color: ${colors.structure.divider};
-  border: none;
-  height: 1px;
-  margin: 0.25rem 0;
-  width: 100%;
-`
-
-export const StyledPopupMenuItem = styled.div`
-  color: ${colors.text.secondary};
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  position: relative;
-  text-align: left;
-  width: 100%;
-
-  &:hover {
-    background-color: ${colors.control.highlight};
-  }
-
-  ${focusRing('::after')}
-`

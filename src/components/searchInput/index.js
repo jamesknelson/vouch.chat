@@ -27,6 +27,7 @@ const StyledSearchBorders = styled.div`
 `
 
 const StyledSearchButton = styled.button`
+  background-color: transparent;
   color: ${colors.control.icon};
   cursor: pointer;
   border-radius: 1rem;

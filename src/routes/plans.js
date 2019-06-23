@@ -4,7 +4,7 @@ import { css } from 'styled-components/macro'
 import Card from 'components/card'
 import { colors } from 'theme'
 
-function Messages(props) {
+function Plans(props) {
   return (
     <div>
       <Card
@@ -20,19 +20,14 @@ function Messages(props) {
             margin-top: 0.5rem;
             margin-bottom: 0.5rem;
           `}>
-          Pen
+          Plans
         </h1>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
       </Card>
     </div>
   )
 }
 
 export default route({
-  title: 'Messages',
-  view: <Messages />,
+  title: 'Plans',
+  view: <Plans />,
 })

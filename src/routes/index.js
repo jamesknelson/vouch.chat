@@ -1,4 +1,4 @@
-import { compose, lazy, mount, withView } from 'navi'
+import { compose, lazy, mount, redirect, withView } from 'navi'
 import React from 'react'
 import App from '../App'
 
@@ -13,7 +13,9 @@ export default compose(
     // '/verify': lazy(() => import('./verify')),
     // '/recover-account': lazy(() => import('./forgotPassword')),
     // '/login': lazy(() => import('./login')),
-    // '/plans': lazy(() => import('./plans')),
+    '/account': lazy(() => import('./account')),
+    '/logout': redirect('/'),
+    '/plans': lazy(() => import('./plans')),
     // '/signup': lazy(() => import('./signup')),
     // '/subscribe': lazy(() => import('./subscribe')),
     // '/thankyou': lazy(() => import('./thankyou')),
