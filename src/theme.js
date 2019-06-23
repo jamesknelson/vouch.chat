@@ -1,5 +1,5 @@
 import { rgba } from 'polished'
-import { css } from 'styled-components'
+import { css } from 'styled-components/macro'
 
 export const colors = {
   structure: {
@@ -16,6 +16,7 @@ export const colors = {
 
   control: {
     bg: '#FBFDFF',
+    highlight: '#F8FAFC',
     border: '#E0E8EC',
     default: '#888',
     icon: '#556688',
@@ -87,6 +88,8 @@ export const radii = {
 
 export const shadows = {
   card: (color = 'black') => `0 0 5px 3px ${rgba(color, 0.01)}`,
+  raisedCard: (color = 'black') => `0 0 6px 1px ${rgba(0, 0, 0, 0.05)},
+    0 0 8px 1px ${rgba(0, 0, 0, 0.02)};`,
   focusHard: (color = colors.focus.default) => `0 0 0 2px ${color}`,
   focusSoft: (color = colors.focus.default) =>
     `0 0 4px 3px ${rgba(color, 0.4)}`,

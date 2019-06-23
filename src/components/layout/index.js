@@ -1,18 +1,20 @@
 import { rgba } from 'polished'
-import React, { useState } from 'react'
-import { createPortal } from 'react-dom'
+import React from 'react'
 import { Link } from 'react-navi'
-import { Manager, Reference, Popper } from 'react-popper'
-import { animated, interpolate, useTransition } from 'react-spring/web.cjs'
 import styled, { css } from 'styled-components/macro'
 import Tippy from '@tippy.js/react'
-import { colors, dimensions, focusRing, shadows } from 'theme'
+import { colors, dimensions, easings, focusRing, shadows } from 'theme'
 import { UserAvatar } from 'components/avatar'
 import { PenButtonLink } from 'components/button'
-import Card from 'components/card'
 import Icon from 'components/icon'
 import SearchInput from 'components/searchInput'
-import { easings } from '../../theme'
+import {
+  PopupProvider,
+  PopupTrigger,
+  Popup,
+  PopupMenuLink,
+  PopupMenuDivider,
+} from 'components/popup'
 
 const Wrapper = styled.div`
   height: 100%;
@@ -31,6 +33,7 @@ const Header = styled.header`
   padding: 1rem;
   position: fixed;
   top: 0;
+  z-index: 3;
   width: calc(100% - ${dimensions.bar});
 `
 
@@ -156,207 +159,27 @@ const AvailableStampsIndicator = ({ highlight, count, ...props }) => (
   </Link>
 )
 
-const modifiers = {
-  flip: { enabled: false },
-  preventOverflow: { enabled: false },
-  hide: { enabled: false },
-}
-
-export const Arrow = styled('div')`
-  position: absolute;
-  width: 0;
-  height: 0;
-
-  &::before,
-  &::after {
-    content: '';
-    margin: auto;
-    display: block;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-color: transparent;
-    position: absolute;
-  }
-  &::before {
-    border-width: 8px;
-  }
-  &::after {
-    border-width: 7px;
-    margin-left: 1px;
-    margin-top: 2px;
-  }
-
-  &[data-placement*='bottom'] {
-    top: 0;
-    left: 0;
-    margin-top: -1rem;
-    width: 0.5rem;
-    height: 0.5rem;
-    &::before {
-      border-color: transparent transparent ${colors.structure.border}
-        transparent;
-      z-index: 1;
-    }
-    &::after {
-      border-color: transparent transparent ${colors.structure.bg} transparent;
-      z-index: 2;
-    }
-  }
-  &[data-placement*='top'] {
-    bottom: 0;
-    left: 0;
-    margin-bottom: -0.9em;
-    width: 1em;
-    height: 0.5em;
-    &::before {
-      border-width: 0.5em 1em 0 1em;
-      border-color: #232323 transparent transparent transparent;
-    }
-  }
-  &[data-placement*='right'] {
-    left: 0;
-    margin-left: -0.9em;
-    height: 3em;
-    width: 1em;
-    &::before {
-      border-width: 1.5em 1em 1.5em 0;
-      border-color: transparent #232323 transparent transparent;
-    }
-  }
-  &[data-placement*='left'] {
-    right: 0;
-    margin-right: -0.9em;
-    height: 3em;
-    width: 1em;
-    &::before {
-      border-width: 1.5em 0 1.5em 1em;
-      border-color: transparent transparent transparent#232323;
-    }
-  }
-`
-
-const AnimatedCard = animated(Card)
-
-const StyledPopperBox = styled(AnimatedCard)`
-  display: flex;
-  box-shadow: 0 0 6px 1px ${rgba(0, 0, 0, 0.05)},
-    0 0 8px 1px ${rgba(0, 0, 0, 0.02)};
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 6em;
-  height: 6em;
-  margin: 0.5em 0;
-  padding: 0.5em;
-  top: 0;
-  left: 0;
-  text-align: center;
-  z-index: 3;
-
-  padding: 1em;
-  width: 10em;
-  transform-origin: top center;
-`
-
-const PopperBox = ({
-  animationProps: { opacity, scale, top: topOffset },
-  left,
-  top,
-  innerRef,
-  ...props
-}) =>
-  console.log(left, top) || (
-    <StyledPopperBox
-      ref={innerRef}
-      {...props}
-      style={{
-        opacity: opacity,
-        transform: interpolate(
-          [scale, topOffset],
-          (scale, topOffset) =>
-            `translate3d(${left}px, ${top + topOffset}px, 0) scale(${scale})`,
-        ),
-        position: props.position,
-      }}
-    />
-  )
-
 const UserDropdown = () => {
-  let [open, setOpen] = useState(false)
-  let toggle = () => {
-    setOpen(!open)
-  }
-
-  let transitions = useTransition(open, null, {
-    config: { tension: 415 },
-    from: { opacity: 0, scale: 0.5, top: -10 },
-    enter: { opacity: 1, scale: 1, top: 0 },
-    leave: { opacity: 0, scale: 0.5, top: -10 },
-  })
-
   return (
-    <Manager>
-      <Reference>
-        {({ ref }) => (
+    <PopupProvider triggerOnFocus triggerOnSelect>
+      <PopupTrigger>
+        {ref => (
           <UserAvatar
             ref={ref}
+            tabIndex={0}
             css={css`
               cursor: pointer;
               margin-right: 1rem;
             `}
-            onClick={toggle}
           />
         )}
-      </Reference>
-      {transitions.map(
-        ({ item, props: animationProps, key }) =>
-          item && (
-            <Popper
-              placement="bottom-end"
-              key={key}
-              modifiers={{
-                ...modifiers,
-                // We disable the built-in gpuAcceleration so that
-                // Popper.js will return us easy to interpolate values
-                // (top, left instead of transform: translate3d)
-                // We'll then use these values to generate the needed
-                // css tranform values blended with the react-spring values
-                computeStyle: { gpuAcceleration: false },
-              }}>
-              {({
-                ref,
-                style: { top, left, position },
-                placement,
-                arrowProps,
-              }) =>
-                createPortal(
-                  <PopperBox
-                    innerRef={ref}
-                    animationProps={animationProps}
-                    position={position}
-                    top={top}
-                    left={left}>
-                    <a
-                      href="https://github.com/drcmda/react-spring"
-                      target="_blank"
-                      rel="noopener noreferrer">
-                      react-spring
-                    </a>
-                    animated
-                    <Arrow
-                      ref={arrowProps.ref}
-                      data-placement={placement}
-                      style={arrowProps.style}
-                    />
-                  </PopperBox>,
-                  document.body,
-                )
-              }
-            </Popper>
-          ),
-      )}
-    </Manager>
+      </PopupTrigger>
+      <Popup placement="bottom-end">
+        <PopupMenuLink href="/account">Account Details</PopupMenuLink>
+        <PopupMenuDivider />
+        <PopupMenuLink href="/logout">Logout</PopupMenuLink>
+      </Popup>
+    </PopupProvider>
   )
 }
 
