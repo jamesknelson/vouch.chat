@@ -16,7 +16,7 @@ const StyledMenu = styled.div`
 
 const StyledMenuItem = styled.div`
   color: ${colors.text.secondary};
-  font-size: 1rem;
+  font-size: 0.95rem;
   padding: 0.5rem 1rem;
   position: relative;
   text-align: left;

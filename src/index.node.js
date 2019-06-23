@@ -5,6 +5,8 @@ import { renderToString } from 'react-dom/server'
 import { NaviProvider, View } from 'react-navi'
 import { StripeProvider } from 'react-stripe-elements'
 import { ServerStyleSheet } from 'styled-components/macro'
+import GlobalIconFontStyle from 'components/icon/font'
+import GlobalResetStyle from './reset.css'
 import routes from './routes'
 
 const renderer = async (request, response) => {
@@ -34,6 +36,13 @@ const renderer = async (request, response) => {
       sheet.collectStyles(
         <StripeProvider stripe={null}>
           <NaviProvider navigation={navigation}>
+            {/*
+              Putting the global styles any deeper in the tree causes them to
+              re-render on each navigation, even on production.
+            */}
+            <GlobalResetStyle />
+            <GlobalIconFontStyle />
+
             <View />
           </NaviProvider>
         </StripeProvider>,

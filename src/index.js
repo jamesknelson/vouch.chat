@@ -3,6 +3,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { NaviProvider, View } from 'react-navi'
 import { StripeProvider } from 'react-stripe-elements'
+import GlobalIconFontStyle from 'components/icon/font'
+import GlobalResetStyle from './reset.css'
 import config from './config'
 import { auth, db } from './firebase'
 import routes from './routes'
@@ -88,6 +90,13 @@ async function main() {
   ReactDOM.hydrate(
     <StripeProvider stripe={window.Stripe(config.stripe.apiKey)}>
       <NaviProvider navigation={navigation}>
+        {/*
+          Putting the global styles any deeper in the tree causes them to
+          re-render on each navigation, even on production.
+         */}
+        <GlobalResetStyle />
+        <GlobalIconFontStyle />
+
         <View />
       </NaviProvider>
     </StripeProvider>,

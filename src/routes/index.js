@@ -10,6 +10,7 @@ export default compose(
     '/notifications': lazy(() => import('./notifications')),
     '/pen': lazy(() => import('./pen')),
     '/watch': lazy(() => import('./watch')),
+    '/search': lazy(() => import('./search')),
     // '/verify': lazy(() => import('./verify')),
     // '/recover-account': lazy(() => import('./forgotPassword')),
     // '/login': lazy(() => import('./login')),

@@ -1,6 +1,6 @@
 import { rgba } from 'polished'
 import React from 'react'
-import { Link } from 'react-navi'
+import { Link, useCurrentRoute } from 'react-navi'
 import { animated, useTransition } from 'react-spring'
 import styled, { css } from 'styled-components/macro'
 import Tippy from '@tippy.js/react'
@@ -164,15 +164,20 @@ const StyledNavLink = styled(Link)`
   }
 `
 
+const NavLinkTooltip = styled.span`
+  ${media.phoneOnly`
+    font-size: 0.9rem;
+    font-weight: 600;
+  `}
+`
+
 const NavLink = ({ title, ...props }) => (
   <Tippy
     placement="right"
     touch={false}
     arrow={true}
     arrowType="round"
-    content={
-      <span style={{ fontSize: '14px', fontWeight: '600' }}>{title}</span>
-    }>
+    content={<NavLinkTooltip>{title}</NavLinkTooltip>}>
     <StyledNavLink {...props} activeClassName="NavLink-active" />
   </Tippy>
 )
@@ -326,66 +331,106 @@ const PhoneOnly = styled.div`
   `}
 `
 
-const Layout = props => (
-  <Wrapper>
-    <TabletPlus>
-      <HomeLink href="/">
-        <Icon glyph="brand" size="2.5rem" />
-      </HomeLink>
-    </TabletPlus>
-    <Header>
-      <PhoneOnly
-        css={css`
-          display: flex;
-        `}>
-        <UserSidebar />
-      </PhoneOnly>
-      <SearchInput
-        label="Search"
-        css={css`
-          ${media.tabletPlus`
-              max-width: 400px;
+const Layout = props => {
+  let route = useCurrentRoute()
+
+  let searchInput = (
+    <SearchInput
+      label="Search"
+      css={css`
+        width: 100%;
+      `}
+    />
+  )
+
+  return (
+    <Wrapper>
+      <TabletPlus>
+        <HomeLink href="/">
+          <Icon glyph="brand" size="2.5rem" />
+        </HomeLink>
+      </TabletPlus>
+      <Header>
+        <PhoneOnly
+          css={css`
+            display: flex;
+          `}>
+          <UserSidebar />
+        </PhoneOnly>
+
+        <PhoneOnly
+          css={css`
+            flex: 1;
+          `}>
+          {route.url.pathname === '/search' ? (
+            searchInput
+          ) : (
+            <h1
+              css={css`
+                font-weight: 700;
+                font-size: 1.2rem;
+                margin-left: 0.5rem;
+              `}>
+              {route.title}
+            </h1>
+          )}
+        </PhoneOnly>
+        <TabletPlus
+          css={css`
+            flex: 100;
+            max-width: 400px;
+          `}>
+          {searchInput}
+        </TabletPlus>
+        <div
+          css={css`
+            ${media.tabletPlus`
+              flex: 1;
             `}
-          flex: 100;
-        `}
-      />
-      <div
-        css={css`
-          flex: 1;
-        `}
-      />
-      <AvailableStampsIndicator count={2} />
-      <TabletPlus>
-        <UserDropdown />
-      </TabletPlus>
-      <TabletPlus>
-        <PenButtonLink remaining={1} href="/pen">
-          Pen
-        </PenButtonLink>
-      </TabletPlus>
-    </Header>
-    <Navbar>
-      <PhoneOnly
-        css={css`
-          display: flex;
-          flex: 1;
-        `}>
-        <NavLink href="/" title="Home" exact>
-          <Icon glyph="brand" size="1.75rem" />
+          `}
+        />
+        <AvailableStampsIndicator count={2} />
+        <TabletPlus>
+          <UserDropdown />
+        </TabletPlus>
+        <TabletPlus>
+          <PenButtonLink remaining={1} href="/pen">
+            Pen
+          </PenButtonLink>
+        </TabletPlus>
+      </Header>
+      <Navbar>
+        <PhoneOnly
+          css={css`
+            display: flex;
+            flex: 1;
+          `}>
+          <NavLink href="/" title="Home" exact>
+            <Icon glyph="brand" size="1.75rem" />
+          </NavLink>
+        </PhoneOnly>
+        <PhoneOnly
+          css={css`
+            display: flex;
+            flex: 1;
+          `}>
+          <NavLink href="/search" title="Search">
+            <Icon glyph="search" size="1.75rem" />
+          </NavLink>
+        </PhoneOnly>
+        <NavLink href="/notifications" title="Notifications">
+          <Icon glyph="bell" size="1.75rem" />
         </NavLink>
-      </PhoneOnly>
-      <NavLink href="/notifications" title="Notifications">
-        <Icon glyph="bell" size="1.75rem" />
-      </NavLink>
-      <NavLink href="/messages" title="Messages">
-        <Icon glyph="envelope" size="1.75rem" />
-      </NavLink>
-      <NavLink href="/watch" title="Watch">
-        <Icon glyph="glasses" size="1.75rem" />
-      </NavLink>
-    </Navbar>
-    <Main>{props.children}</Main>
-  </Wrapper>
-)
+        <NavLink href="/messages" title="Messages">
+          <Icon glyph="envelope" size="1.75rem" />
+        </NavLink>
+        <NavLink href="/watch" title="Watch">
+          <Icon glyph="glasses" size="1.75rem" />
+        </NavLink>
+      </Navbar>
+      <Main>{props.children}</Main>
+    </Wrapper>
+  )
+}
 
 export default Layout
