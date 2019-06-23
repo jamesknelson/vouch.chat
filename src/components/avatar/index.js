@@ -23,7 +23,7 @@ const StyledAvatarContainer = styled.span`
   position: relative;
   user-select: none;
 
-  ${focusRing('::before')}
+  ${focusRing('::before', { radius: '9999px' })}
 `
 
 export const UserAvatar = React.forwardRef(

@@ -116,7 +116,13 @@ export const srOnly = css`
 
 export const focusRing = (
   selector,
-  { color, padding = '0px', horizontalPadding, verticalPadding } = {},
+  {
+    color,
+    padding = '0px',
+    horizontalPadding,
+    verticalPadding,
+    radius = radii.medium,
+  } = {},
 ) => {
   if (horizontalPadding === undefined) {
     horizontalPadding = padding.split(/\s/)[1]
@@ -133,7 +139,7 @@ export const focusRing = (
       left: calc(-1px - ${horizontalPadding || padding});
       right: calc(-1px - ${horizontalPadding || padding});
       bottom: calc(-1px - ${verticalPadding || padding});
-      border-radius: 9999px;
+      border-radius: ${radius};
       position: absolute;
       display: block;
     }

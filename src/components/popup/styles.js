@@ -2,7 +2,7 @@ import React from 'react'
 import { animated, interpolate } from 'react-spring/web.cjs'
 import styled from 'styled-components/macro'
 import Card from 'components/card'
-import { colors } from 'theme'
+import { colors, focusRing } from 'theme'
 
 export const PopupArrow = styled.div`
   position: absolute;
@@ -133,10 +133,13 @@ export const StyledPopupMenuItem = styled.div`
   color: ${colors.text.secondary};
   font-size: 1rem;
   padding: 0.5rem 1rem;
+  position: relative;
   text-align: left;
   width: 100%;
 
   &:hover {
     background-color: ${colors.control.highlight};
   }
+
+  ${focusRing('::after')}
 `

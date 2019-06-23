@@ -30,7 +30,7 @@ export const ButtonShell = styled.button`
   vertical-align: -25%;
 
   position: relative;
-  ${focusRing('::after')}
+  ${focusRing('::after', { radius: '9999px' })}
 
   &[disabled] {
     cursor: default;

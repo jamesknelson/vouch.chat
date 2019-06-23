@@ -73,7 +73,7 @@ const HomeLink = styled(Link)`
   width: ${dimensions.bar};
   z-index: 2;
 
-  ${focusRing('::before', { padding: '-0.6rem' })}
+  ${focusRing('::before', { padding: '-0.6rem', radius: '9999px' })}
 `
 
 const StyledNavLink = styled(Link)`
@@ -145,7 +145,7 @@ const AvailableStampsIndicator = ({ highlight, count, ...props }) => (
       align-items: center;
       margin: 0 1rem;
       position: relative;
-      ${focusRing('::after', { padding: '2px 0.5rem' })}
+      ${focusRing('::after', { padding: '2px 0.5rem', radius: '9999px' })}
     `}>
     <Icon glyph="vouch" size="1rem" />
     <span
@@ -193,7 +193,7 @@ const Layout = props => (
         label="Search"
         css={css`
           max-width: 400px;
-          flex: 1;
+          flex: 100;
         `}
       />
       <div
