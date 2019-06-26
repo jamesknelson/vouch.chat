@@ -1,6 +1,7 @@
-import { compose, lazy, mount, redirect, withView } from 'navi'
+import { compose, lazy, map, mount, redirect, withView } from 'navi'
 import React from 'react'
-import App from '../App'
+import { auth } from 'firebaseApp'
+import App from 'App'
 
 export default compose(
   withView((request, context) => <App navigationContext={context} />),
@@ -12,12 +13,23 @@ export default compose(
     '/watch': lazy(() => import('./watch')),
     '/search': lazy(() => import('./search')),
     // '/verify': lazy(() => import('./verify')),
-    // '/recover-account': lazy(() => import('./forgotPassword')),
-    // '/login': lazy(() => import('./login')),
+    '/recover': lazy(() => import('./recover')),
     '/account': lazy(() => import('./account')),
-    '/logout': redirect('/'),
+    '/login': lazy(() => import('./login')),
+    '/join': lazy(() => import('./join')),
+    '/logout': map(async () => {
+      await auth.signOut()
+      return redirect('/')
+    }),
     '/plans': lazy(() => import('./plans')),
-    // '/signup': lazy(() => import('./signup')),
+    '/:username': map(async ({ params }) => {
+      if (params.username === 'james') {
+        const { default: profile } = await import('./profile')
+        return profile
+      } else {
+        return mount({})
+      }
+    }),
     // '/subscribe': lazy(() => import('./subscribe')),
     // '/thankyou': lazy(() => import('./thankyou')),
   }),

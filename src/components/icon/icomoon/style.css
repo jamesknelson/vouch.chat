@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icomoon';
   src:
-    url('fonts/icomoon.ttf?ulvq7z') format('truetype'),
-    url('fonts/icomoon.woff?ulvq7z') format('woff'),
-    url('fonts/icomoon.svg?ulvq7z#icomoon') format('svg');
+    url('fonts/icomoon.ttf?c2f4d3') format('truetype'),
+    url('fonts/icomoon.woff?c2f4d3') format('woff'),
+    url('fonts/icomoon.svg?c2f4d3#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,6 +23,30 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-envelope-1:before {
+  content: "\e911";
+}
+.icon-lock:before {
+  content: "\e912";
+}
+.icon-person:before {
+  content: "\e913";
+}
+.icon-twitter:before {
+  content: "\e90d";
+}
+.icon-google:before {
+  content: "\e90e";
+}
+.icon-facebook:before {
+  content: "\e90f";
+}
+.icon-brand-letter:before {
+  content: "\e910";
+}
+.icon-v:before {
+  content: "\e910";
+}
 .icon-menu:before {
   content: "\e90c";
 }
@@ -30,6 +54,9 @@
   content: "\e900";
 }
 .icon-brand:before {
+  content: "\e901";
+}
+.icon-brand-stamp:before {
   content: "\e901";
 }
 .icon-check:before {

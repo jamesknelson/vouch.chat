@@ -1,17 +1,23 @@
 import React from 'react'
-import { View } from 'react-navi'
+import { View, useCurrentRoute } from 'react-navi'
 import Layout from 'components/layout'
 import { CurrentUserContext, CurrentLanguageContext } from 'context'
+import { ControlIdProvider } from 'hooks/useControlId'
 
-function App(props) {
+function App({ navigationContext = {} }) {
+  let route = useCurrentRoute()
+  let RouteLayout = route.data.layout || Layout
+
   return (
-    <CurrentUserContext.Provider value={props.currentUser}>
-      <CurrentLanguageContext.Provider value={props.language}>
-        <Layout>
-          <View />
-        </Layout>
-      </CurrentLanguageContext.Provider>
-    </CurrentUserContext.Provider>
+    <ControlIdProvider>
+      <CurrentUserContext.Provider value={navigationContext.currentUser}>
+        <CurrentLanguageContext.Provider value={navigationContext.language}>
+          <RouteLayout>
+            <View />
+          </RouteLayout>
+        </CurrentLanguageContext.Provider>
+      </CurrentUserContext.Provider>
+    </ControlIdProvider>
   )
 }
 

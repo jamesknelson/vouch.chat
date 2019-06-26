@@ -1,12 +1,12 @@
 import { useCallback, useState, useEffect, useMemo, useRef } from 'react'
-import Trigger from 'utils/Trigger'
+import PopupTrigger from 'popup-trigger'
 
-const UnsetContainerDebounce = 500
+const UnsetPopupDebounce = 500
 
 function useTrigger(options = {}) {
   let triggerRef = useRef()
   if (!triggerRef.current) {
-    triggerRef.current = new Trigger(options)
+    triggerRef.current = new PopupTrigger(options)
   }
   let trigger = triggerRef.current
 
@@ -19,9 +19,9 @@ function useTrigger(options = {}) {
     return () => trigger.dispose()
   }, [trigger])
 
-  // Debounce nulling out the container to get around issues caused by
+  // Debounce nulling out the popup container to get around issues caused by
   // other badly handling refs, and causing `null` refs to be passed in.
-  let containerRef = useCallback(
+  let popupRef = useCallback(
     node => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current)
@@ -29,11 +29,11 @@ function useTrigger(options = {}) {
       }
 
       if (node !== null) {
-        trigger.setContainerNode(node)
+        trigger.setPopupNode(node)
       } else {
         debounceRef.current = setTimeout(() => {
-          trigger.setContainerNode(null)
-        }, UnsetContainerDebounce)
+          trigger.setPopupNode(null)
+        }, UnsetPopupDebounce)
       }
     },
     [trigger],
@@ -44,9 +44,9 @@ function useTrigger(options = {}) {
       ...state,
       close: trigger.close,
       ref: trigger.setTriggerNode,
-      containerRef: containerRef,
+      popupRef: popupRef,
     }),
-    [state, trigger, containerRef],
+    [state, trigger, popupRef],
   )
 }
 

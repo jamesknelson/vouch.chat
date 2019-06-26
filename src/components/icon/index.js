@@ -12,6 +12,9 @@ function Icon({ glyph, size = DEFAULT_ICON_SIZE, color, ...props }) {
         display: inline-block;
         font-size: ${size};
         text-align: center;
+        line-height: ${size};
+        height: ${size};
+        width: ${size};
 
         ${color &&
           css`

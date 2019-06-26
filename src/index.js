@@ -6,7 +6,7 @@ import { StripeProvider } from 'react-stripe-elements'
 import GlobalIconFontStyle from 'components/icon/font'
 import GlobalResetStyle from './reset.css'
 import config from './config'
-import { auth, db } from './firebase'
+import { auth, db } from './firebaseApp'
 import routes from './routes'
 
 async function main() {
@@ -32,14 +32,6 @@ async function main() {
     }
 
     if (user) {
-      // Set state to undefined while updating, so that auth-protected routes
-      // will wait for user to load before redirecting.
-      if (context.currentUser !== undefined) {
-        updateContext({
-          currentUser: undefined,
-        })
-      }
-
       let docReference = db.collection('users').doc(user.uid)
 
       unsubscribe = docReference.onSnapshot(doc => {

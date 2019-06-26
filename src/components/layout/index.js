@@ -6,7 +6,7 @@ import styled, { css } from 'styled-components/macro'
 import Tippy from '@tippy.js/react'
 import { colors, dimensions, easings, focusRing, media, shadows } from 'theme'
 import { UserAvatar } from 'components/avatar'
-import { PenButtonLink } from 'components/button'
+import { AuthButtonLink, ButtonLink } from 'components/button'
 import Card from 'components/card'
 import Icon from 'components/icon'
 import { Menu, MenuDivider, MenuLink } from 'components/menu'
@@ -17,6 +17,7 @@ import {
   PopupTrigger,
   PopupMenu,
 } from 'components/popup'
+import { useCurrentUser } from 'context'
 import useTrigger from 'hooks/useTrigger'
 
 const Wrapper = styled.div`
@@ -33,7 +34,7 @@ const Header = styled.header`
   justify-content: space-between;
   position: fixed;
   top: 0;
-  z-index: 4;
+  z-index: 10;
 
   left: 0;
   padding: 1rem 0 1rem 0;
@@ -92,7 +93,7 @@ const HomeLink = styled(Link)`
   position: fixed;
   top: 0;
   width: ${dimensions.bar};
-  z-index: 2;
+  z-index: 100;
 
   ${focusRing('::before', { padding: '-0.6rem', radius: '9999px' })}
 `
@@ -103,8 +104,6 @@ const StyledNavLink = styled(Link)`
   display: flex;
   justify-content: center;
   position: relative;
-
-  text-shadow: 0 0 0.75rem rgba(84, 96, 108, 0);
   transition: text-shadow 200ms ${easings.easeOut};
 
   ${media.phoneOnly`
@@ -114,8 +113,8 @@ const StyledNavLink = styled(Link)`
   `}
   ${media.tabletPlus`
     width: ${dimensions.bar};
-    padding: 0.25rem 0;
-    margin: 0.25rem 0;
+    padding: 0.5rem 0;
+    margin: 0.5rem 0;
   `}
 
   ::after {
@@ -139,7 +138,7 @@ const StyledNavLink = styled(Link)`
   }
 
   &.NavLink-active {
-    text-shadow: 0 0 0.75rem rgba(84, 96, 108, 0.75);
+    color: ${colors.ink.black};
 
     ::after {
       background-color: ${rgba(colors.ink.black, 0.15)};
@@ -159,7 +158,11 @@ const StyledNavLink = styled(Link)`
     `}
   }
 
-  &:focus {
+  :hover {
+    text-shadow: 0 0 0.5rem ${rgba(colors.focus.default, 0.6)};
+  }
+
+  :focus {
     text-shadow: 0 0 0.75rem ${rgba(colors.focus.default, 0.8)};
   }
 `
@@ -229,6 +232,8 @@ const UserDropdown = () => {
 
 const UserMenuContent = () => (
   <>
+    <MenuLink href="/james">Your Profile</MenuLink>
+    <MenuDivider />
     <MenuLink href="/account">Account Details</MenuLink>
     <MenuDivider />
     <MenuLink href="/logout">Logout</MenuLink>
@@ -257,6 +262,8 @@ const StyledSidebarBackdrop = styled(animated.div)`
 `
 
 const UserSidebar = () => {
+  let currentUser = useCurrentUser()
+
   let trigger = useTrigger({
     triggerOnSelect: true,
   })
@@ -285,7 +292,7 @@ const UserSidebar = () => {
 
           ${focusRing('::before', { padding: '-0.75rem', radius: '9999px' })}
         `}>
-        <UserAvatar />
+        {currentUser ? <UserAvatar /> : <Icon glyph="menu" size="1.5rem" />}
       </div>
       {transitions.map(
         ({ item, props: { opacity, transform }, key, state }) =>
@@ -299,7 +306,7 @@ const UserSidebar = () => {
               <StyledUserSidebar
                 radius={0}
                 raised
-                ref={trigger.containerRef}
+                ref={trigger.popupRef}
                 style={{
                   transform,
                 }}>
@@ -333,6 +340,7 @@ const PhoneOnly = styled.div`
 
 const Layout = props => {
   let route = useCurrentRoute()
+  let user = useCurrentUser()
 
   let searchInput = (
     <SearchInput
@@ -342,6 +350,38 @@ const Layout = props => {
       `}
     />
   )
+
+  let rhs =
+    user === undefined ? null : !!user ? (
+      <>
+        <AvailableStampsIndicator count={2} />
+        <TabletPlus>
+          <UserDropdown />
+        </TabletPlus>
+        <TabletPlus>
+          <ButtonLink remaining={1} href="/pen">
+            Pen
+          </ButtonLink>
+        </TabletPlus>
+      </>
+    ) : (
+      <>
+        <AuthButtonLink
+          href="/login"
+          css={css`
+            margin: 0 1rem;
+          `}
+          outline>
+          Sign In
+        </AuthButtonLink>
+        <TabletPlus
+          css={css`
+            margin-left: -0.5rem;
+          `}>
+          <AuthButtonLink href="/join">Join</AuthButtonLink>
+        </TabletPlus>
+      </>
+    )
 
   return (
     <Wrapper>
@@ -389,15 +429,7 @@ const Layout = props => {
             `}
           `}
         />
-        <AvailableStampsIndicator count={2} />
-        <TabletPlus>
-          <UserDropdown />
-        </TabletPlus>
-        <TabletPlus>
-          <PenButtonLink remaining={1} href="/pen">
-            Pen
-          </PenButtonLink>
-        </TabletPlus>
+        {rhs}
       </Header>
       <Navbar>
         <PhoneOnly
@@ -406,7 +438,7 @@ const Layout = props => {
             flex: 1;
           `}>
           <NavLink href="/" title="Home" exact>
-            <Icon glyph="brand" size="1.75rem" />
+            <Icon glyph="brand" size="1.5rem" />
           </NavLink>
         </PhoneOnly>
         <PhoneOnly
@@ -415,17 +447,17 @@ const Layout = props => {
             flex: 1;
           `}>
           <NavLink href="/search" title="Search">
-            <Icon glyph="search" size="1.75rem" />
+            <Icon glyph="search" size="1.5rem" />
           </NavLink>
         </PhoneOnly>
         <NavLink href="/notifications" title="Notifications">
-          <Icon glyph="bell" size="1.75rem" />
+          <Icon glyph="bell" size="1.5rem" />
         </NavLink>
         <NavLink href="/messages" title="Messages">
-          <Icon glyph="envelope" size="1.75rem" />
+          <Icon glyph="envelope" size="1.5rem" />
         </NavLink>
         <NavLink href="/watch" title="Watch">
-          <Icon glyph="glasses" size="1.75rem" />
+          <Icon glyph="glasses" size="1.5rem" />
         </NavLink>
       </Navbar>
       <Main>{props.children}</Main>

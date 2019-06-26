@@ -1,38 +1,43 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { rgba } from 'polished'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import Icon from 'components/icon'
-import { colors, easings, shadows, srOnly } from 'theme'
-import createInputId from 'utils/createInputId'
+import { colors, easings, focusRing, srOnly } from 'theme'
+import useControlId from 'hooks/useControlId'
 
 const StyledSearchWrapper = styled.form`
-  background-color: ${colors.control.bg};
+  background-color: ${colors.control.bg.default};
   border-radius: 1.25rem;
-  border: 1px solid ${colors.control.border};
-  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.02) inset;
+  box-shadow: 0 0 0 1px ${colors.control.border.default} inset,
+    3px 3px 2px 1px rgba(0, 0, 0, 0.02) inset;
   position: relative;
   display: flex;
   ${props => (props.flex ? 'flex: ' + props.flex : '')};
 `
 
-const StyledSearchBorders = styled.div`
+// This can be referenced when the input is focused by using the CSS `~`
+// sibling selector, allowing for a focus ring to be added that is
+// positioned with the group, as opposed to the individual input.
+// However, it is stacked underneath the control itself to avoid blocking
+// input.
+const StyledSearchFocusTarget = styled.div`
   position: absolute;
   top: 0px;
   left: 0px;
   bottom: 0px;
   right: 0px;
-  border-radius: 1.25rem;
   z-index: 1;
-  transition: box-shadow 200ms ${easings.easeOut};
 `
 
 const StyledSearchButton = styled.button`
   background-color: transparent;
-  color: ${colors.control.icon};
+  color: ${colors.control.icon.default};
   cursor: pointer;
   border-radius: 1rem;
   z-index: 3;
   margin-right: 0.75rem;
+  transition: text-shadow 200ms ${easings.easeOut},
+    color 200ms ${easings.easeOut};
 `
 
 const StyledSearchInput = styled.input`
@@ -56,16 +61,11 @@ const StyledSearchInput = styled.input`
     color: ${colors.text.placeholder};
   }
 
-  transition: box-shadow 200ms ${easings.easeOut},
-    border-color 200ms ${easings.easeOut};
-
   position: relative;
   z-index: 2;
-  :focus ~ ${StyledSearchBorders} {
-    border-color: ${colors.focus.border};
-    box-shadow: ${shadows.focus()},
-      1px 1px 2px 1px ${rgba(colors.ink.black, 0.02)} inset;
-  }
+
+  ${focusRing(css` ~ ${StyledSearchFocusTarget}`, { radius: '9999px' })}
+
   :focus ~ ${StyledSearchButton} {
     color: ${colors.focus.default};
     text-shadow: 0 0 3px ${rgba(colors.focus.default, 0.5)};
@@ -73,7 +73,7 @@ const StyledSearchInput = styled.input`
 `
 
 function SearchInput({ as, id, label, className, style, hidden, ...props }) {
-  let { current: inputId } = useRef(id || createInputId())
+  let inputId = useControlId(id)
   return (
     <StyledSearchWrapper style={style} className={className} hidden={hidden}>
       {label && (
@@ -81,8 +81,8 @@ function SearchInput({ as, id, label, className, style, hidden, ...props }) {
           {label}
         </label>
       )}
-      <StyledSearchInput id={id} placeholder={label} {...props} />
-      <StyledSearchBorders />
+      <StyledSearchInput id={inputId} placeholder={label} {...props} />
+      <StyledSearchFocusTarget />
       <StyledSearchButton type="submit" tabIndex={-1}>
         <Icon glyph="search" size="1.25rem" />
       </StyledSearchButton>

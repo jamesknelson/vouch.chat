@@ -23,7 +23,7 @@ const StyledMenuItem = styled.div`
   width: 100%;
 
   &:hover {
-    background-color: ${colors.control.highlight};
+    background-color: ${colors.control.bg.highlight};
   }
 
   ${focusRing('::after')}

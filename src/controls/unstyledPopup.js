@@ -51,7 +51,7 @@ export function UnstyledPopup({ children, ...popperProps }) {
 
 function InnerPopup({ popperRef, children, renderProps }) {
   let { trigger } = useContext(PopupContext)
-  let containerRef = trigger && trigger.containerRef
+  let containerRef = trigger && trigger.popupRef
   let ref = useCallback(
     node => {
       popperRef(node)
