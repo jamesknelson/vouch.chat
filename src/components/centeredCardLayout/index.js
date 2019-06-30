@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components/macro'
 import {
+  AuthButtonLink,
   Button,
   ButtonLink,
   FormSubmitButton,
@@ -19,6 +20,11 @@ export const StyledFormSubmitButton = styled(FormSubmitButton)`
   width: 100%;
 `
 
+export const StyledAuthButtonLink = styled(AuthButtonLink)`
+  margin: 1rem 0;
+  width: 100%;
+`
+
 export const StyledButtonLink = styled(ButtonLink)`
   margin: 1rem 0;
   width: 100%;
@@ -27,7 +33,7 @@ export const StyledButtonLink = styled(ButtonLink)`
 export const RelatedLinkGroup = styled.div`
   justify-content: space-between;
   display: flex;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   flex-wrap: wrap;
 `
 
@@ -48,17 +54,33 @@ export const RelatedLink = styled(StyledLink)`
   }
 `
 
-export const P = styled.p`
-  color: ${props => colors.text[props.variant || 'secondary']};
+export const Greeting = styled.p`
+  color: ${colors.text.secondary};
   line-height: 1.4rem;
-  margin-bottom: 1.5rem;
+  margin: 1.5rem 0 1.75rem;
   text-align: center;
+`
+
+export const Instructions = styled.p`
+  color: ${colors.text.default};
+  line-height: 1.4rem;
+  margin: 1.5rem 0 1rem;
+  text-align: left;
+`
+
+export const Issue = styled.p`
+  color: ${colors.text.warning};
+  font-size: 90%;
+  line-height: 1.4rem;
+  margin: 0.5rem 0 1rem;
+  text-align: left;
 `
 
 export const Title = styled.h1`
   color: ${colors.lightBlack};
   font-size: 1.4rem;
   font-weight: 900;
+  margin-top: 0.5rem;
   margin-bottom: 1.5rem;
   text-align: center;
 `

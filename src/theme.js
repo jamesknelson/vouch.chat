@@ -12,7 +12,7 @@ export const colors = {
   structure: {
     bg: '#FFFFFF',
     wash: '#F5F7FA',
-    border: '#EAECF2',
+    border: '#ECEEF5',
     divider: '#F6F7F8',
   },
 
@@ -51,7 +51,7 @@ export const colors = {
     secondary: '#384048',
     tertiary: '#607080',
     placeholder: '#778899',
-    error: '#733939',
+    warning: '#733939',
     link: '#102030',
     light: 'rgba(255, 255, 255, 0.93)',
   },

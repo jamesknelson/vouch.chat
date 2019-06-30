@@ -1,31 +1,40 @@
-import { route } from 'navi'
+import { mount, route } from 'navi'
 import React from 'react'
+import { useNavigation } from 'react-navi'
 import CenteredCardLayout, {
-  P,
+  Instructions,
   StyledFormSubmitButton,
   RelatedLinkGroup,
   RelatedLink,
 } from 'components/centeredCardLayout'
-import { FormInputControl } from 'components/control'
+import { FormInputField } from 'components/field'
 import AuthLink from 'controls/authLink'
-import { Form, FormIssue } from 'controls/form'
+import { Form } from 'controls/form'
+import useOperation from 'hooks/useOperation'
+import sendPasswordResetEmail from 'operations/sendPasswordResetEmail'
 
 function Recover(props) {
+  let navigation = useNavigation()
+  let operation = useOperation(sendPasswordResetEmail)
+
   return (
     <CenteredCardLayout title="Recover your account">
-      <Form onSubmit={value => {}}>
-        <FormIssue>
-          {message => (
-            <P variant={message && 'error'}>
-              {message || "Can't get in? We've got you covered."}
-            </P>
-          )}
-        </FormIssue>
-        <FormInputControl
-          label="Email"
-          glyph="envelope"
+      <Instructions>
+        Can't login to your account? Just enter your email to reset your
+        password.
+      </Instructions>
+      <Form
+        validate={operation.validate}
+        onSubmit={operation.invoke}
+        onSubmitSucceeded={() => {
+          navigation.navigate('/recover/sent')
+        }}>
+        <FormInputField
+          label="Your email"
+          labelGlyph="envelope"
           name="email"
           type="email"
+          showLabelAsPlaceholder
         />
         <StyledFormSubmitButton>Recover account</StyledFormSubmitButton>
       </Form>
@@ -41,7 +50,28 @@ function Recover(props) {
   )
 }
 
-export default route({
-  title: 'Recover account',
-  view: <Recover />,
+export const ForgotPasswordSent = () => {
+  return (
+    <CenteredCardLayout title="One more step.">
+      <Instructions>
+        I've just sent you an email. Follow the link in the email to reset your
+        password.
+      </Instructions>
+    </CenteredCardLayout>
+  )
+}
+
+export default mount({
+  '/': route({
+    data: {
+      auth: true,
+    },
+    view: <Recover />,
+  }),
+  '/sent': route({
+    data: {
+      auth: true,
+    },
+    view: <ForgotPasswordSent />,
+  }),
 })

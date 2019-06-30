@@ -1,6 +1,5 @@
 import { compose, lazy, map, mount, redirect, withView } from 'navi'
 import React from 'react'
-import { auth } from 'firebaseApp'
 import App from 'App'
 
 export default compose(
@@ -17,8 +16,8 @@ export default compose(
     '/account': lazy(() => import('./account')),
     '/login': lazy(() => import('./login')),
     '/join': lazy(() => import('./join')),
-    '/logout': map(async () => {
-      await auth.signOut()
+    '/logout': map(async ({ context }) => {
+      await context.backend.auth.signOut()
       return redirect('/')
     }),
     '/plans': lazy(() => import('./plans')),
@@ -30,6 +29,8 @@ export default compose(
         return mount({})
       }
     }),
+    '/welcome': lazy(() => import('./welcome')),
+    '/verify': lazy(() => import('./verify')),
     // '/subscribe': lazy(() => import('./subscribe')),
     // '/thankyou': lazy(() => import('./thankyou')),
   }),

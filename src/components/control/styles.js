@@ -1,6 +1,6 @@
 import { rgba } from 'polished'
 import styled, { css } from 'styled-components/macro'
-import { colors, easings, radii, shadows } from 'theme'
+import { colors, easings, shadows } from 'theme'
 
 export const StyledControlWrapper = styled.span`
   align-items: center;
@@ -11,7 +11,8 @@ export const StyledControlWrapper = styled.span`
     z-index: 6;
   }
 
-  > :focus {
+  > :focus,
+  > :focus ~ * {
     z-index: 8;
   }
 `
@@ -35,10 +36,10 @@ export const StyledControlIconLabel = styled.label`
 
 export const StyledControlBackground = styled.div`
   ${props => css`
-    border-top-left-radius: ${props.topLeft ? radii.small : 0};
-    border-top-right-radius: ${props.topRight ? radii.small : 0};
-    border-bottom-right-radius: ${props.bottomRight ? radii.small : 0};
-    border-bottom-left-radius: ${props.bottomLeft ? radii.small : 0};
+    border-top-left-radius: ${props.topLeft};
+    border-top-right-radius: ${props.topRight};
+    border-bottom-right-radius: ${props.bottomRight};
+    border-bottom-left-radius: ${props.bottomLeft};
 
     background-color: ${props.backgroundColor};
   `}
@@ -85,10 +86,10 @@ export const StyledControlBorders = styled.div`
   ${props => css`
     border: 1px solid ${props.color};
 
-    border-top-left-radius: ${props.topLeft ? radii.small : 0};
-    border-top-right-radius: ${props.topRight ? radii.small : 0};
-    border-bottom-right-radius: ${props.bottomRight ? radii.small : 0};
-    border-bottom-left-radius: ${props.bottomLeft ? radii.small : 0};
+    border-top-left-radius: ${props.topLeft};
+    border-top-right-radius: ${props.topRight};
+    border-bottom-right-radius: ${props.bottomRight};
+    border-bottom-left-radius: ${props.bottomLeft};
 
     z-index: ${props.priority ? 2 : 1};
   `}
@@ -100,7 +101,7 @@ export const StyledControlBorders = styled.div`
     left: -1px;
     right: -1px;
     bottom: -1px;
-    border-radius: ${radii.medium};
+    border-radius: ${props => props.radius};
     position: absolute;
     display: block;
   }

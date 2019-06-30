@@ -1,9 +1,12 @@
-import { route } from 'navi'
+import { map, redirect, route } from 'navi'
 import React from 'react'
-import emailRegister from 'actions/emailRegister'
+import { useNavigation } from 'react-navi'
+
 import { StyledLink } from 'components/button'
 import CenteredCardLayout, {
-  P,
+  Greeting,
+  Instructions,
+  Issue,
   StyledFormSubmitButton,
   RelatedLinkGroup,
   RelatedLink,
@@ -12,26 +15,23 @@ import { ControlGroup, FormInputControl } from 'components/control'
 import Divider from 'components/divider'
 import { Form, FormIssue } from 'controls/form'
 import AuthLink from 'controls/authLink'
-import useNavigateAfterLogin from 'hooks/useNavigateAfterLogin'
+import useOperation from 'hooks/useOperation'
+import emailRegister from 'operations/emailRegister'
 
 function Join({ redirectTo, plan }) {
-  let navigateAfterLogin = useNavigateAfterLogin({ redirectTo, plan })
+  let navigation = useNavigation()
+  let operation = useOperation(emailRegister, {
+    onSettled: async issue => {
+      if (issue) {
+        await navigation.getRoute()
+      }
+    },
+  })
 
   return (
     <CenteredCardLayout title="Join in">
-      <Form
-        onSubmit={async value => {
-          await emailRegister(value)
-          await navigateAfterLogin()
-        }}
-        validate={emailRegister.validate}>
-        <FormIssue>
-          {message => (
-            <P variant={message && 'error'}>
-              {message || 'Every great journey begins with a single step.'}
-            </P>
-          )}
-        </FormIssue>
+      <Greeting>Every journey starts with a single step.</Greeting>
+      <Form onSubmit={operation.invoke} validate={operation.validate}>
         <ControlGroup>
           <FormInputControl label="Name" glyph="person" name="name" />
           <FormInputControl
@@ -47,33 +47,42 @@ function Join({ redirectTo, plan }) {
             type="password"
           />
         </ControlGroup>
+        <FormIssue>
+          {message => (message ? <Issue>{message}</Issue> : null)}
+        </FormIssue>
         <StyledFormSubmitButton>Join in</StyledFormSubmitButton>
       </Form>
       <RelatedLinkGroup>
-        <RelatedLink href="/login/email">Sign in</RelatedLink>
-        <RelatedLink href="/recover">Recover account</RelatedLink>
+        <RelatedLink as={AuthLink} href="/login">
+          Sign in
+        </RelatedLink>
+        <RelatedLink as={AuthLink} href="/recover">
+          Recover account
+        </RelatedLink>
       </RelatedLinkGroup>
       <Divider />
-      <P>
+      <Instructions>
         Please only join if you agree to our marvellous{' '}
-        <StyledLink as={AuthLink} href="/pages/privacy">
-          Privacy Policy
-        </StyledLink>
-        , your{' '}
-        <StyledLink as={AuthLink} href="/pages/conduct">
-          Code of Conduct
-        </StyledLink>
-        , and the{' '}
-        <StyledLink as={AuthLink} href="/pages/privacy">
-          Terms of Service
-        </StyledLink>
-        .
-      </P>
+        <StyledLink href="/pages/privacy">Privacy Policy</StyledLink>, your{' '}
+        <StyledLink href="/pages/conduct">Code of Conduct</StyledLink>, and the{' '}
+        <StyledLink href="/pages/privacy">Terms of Service</StyledLink>.
+      </Instructions>
     </CenteredCardLayout>
   )
 }
 
-export default route({
-  title: 'Join',
-  getView: ({ params }) => <Join {...params} />,
+export default map(({ context, params }) => {
+  // Only redirect automatically if the user was already logged in when they
+  // first landed at this page, as otherwise we'll want to t
+  if (context.currentUser) {
+    return redirect('/welcome')
+  }
+
+  return route({
+    data: {
+      auth: true,
+    },
+    title: 'Join',
+    view: <Join {...params} />,
+  })
 })

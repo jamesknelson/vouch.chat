@@ -1,7 +1,9 @@
 import React from 'react'
 import Img from 'react-image'
 import styled from 'styled-components/macro'
+import { useCurrentUser } from 'context'
 import { colors, focusRing } from 'theme'
+import anonymous from './anonymous.svg'
 
 const StyledAvatarImage = styled(Img)`
   border-radius: 9999px;
@@ -28,6 +30,8 @@ const StyledAvatarContainer = styled.span`
 
 export const UserAvatar = React.forwardRef(
   ({ className, hidden, style, tabIndex, ...props }, ref) => {
+    let currentUser = useCurrentUser()
+
     return (
       <StyledAvatarImage
         {...props}
@@ -45,7 +49,7 @@ export const UserAvatar = React.forwardRef(
             </StyledAvatarContainer>
           )
         }}
-        src="https://reactarmory.com/james.jpg"
+        src={currentUser.photoURL || anonymous}
       />
     )
   },

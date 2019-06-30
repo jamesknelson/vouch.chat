@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import 'styled-components/macro'
-import { colors, srOnly } from 'theme'
+import { colors, srOnly, radii } from 'theme'
 import Icon from 'components/icon'
 import useControlId from 'hooks/useControlId'
 import {
@@ -22,7 +22,18 @@ export function ControlIconLabel({ glyph, ...props }) {
   )
 }
 
-export function Control({ as, children, glyph, id, label, variant, ...props }) {
+export function Control({
+  as,
+  children,
+  glyph,
+  id,
+  label,
+  radius,
+  variant,
+  ...props
+}) {
+  radius = radii[radius] || radius || radii.small
+
   let controlId = useControlId(id)
   let controlGroupItem = useContext(ControlGroupItemContext)
   let firstRow = !controlGroupItem || controlGroupItem.firstRow
@@ -32,14 +43,14 @@ export function Control({ as, children, glyph, id, label, variant, ...props }) {
   let border =
     colors.control.border[variant] || colors.control.border['default']
   let corners = {
-    topLeft: firstRow && firstColumn,
-    topRight: firstRow && lastColumn,
-    bottomRight: lastRow && lastColumn,
-    bottomLeft: lastRow && firstColumn,
+    topLeft: firstRow && firstColumn ? radius : 0,
+    topRight: firstRow && lastColumn ? radius : 0,
+    bottomRight: lastRow && lastColumn ? radius : 0,
+    bottomLeft: lastRow && firstColumn ? radius : 0,
   }
 
   return (
-    <StyledControlWrapper {...props} style={{ ...props.style, flex }}>
+    <StyledControlWrapper as={as} {...props} style={{ ...props.style, flex }}>
       {label && (
         <label htmlFor={controlId} css={srOnly}>
           {label}
@@ -49,8 +60,13 @@ export function Control({ as, children, glyph, id, label, variant, ...props }) {
       {glyph && (
         <ControlIconLabel htmlFor={controlId} variant={variant} glyph={glyph} />
       )}
-      <StyledControlBackground as={as} backgroundColor={bg} {...corners} />
-      <StyledControlBorders color={border} priority={!!variant} {...corners} />
+      <StyledControlBackground backgroundColor={bg} {...corners} />
+      <StyledControlBorders
+        radius={radius}
+        color={border}
+        priority={!!variant}
+        {...corners}
+      />
     </StyledControlWrapper>
   )
 }

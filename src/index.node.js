@@ -6,20 +6,27 @@ import { NaviProvider, View } from 'react-navi'
 import { StripeProvider } from 'react-stripe-elements'
 import { ServerStyleSheet } from 'styled-components/macro'
 import GlobalIconFontStyle from 'components/icon/font'
+import Backend from './backend'
 import GlobalResetStyle from './reset.css'
 import routes from './routes'
+import { BackendContext } from 'context'
 
 const renderer = async (request, response) => {
-  let sheet = new ServerStyleSheet()
+  let backend, navigation, sheet
+  let template = fs.readFileSync(process.env.HTML_TEMPLATE_PATH, 'utf8')
+  let [header, footer] = template.split('%RENDERED_CONTENT%')
 
   try {
-    let navigation = createMemoryNavigation({
+    backend = new Backend()
+    navigation = createMemoryNavigation({
       context: {
+        backend,
         currentUser: undefined,
       },
       request,
       routes,
     })
+    sheet = new ServerStyleSheet()
 
     await navigation.getRoute()
 
@@ -34,30 +41,38 @@ const renderer = async (request, response) => {
     // automatically replaced by the build script.
     let body = renderToString(
       sheet.collectStyles(
-        <StripeProvider stripe={null}>
-          <NaviProvider navigation={navigation}>
-            {/*
-              Putting the global styles any deeper in the tree causes them to
-              re-render on each navigation, even on production.
-            */}
-            <GlobalResetStyle />
-            <GlobalIconFontStyle />
+        <BackendContext.Provider value={backend}>
+          <StripeProvider stripe={null}>
+            <NaviProvider navigation={navigation}>
+              {/*
+                Putting the global styles any deeper in the tree causes them to
+                re-render on each navigation, even on production.
+              */}
+              <GlobalResetStyle />
+              <GlobalIconFontStyle />
 
-            <View />
-          </NaviProvider>
-        </StripeProvider>,
+              <View />
+            </NaviProvider>
+          </StripeProvider>
+        </BackendContext.Provider>,
       ),
     )
     let styleTags = sheet.getStyleTags()
-    let template = fs.readFileSync(process.env.HTML_TEMPLATE_PATH, 'utf8')
-    let [header, footer] = template.split('%RENDERED_CONTENT%')
     let html = header + styleTags + body + footer
     response.send(html)
   } catch (error) {
+    let html
     console.error(error)
-    response.status(500).send('Error')
+    if (process.env.NODE_ENV === 'production') {
+      html = `<h1>500 Error</h1>`
+    } else {
+      html = `<h1>500 Error</h1><pre>${String(error)}</pre>` + header + footer
+    }
+    response.status(500).send(html)
   } finally {
     sheet.seal()
+    backend.dispose()
+    navigation.dispose()
   }
 }
 

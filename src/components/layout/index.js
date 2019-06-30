@@ -10,7 +10,7 @@ import { AuthButtonLink, ButtonLink } from 'components/button'
 import Card from 'components/card'
 import Icon from 'components/icon'
 import { Menu, MenuDivider, MenuLink } from 'components/menu'
-import SearchInput from 'components/searchInput'
+import SearchForm from 'components/searchForm'
 import {
   PopupContext,
   PopupProvider,
@@ -343,7 +343,7 @@ const Layout = props => {
   let user = useCurrentUser()
 
   let searchInput = (
-    <SearchInput
+    <SearchForm
       label="Search"
       css={css`
         width: 100%;
@@ -364,7 +364,7 @@ const Layout = props => {
           </ButtonLink>
         </TabletPlus>
       </>
-    ) : (
+    ) : route.data.auth ? null : (
       <>
         <AuthButtonLink
           href="/login"
@@ -431,35 +431,37 @@ const Layout = props => {
         />
         {rhs}
       </Header>
-      <Navbar>
-        <PhoneOnly
-          css={css`
-            display: flex;
-            flex: 1;
-          `}>
-          <NavLink href="/" title="Home" exact>
-            <Icon glyph="brand" size="1.5rem" />
+      {user && (
+        <Navbar>
+          <PhoneOnly
+            css={css`
+              display: flex;
+              flex: 1;
+            `}>
+            <NavLink href="/" title="Home" exact>
+              <Icon glyph="brand" size="1.5rem" />
+            </NavLink>
+          </PhoneOnly>
+          <PhoneOnly
+            css={css`
+              display: flex;
+              flex: 1;
+            `}>
+            <NavLink href="/search" title="Search">
+              <Icon glyph="search" size="1.5rem" />
+            </NavLink>
+          </PhoneOnly>
+          <NavLink href="/notifications" title="Notifications">
+            <Icon glyph="bell" size="1.5rem" />
           </NavLink>
-        </PhoneOnly>
-        <PhoneOnly
-          css={css`
-            display: flex;
-            flex: 1;
-          `}>
-          <NavLink href="/search" title="Search">
-            <Icon glyph="search" size="1.5rem" />
+          <NavLink href="/messages" title="Messages">
+            <Icon glyph="envelope" size="1.5rem" />
           </NavLink>
-        </PhoneOnly>
-        <NavLink href="/notifications" title="Notifications">
-          <Icon glyph="bell" size="1.5rem" />
-        </NavLink>
-        <NavLink href="/messages" title="Messages">
-          <Icon glyph="envelope" size="1.5rem" />
-        </NavLink>
-        <NavLink href="/watch" title="Watch">
-          <Icon glyph="glasses" size="1.5rem" />
-        </NavLink>
-      </Navbar>
+          <NavLink href="/watch" title="Watch">
+            <Icon glyph="glasses" size="1.5rem" />
+          </NavLink>
+        </Navbar>
+      )}
       <Main>{props.children}</Main>
     </Wrapper>
   )
