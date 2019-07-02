@@ -42,6 +42,17 @@ export default class CurrentUser {
               deferred.reject()
             }
             if (data) {
+              // Wait until the profile photo has loaded
+              let photoURL = data.photoURL
+              if (photoURL) {
+                await new Promise((resolve, reject) => {
+                  let img = new Image()
+                  img.onload = resolve
+                  img.onerror = reject
+                  img.src = photoURL
+                })
+              }
+
               deferred.resolve({
                 ...data,
                 ...auth.currentUser,

@@ -1,4 +1,4 @@
-import { map, mount, redirect, route, lazy } from 'navi'
+import { compose, lazy, map, mount, redirect, route, withData } from 'navi'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigation } from 'react-navi'
 
@@ -75,7 +75,7 @@ function Login(props) {
     <CenteredCardLayout title="Sign in">
       <Greeting>I'll vouch for you.</Greeting>
       <StyledAuthButtonLink
-        glyph="envelope"
+        glyph="envelope1"
         href="/login/email"
         disabled={disabled}
         outline={disabled || previousLoginProvider !== undefined}>
@@ -153,7 +153,7 @@ function EmailLogin(props) {
         <ControlGroup>
           <FormInputControl
             label="Email"
-            glyph="envelope"
+            glyph="envelope1"
             name="email"
             type="email"
           />
@@ -191,39 +191,38 @@ function EmailLogin(props) {
   )
 }
 
-export default map(async ({ context, params }) => {
-  let { backend, currentUser } = context
+export default compose(
+  withData({
+    auth: true,
+  }),
+  map(async ({ context, params }) => {
+    let { backend, currentUser } = context
 
-  if (currentUser === undefined) {
-    return lazy(() => import('./loading'))
-  } else if (currentUser) {
-    return redirect(params.redirectTo || '/', { exact: false })
-  } else {
-    let previousLoginProviderDoc = backend.deviceConfig.previousLoginProvider
+    if (currentUser === undefined) {
+      return lazy(() => import('./loading'))
+    } else if (currentUser) {
+      return redirect(params.redirectTo || '/', { exact: false })
+    } else {
+      let previousLoginProviderDoc = backend.deviceConfig.previousLoginProvider
 
-    return mount({
-      '/': route({
-        data: {
-          auth: true,
-        },
-        title: 'Sign in',
-        view: (
-          <Login
-            {...params}
-            previousLoginProvider={{
-              doc: previousLoginProviderDoc,
-              initialSnapshot: await previousLoginProviderDoc.get(),
-            }}
-          />
-        ),
-      }),
-      '/email': route({
-        data: {
-          auth: true,
-        },
-        title: 'Sign in with Email',
-        view: <EmailLogin {...params} />,
-      }),
-    })
-  }
-})
+      return mount({
+        '/': route({
+          title: 'Sign in',
+          view: (
+            <Login
+              {...params}
+              previousLoginProvider={{
+                doc: previousLoginProviderDoc,
+                initialSnapshot: await previousLoginProviderDoc.get(),
+              }}
+            />
+          ),
+        }),
+        '/email': route({
+          title: 'Sign in with Email',
+          view: <EmailLogin {...params} />,
+        }),
+      })
+    }
+  }),
+)

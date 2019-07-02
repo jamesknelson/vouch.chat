@@ -6,7 +6,7 @@ import { Button } from './styles'
 
 export { Button, StyledLink } from './styles'
 
-export const AuthButtonLink = props => <ButtonLink as={AuthLink} {...props} />
+export const AuthLinkButton = props => <ButtonLink as={AuthLink} {...props} />
 
 export const ButtonLink = ({
   as = Link,
@@ -48,5 +48,17 @@ export function FormSubmitButton(props) {
     />
   )
 }
+
+export const LoginButton = props => (
+  <AuthLinkButton {...props} href="/login" outline>
+    Sign In
+  </AuthLinkButton>
+)
+
+export const RegisterButton = props => (
+  <AuthLinkButton {...props} href="/join">
+    Join
+  </AuthLinkButton>
+)
 
 export default Button

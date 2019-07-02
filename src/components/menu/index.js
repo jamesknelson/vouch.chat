@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-navi'
 import styled from 'styled-components/macro'
-import { colors, focusRing } from 'theme'
+import { colors, focusRing, shadows } from 'theme'
 
 const MenuContext = React.createContext({})
 
@@ -21,9 +21,10 @@ const StyledMenuItem = styled.div`
   position: relative;
   text-align: left;
   width: 100%;
+  white-space: nowrap;
 
-  &:hover {
-    background-color: ${colors.control.bg.highlight};
+  &:hover::after {
+    box-shadow: ${shadows.focus(colors.ink.light)};
   }
 
   ${focusRing('::after')}

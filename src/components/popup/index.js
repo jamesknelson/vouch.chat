@@ -89,6 +89,7 @@ export function Popup({ children, className, style, id, ...props }) {
               style={style}
               id={id}
               ref={ref}
+              data-placement={placement}
               transitionProps={transitionProps}
               position={position}
               top={top}

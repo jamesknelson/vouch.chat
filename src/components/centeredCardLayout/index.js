@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components/macro'
 import {
-  AuthButtonLink,
+  AuthLinkButton,
   Button,
   ButtonLink,
   FormSubmitButton,
@@ -20,7 +20,7 @@ export const StyledFormSubmitButton = styled(FormSubmitButton)`
   width: 100%;
 `
 
-export const StyledAuthButtonLink = styled(AuthButtonLink)`
+export const StyledAuthButtonLink = styled(AuthLinkButton)`
   margin: 1rem 0;
   width: 100%;
 `

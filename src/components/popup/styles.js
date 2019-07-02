@@ -25,8 +25,6 @@ export const PopupArrow = styled.div`
   }
   &::after {
     border-width: 7px;
-    margin-left: 1px;
-    margin-top: 2px;
   }
 
   &[data-placement*='bottom'] {
@@ -43,6 +41,8 @@ export const PopupArrow = styled.div`
     &::after {
       border-color: transparent transparent ${colors.structure.bg} transparent;
       z-index: 2;
+      margin-left: 1px;
+      margin-top: 2px;
     }
   }
   &[data-placement*='top'] {
@@ -57,13 +57,22 @@ export const PopupArrow = styled.div`
     }
   }
   &[data-placement*='right'] {
+    top: 0;
     left: 0;
-    margin-left: -0.9em;
-    height: 3em;
-    width: 1em;
+    margin-top: -0.75rem;
+    margin-left: -1rem;
+    height: 0.5rem;
+    width: 0.5rem;
     &::before {
-      border-width: 1.5em 1em 1.5em 0;
-      border-color: transparent #232323 transparent transparent;
+      border-color: transparent ${colors.structure.border} transparent
+        transparent;
+      z-index: 1;
+    }
+    &::after {
+      border-color: transparent ${colors.structure.bg} transparent transparent;
+      z-index: 2;
+      margin-top: 1px;
+      margin-left: 2px;
     }
   }
   &[data-placement*='left'] {
@@ -85,7 +94,14 @@ const StyledPopupBox = styled(AnimatedCard)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 0.5rem 0;
+  &[data-placement*='bottom'],
+  &[data-placement*='top'] {
+    margin: 0.5rem 0;
+  }
+  &[data-placement*='left'],
+  &[data-placement*='right'] {
+    margin: 0 0.5rem;
+  }
   top: 0;
   left: 0;
   z-index: 3;

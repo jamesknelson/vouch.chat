@@ -8,6 +8,7 @@ import anonymous from './anonymous.svg'
 const StyledAvatarImage = styled(Img)`
   border-radius: 9999px;
   max-height: 100%;
+  max-width: 100%;
 `
 
 const StyledLoader = styled.span`
@@ -19,7 +20,9 @@ const StyledLoader = styled.span`
 `
 
 const StyledAvatarContainer = styled.span`
-  display: inline-block;
+  align-items: center;
+  display: flex;
+  justify-content: center;
   height: ${props => props.size};
   width: ${props => props.size};
   position: relative;
@@ -29,9 +32,7 @@ const StyledAvatarContainer = styled.span`
 `
 
 export const UserAvatar = React.forwardRef(
-  ({ className, hidden, style, tabIndex, ...props }, ref) => {
-    let currentUser = useCurrentUser()
-
+  ({ className, hidden, style, tabIndex, user, ...props }, ref) => {
     return (
       <StyledAvatarImage
         {...props}
@@ -49,7 +50,7 @@ export const UserAvatar = React.forwardRef(
             </StyledAvatarContainer>
           )
         }}
-        src={currentUser.photoURL || anonymous}
+        src={user.photoURL || anonymous}
       />
     )
   },

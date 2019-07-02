@@ -99,13 +99,13 @@ export const StyledSolidButton = styled(StyledButtonBase)`
   ${props => css`
     background-color: ${props.color};
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.2),
-      2px 2px 2px rgba(255, 255, 255, 0.12) inset,
-      -2px -2px 2px rgba(0, 0, 0, 0.08) inset;
+      1px 1px 1px rgba(255, 255, 255, 0.12) inset,
+      -1px -1px 1px rgba(0, 0, 0, 0.08) inset;
     color: ${colors.text.light};
     :active {
       box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.08),
-        -2px -2px 2px rgba(255, 255, 255, 0.2) inset,
-        2px 2px 2px rgba(0, 0, 0, 0.1) inset;
+        -1px -1px 1px rgba(255, 255, 255, 0.2) inset,
+        1px 1px 1px rgba(0, 0, 0, 0.1) inset;
     }
   `}
 `

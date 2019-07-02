@@ -11,21 +11,22 @@ export const breakpoints = {
 export const colors = {
   structure: {
     bg: '#FFFFFF',
-    wash: '#F5F7FA',
+    wash: '#F5F7F9',
     border: '#ECEEF5',
     divider: '#F6F7F8',
   },
 
   ink: {
     black: '#102030',
-    mid: '#334455',
+    mid: '#606672',
+    light: '#d8dbde',
   },
 
   control: {
     bg: {
       default: '#FBFCFF',
       warning: '#FFFBFD',
-      highlight: '#F2F7FF',
+      highlight: rgba('#4488dd', 0.05),
     },
     border: {
       default: '#E0E8EC',
@@ -138,7 +139,7 @@ export const focusRing = (
   return css`
     ${selector} {
       content: ' ';
-      transition: box-shadow 200ms ${easings.easeOut};
+      transition: box-shadow 250ms ${easings.easeOut};
       top: calc(0px - ${verticalPadding || padding});
       left: calc(0px - ${horizontalPadding || padding});
       right: calc(0px - ${horizontalPadding || padding});
