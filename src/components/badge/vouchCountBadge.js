@@ -80,7 +80,7 @@ export const VouchCountBadgeWrapper = ({ children, count, ...props }) => {
   })
   let countAnimationProps = useSpring({
     config: {
-      tension: 50,
+      tension: 100,
     },
     count,
   })

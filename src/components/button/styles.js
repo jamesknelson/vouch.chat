@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-navi'
 import { animated, useSpring, useTransition } from 'react-spring'
 import styled, { css } from 'styled-components/macro'
-import { colors, easings, focusRing, radii, shadows } from 'theme'
+import { colors, easings, focusRing, radii, shadows, media } from 'theme'
 import Icon from 'components/icon'
 import { Spinner } from 'components/loading'
 
@@ -61,6 +61,10 @@ export const StyledButtonBase = styled.button`
       : css`
           font-size: 0.9rem;
           height: 2.5rem;
+
+          ${media.phoneOnly`
+            height: 2.25rem
+          `}
         `}
 
   ${props =>

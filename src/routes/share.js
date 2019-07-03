@@ -1,8 +1,9 @@
-import { route } from 'navi'
+import { compose, route, withTitle } from 'navi'
 import React from 'react'
 import { css } from 'styled-components/macro'
 import Card from 'components/card'
 import { colors } from 'theme'
+import authenticated from 'utils/authenticated'
 
 function Pen(props) {
   return (
@@ -27,7 +28,11 @@ function Pen(props) {
   )
 }
 
-export default route({
-  title: 'Pen',
-  view: <Pen />,
-})
+export default compose(
+  withTitle('Share'),
+  authenticated(
+    route({
+      view: <Pen />,
+    }),
+  ),
+)

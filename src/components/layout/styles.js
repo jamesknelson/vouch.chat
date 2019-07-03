@@ -3,10 +3,11 @@ import React from 'react'
 import { Link } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 import { colors, dimensions, easings, focusRing, media, shadows } from 'theme'
+import { Avatar } from 'components/avatar'
 import { BrandImage } from 'components/brand'
 import Icon from 'components/icon'
+import { PhoneOnly, TabletPlus, phoneOnly, tabletPlus } from 'components/media'
 import { MenuLink } from 'components/menu'
-import { Avatar } from 'components/avatar'
 
 // A helper for defining flexbox attributes
 const flex = (justify, align, flex) => css`
@@ -17,17 +18,11 @@ const flex = (justify, align, flex) => css`
   ${justify && `justify-content: ${justify};`}
 `
 
-export const TabletPlus = styled.div`
-  ${flex('center', 'center', 1)}
-  ${media.phoneOnly`
-    display: none;
-  `}
+export const FlexPhoneOnly = styled(PhoneOnly)`
+  ${flex('center', 'stretch', 1)}
 `
-export const PhoneOnly = styled.div`
-  ${flex('center', 'center', 1)}
-  ${media.tabletPlus`
-    display: none;
-  `}
+export const FlexTabletPlus = styled(TabletPlus)`
+  ${flex('center', 'stretch', 1)}
 `
 
 export const MenuHeader = ({ displayName, username, photoURL }) => (
@@ -72,45 +67,81 @@ export const MenuHeader = ({ displayName, username, photoURL }) => (
   </MenuLink>
 )
 
-export const StyledWrapper = styled.div`
+const StyledWrapper = styled.div`
   height: 100%;
   min-height: 100%;
 `
+export const PhoneWrapper = phoneOnly(StyledWrapper)
+export const TabletPlusWrapper = tabletPlus(StyledWrapper)
 
-export const StyledNavbar = styled.nav`
+export const StyledPhoneHeaderOverlay = styled.header`
+  ${flex('space-between', 'center')}
+
+  height: ${dimensions.bar};
+  width: 100%;
+  position: ${props => (props.relative ? 'relative' : 'fixed')};
+  top: 0;
+  z-index: 10;
+  left: 0;
+  padding: 0 1rem 0 0.75rem;
+  transition: transform 200ms ${easings.easeOut};
+  transform: translateY(${props => (props.hide ? `-${dimensions.bar}` : 0)});
+`
+
+export const StyledPhoneNavbar = styled.nav`
+  ${flex('space-between', 'stretch')}
+
+  background-color: ${colors.structure.bg};
+  box-shadow: ${shadows.card()};
+  border-bottom: 1px solid ${colors.structure.border};
+
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: calc(${dimensions.bar} * 7 / 4);
+  z-index: 3;
+
+  transition: transform 200ms ${easings.easeInOut};
+  transform: translateY(
+    ${props =>
+      props.hide
+        ? `calc(-${dimensions.bar} * 7 / 4)`
+        : props.leaveTitleSpace
+        ? 0
+        : `-${dimensions.bar}`}
+  );
+
+  padding: ${dimensions.bar} 0.5rem 0;
+  ${media.mediumPhonePlus`
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  `}
+`
+
+export const StyledTabletPlusNavbar = styled.nav`
   background-color: ${colors.structure.bg};
   box-shadow: ${shadows.card()};
   position: fixed;
   top: 0;
   z-index: 3;
-
-  ${media.phoneOnly`
-    ${flex('stretch')}
-    border-bottom: 1px solid ${colors.structure.border};
-    height: ${dimensions.bar};
-    width: 100%;
-  `}
-  ${media.tabletPlus`
-    border-right: 1px solid ${colors.structure.border};
-    height: 100%;
-    width: ${dimensions.bar};
-  `}
+  bottom: 0;
+  left: 0;
+  border-right: 1px solid ${colors.structure.border};
+  width: ${dimensions.bar};
+  height: 100%;
 `
 
-export const NavbarCorner = styled.div`
+export const NavbarCorner = styled(TabletPlus)`
   ${flex('center', 'center', 1)}
-  background-color: ${colors.structure.bg};
+  position: relative;
   border-bottom: 1px solid ${colors.structure.divider};
   color: ${colors.ink.black};
   height: ${dimensions.bar};
   left: 0;
   margin-bottom: 1rem;
   top: 0;
+  width: 100%;
   z-index: 100;
-
-  ${media.phoneOnly`
-    display: none;
-  `}
 `
 
 export const StyledNavbarIcon = styled(Icon)`
@@ -140,10 +171,13 @@ StyledNavbarIcon.defaultProps = {
 }
 
 const NavbarLink = React.forwardRef(
-  ({ children, faded, focusRingSize, glyph, ...rest }, ref) => (
-    <Link {...rest} activeClassName="NavbarLink-active" ref={ref}>
+  (
+    { children, faded, focusRingSize, glyph, hideActiveIndicator, ...rest },
+    ref,
+  ) => (
+    <Link activeClassName="NavbarLink-active" {...rest} ref={ref}>
       {children}
-      <span className="NavbarLink-activeIndicator" />
+      {!hideActiveIndicator && <span className="NavbarLink-activeIndicator" />}
     </Link>
   ),
 )
@@ -151,7 +185,7 @@ const NavbarLink = React.forwardRef(
 const navbarFocusRing = css`
   ${focusRing('::after', { radius: '9999px' })}
   ::after {
-    ${({ focusRingSize = '2.5rem' }) => css`
+    ${({ focusRingSize = '2.25rem' }) => css`
       height: ${focusRingSize};
       width: ${focusRingSize};
       left: calc(50% - ${focusRingSize} / 2);
@@ -221,53 +255,52 @@ export const StyledNavbarWatched = styled.div`
   `}
 `
 
-export const StyledHeader = styled.header`
-  ${flex('center', 'center')}
-  background-color: ${colors.structure.bg};
-  box-shadow: ${shadows.card()};
+export const StyledTabletPlusHeader = styled(TabletPlus)`
+  ${flex('space-between', 'center')}
   height: ${dimensions.bar};
-  position: fixed;
-  top: 0;
-  z-index: 10;
-
-  left: 0;
-  padding: 1rem 0 1rem 0;
   width: 100%;
-  ${media.tabletPlus`
-    border-bottom: 1px solid ${colors.structure.border};
-    left: ${dimensions.bar};
-    padding: 1rem;
-    width: calc(100% - ${dimensions.bar});
-  `}
+  padding: 1rem;
 `
-
-export const HeaderBrandTextLink = () => (
-  <Link
-    css={css`
-      display: flex;
-      flex: 1;
-
-      ${focusRing('::after')}
-    `}>
-    <BrandImage />
-  </Link>
-)
-
-export const HeaderBrandLogoLink = styled(Link)``
 
 export const StyledHeaderBackButton = styled(Link)``
 
+export const HeaderBrandTextLink = () => (
+  <div
+    css={css`
+      /* Insert a flex box to keep other header items aligned */
+      flex: 1;
+    `}>
+    <Link
+      href="/"
+      css={css`
+        position: relative;
+        display: flex;
+        flex: 0;
+
+        ${focusRing('::after')}
+      `}>
+      <BrandImage
+        css={css`
+          height: 1rem;
+        `}
+      />
+    </Link>
+  </div>
+)
+
 export const StyledHeaderTitle = styled.h1`
+  flex: 1;
   font-size: 1.2rem;
   font-weight: 700;
-  margin-left: 0.5rem;
+`
+
+export const StyledHeaderActions = styled.div`
+  ${flex('flex-end', 'center', 1)}
 `
 
 export const StyledMain = styled.main`
   ${media.phoneOnly`
-    ${StyledNavbar} ~ & {
-      padding-top: calc(${dimensions.bar});
-    }
+    padding-top: calc(${dimensions.bar} * 7 / 4);
   `}
   ${media.tabletPlus`
     padding-left: ${dimensions.bar};

@@ -32,7 +32,7 @@ const StyledAvatarContainer = styled.span`
 `
 
 export const Avatar = React.forwardRef(
-  ({ className, hidden, style, tabIndex, photoURL, ...props }, ref) => (
+  ({ className, hidden, style, tabIndex, photoURL, size, ...props }, ref) => (
     <StyledAvatarImage
       {...props}
       loader={<StyledLoader />}
@@ -41,7 +41,7 @@ export const Avatar = React.forwardRef(
           <StyledAvatarContainer
             className={className}
             hidden={hidden}
-            size={props.size || '2.5rem'}
+            size={size || '2.5rem'}
             style={style}
             tabIndex={tabIndex}
             ref={ref}>
@@ -55,5 +55,5 @@ export const Avatar = React.forwardRef(
 )
 
 export const UserAvatar = React.forwardRef(({ user, ...props }, ref) => (
-  <Avatar photoURL={user.photoURL} />
+  <Avatar photoURL={user.photoURL} {...props} />
 ))

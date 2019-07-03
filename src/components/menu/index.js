@@ -28,7 +28,7 @@ const StyledMenuItem = styled.div`
     box-shadow: ${shadows.focus(colors.ink.light)};
   }
 
-  ${focusRing('::after')}
+  ${focusRing('::after', { padding: '-0.25rem' })}
 `
 
 export const MenuDivider = styled.hr`

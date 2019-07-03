@@ -2,17 +2,21 @@ import { rgba } from 'polished'
 import React, { useState, useRef } from 'react'
 import { animated, interpolate, useSpring } from 'react-spring'
 import styled, { css } from 'styled-components/macro'
-import { colors } from 'theme'
+import { colors, mediaQueries } from 'theme'
 import { UserAvatar } from 'components/avatar'
-import Icon from 'components/icon'
 import { Spinner } from 'components/loading'
 import { CurrentUserVouchCountWrapper } from 'components/badge'
+import useMediaQuery from 'hooks/useMedia'
 import { StyledNavbarLink } from './styles'
+import brandLetter from './brand-letter.svg'
+import { useLoadingRoute } from 'react-navi'
 
 const StyledDisc = styled.div`
   display: flex;
-  height: 2.5rem;
-  width: 2.5rem;
+  ${props => css`
+    height: ${props.size};
+    width: ${props.size};
+  `}
 `
 const Disc = props => {
   let lastUserRef = useRef(props.currentUser)
@@ -22,18 +26,18 @@ const Disc = props => {
   let user = lastUserRef.current
 
   return (
-    <StyledDisc style={{ transform: props.transform }}>
+    <StyledDisc size={props.size} style={{ transform: props.transform }}>
       {user && props.side === 'avatar' ? (
-        <UserAvatar user={user} />
+        <UserAvatar user={user} size={props.size} />
       ) : (
-        <StyledLogoDisc>
-          <Icon
-            glyph="brand-letter"
-            size="1.75rem"
+        <StyledLogoDisc size={props.size}>
+          <img
+            alt="Logo"
+            src={brandLetter}
             css={css`
-              color: transparent;
-              margin-top: 6px;
-              text-shadow: 1px 1px 0px ${colors.structure.bg};
+              padding: 0.33rem;
+              width: ${props.size};
+              height: ${props.size};
             `}
           />
         </StyledLogoDisc>
@@ -59,13 +63,19 @@ const StyledCutout = styled.div`
   box-shadow: 0 0 2px ${rgba(0, 0, 0, 0.05)} inset,
     0 0 2px 0px ${rgba(0, 0, 0, 0.1)} inset;
   display: flex;
-  height: calc(2.5rem + 6px);
   justify-content: center;
   position: relative;
-  width: calc(2.5rem + 6px);
+  ${props => css`
+    height: calc(${props.size} + 6px);
+    width: calc(${props.size} + 6px);
+  `}
 `
 
-const BrandAvatarFlipper = props => {
+const BrandAvatarFlipper = ({
+  currentUser,
+  sizeRem = 3,
+  badgeSizeRem = 1.25,
+}) => {
   let config = {
     mass: 1.5,
     tension: 180,
@@ -74,18 +84,23 @@ const BrandAvatarFlipper = props => {
   let [flickAngle, setFlickAngle] = useState(0)
   let transitionProps = useSpring({
     config,
-    angle: props.currentUser ? Math.PI : 0,
+    angle: currentUser ? Math.PI : 0,
   })
   let flickProps = useSpring({
     config,
     angle: flickAngle,
   })
+  let isPhone = useMediaQuery(mediaQueries.phoneOnly, true)
+  let loadingRoute = useLoadingRoute()
+
+  let isLoading = !!loadingRoute || currentUser === undefined
 
   return (
     <StyledNavbarLink
       exact
-      href={props.currentUser ? '/james' : '/'}
-      focusRingSize="2.75rem"
+      hideActiveIndicator={isPhone}
+      href={currentUser ? '/james' : '/'}
+      focusRingSize={`${sizeRem - 0.25}rem`}
       onTouchStart={() => {
         setFlickAngle(Math.PI / 6)
       }}
@@ -106,20 +121,20 @@ const BrandAvatarFlipper = props => {
         width: 100%;
       `}>
       <Spinner
-        active={props.currentUser === undefined}
+        active={isLoading}
         backgroundColor={colors.structure.bg}
         color={colors.ink.black}
         css={css`
           position: absolute;
           z-index: 0;
-          height: 3rem;
-          width: 3rem;
+          height: ${sizeRem}rem;
+          width: ${sizeRem}rem;
         `}
       />
-      <StyledCutout>
-        <CurrentUserVouchCountWrapper>
+      <StyledCutout size={sizeRem - 0.5 + 'rem'}>
+        <CurrentUserVouchCountWrapper size={`${badgeSizeRem}rem`}>
           <AnimatedDisc
-            currentUser={props.currentUser}
+            currentUser={currentUser}
             transform={interpolate(
               [transitionProps.angle, flickProps.angle],
               (transitionAngle, flickAngle) =>
@@ -133,11 +148,12 @@ const BrandAvatarFlipper = props => {
                   Math.round((transitionAngle + flickAngle) / Math.PI) % 2 === 1
 
                 // Is there an avatar to show?
-                let hasAvatar = !!(props.currentUser || transitionAngle > 0)
+                let hasAvatar = !!(currentUser || transitionAngle > 0)
 
                 return front && hasAvatar ? 'avatar' : 'brand'
               },
             )}
+            size={sizeRem - 0.5 + 'rem'}
           />
         </CurrentUserVouchCountWrapper>
       </StyledCutout>

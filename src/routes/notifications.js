@@ -1,5 +1,6 @@
-import { route } from 'navi'
+import { compose, route, withTitle } from 'navi'
 import React from 'react'
+import authenticated from 'utils/authenticated'
 
 function Notifications(props) {
   return (
@@ -9,7 +10,11 @@ function Notifications(props) {
   )
 }
 
-export default route({
-  title: 'Notifications',
-  view: <Notifications />,
-})
+export default compose(
+  withTitle('Alerts'),
+  authenticated(
+    route({
+      view: <Notifications />,
+    }),
+  ),
+)

@@ -49,7 +49,6 @@ function Login(props) {
   )
   useEffect(() =>
     props.previousLoginProvider.doc.onSnapshot(next => {
-      console.log('next', next)
       setPreviousLoginProvider(next.data())
     }),
   )
@@ -73,7 +72,11 @@ function Login(props) {
 
   return (
     <CenteredCardLayout title="Sign in">
-      <Greeting>I'll vouch for you.</Greeting>
+      <Greeting>
+        {props.required !== undefined
+          ? "You'll need to login to access that feature."
+          : "I'll vouch for you."}
+      </Greeting>
       <StyledAuthButtonLink
         glyph="envelope1"
         href="/login/email"

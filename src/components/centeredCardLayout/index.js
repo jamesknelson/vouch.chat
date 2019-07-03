@@ -8,6 +8,7 @@ import {
   StyledLink,
 } from 'components/button'
 import Card from 'components/card'
+import { Header } from 'components/layout'
 import { colors, dimensions, media } from 'theme'
 
 export const StyledButton = styled(Button)`
@@ -86,43 +87,52 @@ export const Title = styled.h1`
 `
 
 export const CenteredCardLayout = ({ children, title, ...props }) => (
-  <div
-    {...props}
-    css={css`
-      align-items: stretch;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      justify-content: stretch;
-      padding: 2rem;
-      ${media.tabletPlus`
-        padding: 4rem 1rem 1rem;
-      `}
-    `}>
+  <>
+    <Header />
     <div
+      {...props}
       css={css`
+        align-items: stretch;
+        display: flex;
+        flex-direction: column;
         flex-grow: 1;
-        max-width: ${dimensions.narrowCard};
-        width: 100%;
-        margin: 0 auto;
-        position: relative;
+        justify-content: stretch;
+        ${media.phoneOnly`
+          padding: 0 1rem;
+          margin-top: -6rem;
+        `}
+        ${media.tabletPlus`
+          padding: 1rem 1rem 1rem;
+        `}
       `}>
-      <Card
-        radius="medium"
+      <div
         css={css`
-          font-size: 90%;
-          padding: 2rem 1.5rem;
-          text-align: center;
-
-          ${media.mediumPhonePlus`
-            padding: 2rem 3rem;
-          `}
+          flex-grow: 1;
+          max-width: ${dimensions.narrowCard};
+          width: 100%;
+          margin: 0 auto;
+          position: relative;
         `}>
-        <Title>{title}</Title>
-        {children}
-      </Card>
+        <Card
+          radius="medium"
+          css={css`
+            font-size: 90%;
+            padding: 2rem 1.5rem;
+            text-align: center;
+
+            ${media.mediumPhonePlus`
+              padding: 2rem 2rem;
+            `}
+            ${media.tabletPlus`
+              padding: 2rem 3rem;
+            `}
+          `}>
+          <Title>{title}</Title>
+          {children}
+        </Card>
+      </div>
     </div>
-  </div>
+  </>
 )
 
 export default CenteredCardLayout

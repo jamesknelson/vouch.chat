@@ -1,7 +1,10 @@
 import React from 'react'
+import { createPortal } from 'react-dom'
 import { animated, useTransition } from 'react-spring'
 import styled from 'styled-components/macro'
+
 import Card from 'components/card'
+import { colors } from 'theme'
 
 const StyledSidebarCard = styled(animated(Card))`
   position: fixed;
@@ -22,6 +25,15 @@ const StyledSidebarBackdrop = styled(animated.div)`
   z-index: 98;
 `
 
+const StyledCloseButton = styled.button`
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0.5rem 1rem 0;
+  color: ${colors.ink.light};
+  background-color: transparent;
+  border-width: 0;
+`
+
 // Prevents events from passing through to the sidebar while it is still
 // being animated. This is important on iPhone where a press on the trigger
 // can cause a click on a newly revealed sidebar link immediately afterwards.
@@ -35,7 +47,7 @@ const StyledSidebarMask = styled.div`
 `
 
 const Sidebar = React.forwardRef(
-  ({ children, open, side = 'right', ...rest }, ref) => {
+  ({ children, open, onClose, side = 'right', ...rest }, ref) => {
     let negate = side === 'left' ? '-' : ''
     let transitions = useTransition(open, null, {
       config: { tension: 300, mass: 0.5 },
@@ -46,7 +58,8 @@ const Sidebar = React.forwardRef(
 
     return transitions.map(
       ({ item, props: { opacity, transform }, key, state }) =>
-        item && (
+        item &&
+        createPortal(
           <React.Fragment key={key}>
             <StyledSidebarBackdrop
               style={{
@@ -62,10 +75,12 @@ const Sidebar = React.forwardRef(
                 transform,
               }}
               {...rest}>
+              <StyledCloseButton onClick={onClose}>&times;</StyledCloseButton>
               {children}
               {state !== 'update' && <StyledSidebarMask />}
             </StyledSidebarCard>
-          </React.Fragment>
+          </React.Fragment>,
+          document.body,
         ),
     )
   },

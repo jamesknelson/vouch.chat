@@ -72,17 +72,26 @@ export const easings = {
 }
 
 const mediaFactory = query => (...args) => css`
-  @media screen and (${query}) {
+  @media screen and ${query} {
     ${css.apply(null, args)}
   }
 `
 
+export const mediaQueries = {
+  smallPhoneOnly: `(max-width: ${breakpoints.mediumPhonePlus - 1}px)`,
+  phoneOnly: `(max-width: ${breakpoints.tabletPlus - 1}px)`,
+  mediumPhonePlus: `(min-width: ${breakpoints.mediumPhonePlus}px)`,
+  tabletPlus: `(min-width: ${breakpoints.tabletPlus}px)`,
+  laptopPlus: `(min-width: ${breakpoints.laptopPlus}px)`,
+  widescreenPlus: `(min-width: ${breakpoints.widescreenPlus}px)`,
+}
 export const media = {
-  phoneOnly: mediaFactory(`max-width: ${breakpoints.tabletPlus - 1}px`),
-  mediumPhonePlus: mediaFactory(`min-width: ${breakpoints.mediumPhonePlus}px`),
-  tabletPlus: mediaFactory(`min-width: ${breakpoints.tabletPlus}px`),
-  laptopPlus: mediaFactory(`min-width: ${breakpoints.laptopPlus}px`),
-  widescreenPlus: mediaFactory(`min-width: ${breakpoints.widescreenPlus}px`),
+  smallPhoneOnly: mediaFactory(mediaQueries.smallPhoneOnly),
+  phoneOnly: mediaFactory(mediaQueries.phoneOnly),
+  mediumPhonePlus: mediaFactory(mediaQueries.mediumPhonePlus),
+  tabletPlus: mediaFactory(mediaQueries.tabletPlus),
+  laptopPlus: mediaFactory(mediaQueries.laptopPlus),
+  widescreenPlus: mediaFactory(mediaQueries.widescreenPlus),
 }
 
 export const radii = {

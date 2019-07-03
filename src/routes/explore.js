@@ -19,6 +19,6 @@ function Search(props) {
 }
 
 export default route({
-  title: 'Search',
+  title: 'Community',
   view: <Search />,
 })

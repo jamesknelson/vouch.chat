@@ -1,27 +1,51 @@
-import { route } from 'navi'
+import { compose, route, withTitle } from 'navi'
 import React from 'react'
 import { css } from 'styled-components/macro'
+import { ButtonLink } from 'components/button'
 import Card from 'components/card'
+import { Header } from 'components/layout'
 import { colors } from 'theme'
+import authenticated from 'utils/authenticated'
 
 function Messages(props) {
   return (
     <div>
+      <Header />
       <Card
         css={css`
           color: ${colors.text};
           margin: 1rem;
           padding: 1rem;
         `}>
-        <h1
-          css={css`
-            font-size: 1.4rem;
-            font-weight: 800;
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-          `}>
-          Pen
-        </h1>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
+        <p>Message</p>
         <p>Message</p>
         <p>Message</p>
         <p>Message</p>
@@ -32,7 +56,18 @@ function Messages(props) {
   )
 }
 
-export default route({
-  title: 'Messages',
-  view: <Messages />,
-})
+export default compose(
+  withTitle('Chat'),
+  authenticated(
+    route({
+      view: <Messages />,
+      data: {
+        headerActions: (
+          <ButtonLink href="/messages/new" outline>
+            New
+          </ButtonLink>
+        ),
+      },
+    }),
+  ),
+)
