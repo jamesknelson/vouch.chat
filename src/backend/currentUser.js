@@ -1,4 +1,5 @@
 import Deferred from 'utils/Deferred'
+import anonymous from './anonymous.svg'
 
 /**
  * Firebase limits what can be stored in the user object itself; extra data
@@ -42,20 +43,23 @@ export default class CurrentUser {
               deferred.reject()
             }
             if (data) {
+              let photoURL = data.photoURL || anonymous
+
+              data.availableVouches = 12
+              data.username = 'james'
+
               // Wait until the profile photo has loaded
-              let photoURL = data.photoURL
-              if (photoURL) {
-                await new Promise((resolve, reject) => {
-                  let img = new Image()
-                  img.onload = resolve
-                  img.onerror = reject
-                  img.src = photoURL
-                })
-              }
+              data.photoImage = await new Promise((resolve, reject) => {
+                let img = new Image()
+                img.onload = resolve
+                img.onerror = reject
+                img.src = photoURL
+              })
 
               deferred.resolve({
-                ...data,
                 ...auth.currentUser,
+                ...data,
+                photoURL,
               })
             }
           },

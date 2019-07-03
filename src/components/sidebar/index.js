@@ -8,7 +8,7 @@ const StyledSidebarCard = styled(animated(Card))`
   top: 0;
   bottom: 0;
   width: 70%;
-  max-width: 250px;
+  max-width: 260px;
   z-index: 99;
 `
 
@@ -58,6 +58,7 @@ const Sidebar = React.forwardRef(
               raised
               ref={ref}
               style={{
+                [side]: 0,
                 transform,
               }}
               {...rest}>

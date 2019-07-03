@@ -5,27 +5,72 @@ import styled, { css } from 'styled-components/macro'
 import { colors, dimensions, easings, focusRing, media, shadows } from 'theme'
 import { BrandImage } from 'components/brand'
 import Icon from 'components/icon'
+import { MenuLink } from 'components/menu'
+import { Avatar } from 'components/avatar'
+
+// A helper for defining flexbox attributes
+const flex = (justify, align, flex) => css`
+  display: flex;
+
+  ${align && `align-items: ${align};`}
+  ${flex && `flex: ${flex};`}
+  ${justify && `justify-content: ${justify};`}
+`
 
 export const TabletPlus = styled.div`
-  align-items: center;
-  display: flex;
-  flex: 1;
-  justify-content: center;
-
+  ${flex('center', 'center', 1)}
   ${media.phoneOnly`
     display: none;
   `}
 `
 export const PhoneOnly = styled.div`
-  align-items: center;
-  display: flex;
-  flex: 1;
-  justify-content: center;
-
+  ${flex('center', 'center', 1)}
   ${media.tabletPlus`
     display: none;
   `}
 `
+
+export const MenuHeader = ({ displayName, username, photoURL }) => (
+  <MenuLink
+    href={`/${username}`}
+    css={css`
+      align-items: center;
+      justify-content: space-between;
+      display: flex;
+    `}>
+    <div>
+      <h4
+        css={css`
+          color: ${colors.text.default};
+          font-weight: 800;
+          font-size: 1rem;
+          padding-right: 1rem;
+
+          ${media.phoneOnly`
+            /* Allow standard line breaks on mobile as the menu
+               will appear in a sidebar instead of a popup */
+            white-space: normal;
+          `}
+        `}>
+        {displayName}
+      </h4>
+      <p
+        css={css`
+          color: ${colors.text.tertiary};
+          font-size: 0.8rem;
+        `}>
+        @{username}
+      </p>
+    </div>
+    <Avatar
+      photoURL={photoURL}
+      css={css`
+        flex-grow: 0;
+        flex-shrink: 0;
+      `}
+    />
+  </MenuLink>
+)
 
 export const StyledWrapper = styled.div`
   height: 100%;
@@ -40,9 +85,8 @@ export const StyledNavbar = styled.nav`
   z-index: 3;
 
   ${media.phoneOnly`
+    ${flex('stretch')}
     border-bottom: 1px solid ${colors.structure.border};
-    display: flex;
-    justify-content: stretch;
     height: ${dimensions.bar};
     width: 100%;
   `}
@@ -54,13 +98,11 @@ export const StyledNavbar = styled.nav`
 `
 
 export const NavbarCorner = styled.div`
-  align-items: center;
+  ${flex('center', 'center', 1)}
   background-color: ${colors.structure.bg};
   border-bottom: 1px solid ${colors.structure.divider};
   color: ${colors.ink.black};
-  display: flex;
   height: ${dimensions.bar};
-  justify-content: center;
   left: 0;
   margin-bottom: 1rem;
   top: 0;
@@ -72,15 +114,13 @@ export const NavbarCorner = styled.div`
 `
 
 export const StyledNavbarIcon = styled(Icon)`
-  align-items: center;
+  ${flex('center', 'center', 1)}
   color: ${props => (props.faded ? colors.ink.light : colors.ink.black)};
   text-shadow: 0 0 9px
       ${props => rgba(props.faded ? colors.ink.light : colors.ink.black, 0.4)},
     0 0 2px
       ${props => rgba(props.faded ? colors.ink.light : colors.ink.black, 0.2)};
-  display: flex;
   line-height: 1.5rem;
-  justify-content: center;
   position: relative;
   transition: color 500ms ${easings.easeOut};
 
@@ -100,7 +140,7 @@ StyledNavbarIcon.defaultProps = {
 }
 
 const NavbarLink = React.forwardRef(
-  ({ children, faded, glyph, ...rest }, ref) => (
+  ({ children, faded, focusRingSize, glyph, ...rest }, ref) => (
     <Link {...rest} activeClassName="NavbarLink-active" ref={ref}>
       {children}
       <span className="NavbarLink-activeIndicator" />
@@ -121,15 +161,9 @@ const navbarFocusRing = css`
 `
 
 export const StyledNavbarLink = styled(NavbarLink)`
-  align-items: center;
-  display: flex;
-  justify-content: center;
   position: relative;
+  ${flex('center', 'center', 1)}
   ${navbarFocusRing};
-
-  ${media.phoneOnly`
-    flex: 1;
-  `}
 
   .NavbarLink-activeIndicator {
     overflow: hidden;
@@ -168,13 +202,10 @@ export const StyledNavbarLink = styled(NavbarLink)`
 `
 
 export const StyledNavbarButton = styled.button`
-  align-items: center;
+  ${flex('center', 'center', 1)}
   background-color: transparent;
   border-width: 0;
   cursor: pointer;
-  display: flex;
-  flex: 1;
-  justify-content: center;
   position: relative;
   ${navbarFocusRing};
 `
@@ -191,12 +222,10 @@ export const StyledNavbarWatched = styled.div`
 `
 
 export const StyledHeader = styled.header`
-  align-items: center;
+  ${flex('center', 'center')}
   background-color: ${colors.structure.bg};
   box-shadow: ${shadows.card()};
-  display: flex;
   height: ${dimensions.bar};
-  justify-content: space-between;
   position: fixed;
   top: 0;
   z-index: 10;

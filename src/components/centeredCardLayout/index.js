@@ -94,9 +94,9 @@ export const CenteredCardLayout = ({ children, title, ...props }) => (
       flex-direction: column;
       flex-grow: 1;
       justify-content: stretch;
-      margin: 1rem;
+      padding: 2rem;
       ${media.tabletPlus`
-        margin: 2rem 1rem;
+        padding: 4rem 1rem 1rem;
       `}
     `}>
     <div

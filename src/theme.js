@@ -20,6 +20,7 @@ export const colors = {
     black: '#102030',
     mid: '#606672',
     light: '#d8dbde',
+    wash: '#F4F8FF',
   },
 
   control: {
