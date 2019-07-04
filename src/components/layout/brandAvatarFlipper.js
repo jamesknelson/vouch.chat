@@ -8,7 +8,7 @@ import { Spinner } from 'components/loading'
 import { CurrentUserVouchCountWrapper } from 'components/badge'
 import useMediaQuery from 'hooks/useMedia'
 import { StyledNavbarLink } from './styles'
-import brandLetter from './brand-letter.svg'
+import logo from './logo.svg'
 import { useLoadingRoute } from 'react-navi'
 
 const StyledDisc = styled.div`
@@ -30,30 +30,20 @@ const Disc = props => {
       {user && props.side === 'avatar' ? (
         <UserAvatar user={user} size={props.size} />
       ) : (
-        <StyledLogoDisc size={props.size}>
-          <img
-            alt="Logo"
-            src={brandLetter}
-            css={css`
-              padding: 0.33rem;
-              width: ${props.size};
-              height: ${props.size};
-            `}
-          />
-        </StyledLogoDisc>
+        <img
+          alt="Logo"
+          src={logo}
+          css={css`
+            border-radius: 9999px;
+            width: ${props.size};
+            height: ${props.size};
+          `}
+        />
       )}
     </StyledDisc>
   )
 }
 const AnimatedDisc = animated(Disc)
-
-const StyledLogoDisc = styled(StyledDisc)`
-  background-color: ${colors.ink.black};
-  color: ${colors.structure.wash};
-  align-items: center;
-  border-radius: 9999px;
-  justify-content: center;
-`
 
 const StyledCutout = styled.div`
   align-items: center;

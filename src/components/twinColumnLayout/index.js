@@ -1,6 +1,8 @@
 import React from 'react'
 import { css } from 'styled-components/macro'
 
+import Card from 'components/card'
+
 // there should be a top header with the flipper/title/search bar on mobile
 // which only appears initially, and when scrolling up -- like the twitter one.
 
@@ -27,14 +29,27 @@ export default function TwinColumnLayout({ left, right, primary }) {
     <div
       css={css`
         display: flex;
+        height: 100%;
         min-height: 100%;
       `}>
       <div
         css={css`
+          align-items: stretch;
+          justify-content: stretch;
+          display: flex;
+          min-height: 100%;
+          /* flex-direction: column; */
+          margin: 0 1rem;
           max-width: 320px;
           flex: 1;
         `}>
-        {left}
+        <Card
+          radius={0}
+          css={css`
+            flex: 1;
+          `}>
+          {left}
+        </Card>
       </div>
       <div
         css={css`

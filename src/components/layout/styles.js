@@ -299,6 +299,9 @@ export const StyledHeaderActions = styled.div`
 `
 
 export const StyledMain = styled.main`
+  height: 100%;
+  min-height: 100%;
+
   ${media.phoneOnly`
     padding-top: calc(${dimensions.bar} * 7 / 4);
   `}

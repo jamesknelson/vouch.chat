@@ -4,55 +4,55 @@ import { css } from 'styled-components/macro'
 import { ButtonLink } from 'components/button'
 import Card from 'components/card'
 import { Header } from 'components/layout'
+import TwinColumnLayout from 'components/twinColumnLayout'
 import { colors } from 'theme'
 import authenticated from 'utils/authenticated'
 
 function Messages(props) {
   return (
-    <div>
-      <Header />
-      <Card
-        css={css`
-          color: ${colors.text};
-          margin: 1rem;
-          padding: 1rem;
-        `}>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-        <p>Message</p>
-      </Card>
-    </div>
+    <TwinColumnLayout
+      primary="left"
+      left={
+        <>
+          <Header />
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+          <p>Message</p>
+        </>
+      }
+      right={<h2>Email Settings</h2>}
+    />
   )
 }
 
