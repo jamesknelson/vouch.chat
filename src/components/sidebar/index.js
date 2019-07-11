@@ -47,7 +47,7 @@ const StyledSidebarMask = styled.div`
 `
 
 const Sidebar = React.forwardRef(
-  ({ children, open, onClose, side = 'right', ...rest }, ref) => {
+  ({ children, open, onClose, side = 'left', ...rest }, ref) => {
     let negate = side === 'left' ? '-' : ''
     let transitions = useTransition(open, null, {
       config: { tension: 300, mass: 0.5 },

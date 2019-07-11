@@ -3,14 +3,14 @@ import React from 'react'
 import { useNavigation } from 'react-navi'
 
 import { StyledLink } from 'components/button'
-import CenteredCardLayout, {
+import LayoutCenteredCard, {
   Greeting,
   Instructions,
   Issue,
   StyledFormSubmitButton,
   RelatedLinkGroup,
   RelatedLink,
-} from 'components/centeredCardLayout'
+} from 'components/layout/layoutCenteredCard'
 import { ControlGroup, FormInputControl } from 'components/control'
 import Divider from 'components/divider'
 import { Form, FormIssue } from 'controls/form'
@@ -29,7 +29,7 @@ function Join({ redirectTo, plan }) {
   })
 
   return (
-    <CenteredCardLayout title="Join in">
+    <LayoutCenteredCard title="Join in">
       <Greeting>Every journey starts with a single step.</Greeting>
       <Form onSubmit={operation.invoke} validate={operation.validate}>
         <ControlGroup>
@@ -67,7 +67,7 @@ function Join({ redirectTo, plan }) {
         <StyledLink href="/pages/conduct">Code of Conduct</StyledLink>, and the{' '}
         <StyledLink href="/pages/privacy">Terms of Service</StyledLink>.
       </Instructions>
-    </CenteredCardLayout>
+    </LayoutCenteredCard>
   )
 }
 

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
  * Listen for scroll events, and return the most recent scroll direction
  * once the user has scrolled at least `threshold` pixels in that direction.
  */
-export default function useLastScrollDirection(threshold = 100) {
+export default function useLastScrollDirection(threshold = 50) {
   // Scroll events can happen pretty frequently, so instead of storing the
   // the latest mark in state (which will re-render the entire component
   // on every scroll), we'll store instead in a ref and only update the

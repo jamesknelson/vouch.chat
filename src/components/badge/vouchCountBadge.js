@@ -69,14 +69,14 @@ export const VouchCountBadge = ({
 
 const AnimatedVouchCountBadge = animated(VouchCountBadge)
 
-export const VouchCountBadgeWrapper = ({ children, count, ...props }) => {
+export const VouchCountBadgeWrapper = ({ children, count, size, ...props }) => {
   let transition = useTransition(count !== 0, null, {
     config: {
       tension: 415,
     },
-    from: { opacity: 0, scale: 0.5, bottom: 5 },
-    enter: { opacity: 1, scale: 1, bottom: -5 },
-    leave: { opacity: 0, scale: 0.5, bottom: -15 },
+    from: { opacity: 0, scale: 0.5, bottom: 2 },
+    enter: { opacity: 1, scale: 1, bottom: -8 },
+    leave: { opacity: 0, scale: 0.5, bottom: -8 },
   })
   let countAnimationProps = useSpring({
     config: {
@@ -100,11 +100,11 @@ export const VouchCountBadgeWrapper = ({ children, count, ...props }) => {
               )}
               css={css`
                 position: absolute;
-                right: -5px;
+                right: -8px;
                 z-index: 1;
               `}
               key={key}
-              size="1rem"
+              size={size}
               style={transitionProps}
             />
           ),

@@ -1,35 +1,37 @@
 import { compose, route, withTitle } from 'navi'
 import React from 'react'
 import { css } from 'styled-components/macro'
-import Card from 'components/card'
-import { colors } from 'theme'
+
+import Button from 'components/button'
+import {
+  LayoutSingleColumn,
+  LayoutHeaderSection,
+  LayoutHeaderContent,
+} from 'components/layout'
 import authenticated from 'utils/authenticated'
 
 function Pen(props) {
   return (
-    <div>
-      <Card
+    <LayoutSingleColumn>
+      <LayoutHeaderSection>
+        <LayoutHeaderContent />
+      </LayoutHeaderSection>
+      <h1
         css={css`
-          color: ${colors.text};
-          margin: 1rem;
-          padding: 1rem;
+          font-size: 1.4rem;
+          font-weight: 800;
+          margin-top: 0.5rem;
+          margin-bottom: 0.5rem;
         `}>
-        <h1
-          css={css`
-            font-size: 1.4rem;
-            font-weight: 800;
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-          `}>
-          Pen
-        </h1>
-      </Card>
-    </div>
+        Pick: Note or Topic Card
+      </h1>
+      <Button>Vouch</Button>
+    </LayoutSingleColumn>
   )
 }
 
 export default compose(
-  withTitle('Share'),
+  withTitle('Create'),
   authenticated(
     route({
       view: <Pen />,

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-navi'
 import styled from 'styled-components/macro'
-import { colors, focusRing, shadows } from 'theme'
+import { colors, focusRing } from 'theme'
 
 const MenuContext = React.createContext({})
 
@@ -23,10 +23,6 @@ const StyledMenuItem = styled.div`
   text-align: left;
   width: 100%;
   white-space: nowrap;
-
-  &:hover::after {
-    box-shadow: ${shadows.focus(colors.ink.light)};
-  }
 
   ${focusRing('::after', { padding: '-0.25rem' })}
 `
@@ -68,9 +64,11 @@ export const MenuLink = props => {
 }
 
 export const Menu = React.forwardRef(
-  ({ onDidSelect, readonly, ...rest }, ref) => (
+  ({ children, onDidSelect = undefined, readonly = false, ...rest }, ref) => (
     <MenuContext.Provider value={{ onDidSelect, readonly }}>
-      <StyledMenu ref={ref} {...rest} />
+      <StyledMenu ref={ref} {...rest}>
+        {children}
+      </StyledMenu>
     </MenuContext.Provider>
   ),
 )

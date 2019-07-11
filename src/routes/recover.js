@@ -1,12 +1,12 @@
 import { mount, route } from 'navi'
 import React from 'react'
 import { useNavigation } from 'react-navi'
-import CenteredCardLayout, {
+import LayoutCenteredCard, {
   Instructions,
   StyledFormSubmitButton,
   RelatedLinkGroup,
   RelatedLink,
-} from 'components/centeredCardLayout'
+} from 'components/layout/layoutCenteredCard'
 import { FormInputField } from 'components/field'
 import AuthLink from 'controls/authLink'
 import { Form } from 'controls/form'
@@ -18,7 +18,7 @@ function Recover(props) {
   let operation = useOperation(sendPasswordResetEmail)
 
   return (
-    <CenteredCardLayout title="Recover your account">
+    <LayoutCenteredCard title="Recover your account">
       <Instructions>
         Can't login to your account? Just enter your email to reset your
         password.
@@ -46,18 +46,18 @@ function Recover(props) {
           Sign in
         </RelatedLink>
       </RelatedLinkGroup>
-    </CenteredCardLayout>
+    </LayoutCenteredCard>
   )
 }
 
 export const ForgotPasswordSent = () => {
   return (
-    <CenteredCardLayout title="One more step.">
+    <LayoutCenteredCard title="One more step.">
       <Instructions>
         I've just sent you an email. Follow the link in the email to reset your
         password.
       </Instructions>
-    </CenteredCardLayout>
+    </LayoutCenteredCard>
   )
 }
 

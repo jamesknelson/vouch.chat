@@ -1,72 +1,112 @@
-import { compose, route, withTitle } from 'navi'
+import { compose, route } from 'navi'
 import React from 'react'
-import { css } from 'styled-components/macro'
 import { ButtonLink } from 'components/button'
-import Card from 'components/card'
-import { Header } from 'components/layout'
+import { List, ListItem } from 'components/list'
 import TwinColumnLayout from 'components/twinColumnLayout'
-import { colors } from 'theme'
 import authenticated from 'utils/authenticated'
 
-function Messages(props) {
+function Chat(props) {
   return (
     <TwinColumnLayout
       primary="left"
       left={
-        <>
-          <Header />
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-          <p>Message</p>
-        </>
+        <div>
+          <List>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+            <ListItem>Message</ListItem>
+          </List>
+        </div>
       }
-      right={<h2>Email Settings</h2>}
+      right={
+        <div>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+          <h2>Test</h2>
+        </div>
+      }
     />
   )
 }
 
 export default compose(
-  withTitle('Chat'),
   authenticated(
     route({
-      view: <Messages />,
+      view: <Chat />,
       data: {
-        headerActions: (
-          <ButtonLink href="/messages/new" outline>
-            New
-          </ButtonLink>
-        ),
+        indexHeader: {
+          actions: (
+            <ButtonLink
+              href="/messages/new"
+              outline
+              style={{ marginRight: '0.75rem' }}>
+              New
+            </ButtonLink>
+          ),
+          title: 'Chat',
+        },
       },
     }),
   ),

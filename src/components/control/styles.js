@@ -105,6 +105,11 @@ export const StyledControlBorders = styled.div`
     position: absolute;
     display: block;
   }
+  *:hover ~ & {
+    ::after {
+      box-shadow: ${shadows.focus(colors.ink.light)};
+    }
+  }
   *:focus ~ & {
     z-index: 7;
 

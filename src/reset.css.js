@@ -28,6 +28,7 @@ export default createGlobalStyle`
     height: 100%;
     line-height: 1.5rem;
     min-height: 100%;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

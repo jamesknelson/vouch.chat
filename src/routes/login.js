@@ -4,7 +4,7 @@ import { useNavigation } from 'react-navi'
 
 import { StyledLink } from 'components/button'
 import { ControlGroup, FormInputControl } from 'components/control'
-import CenteredCardLayout, {
+import LayoutCenteredCard, {
   Greeting,
   Instructions,
   Issue,
@@ -13,7 +13,7 @@ import CenteredCardLayout, {
   StyledAuthButtonLink,
   StyledButton,
   StyledFormSubmitButton,
-} from 'components/centeredCardLayout'
+} from 'components/layout/layoutCenteredCard'
 import Divider from 'components/divider'
 import AuthLink from 'controls/authLink'
 import { Form, FormIssue } from 'controls/form'
@@ -71,7 +71,7 @@ function Login(props) {
     twitterLoginOperation.busy
 
   return (
-    <CenteredCardLayout title="Sign in">
+    <LayoutCenteredCard title="Sign in">
       <Greeting>
         {props.required !== undefined
           ? "You'll need to login to access that feature."
@@ -132,7 +132,7 @@ function Login(props) {
         <StyledLink href="/pages/conduct">Code of Conduct</StyledLink>, and the{' '}
         <StyledLink href="/pages/privacy">Terms of Service</StyledLink>.
       </Instructions>
-    </CenteredCardLayout>
+    </LayoutCenteredCard>
   )
 }
 
@@ -141,7 +141,7 @@ function EmailLogin(props) {
   let emailLoginDependencies = emailLogin.useDependencies()
 
   return (
-    <CenteredCardLayout title="Sign in">
+    <LayoutCenteredCard title="Sign in">
       <Form
         onSubmit={async value => {
           let error = await emailLogin(value, emailLoginDependencies)
@@ -190,7 +190,7 @@ function EmailLogin(props) {
         <StyledLink href="/pages/conduct">Code of Conduct</StyledLink>, and the{' '}
         <StyledLink href="/pages/privacy">Terms of Service</StyledLink>.
       </Instructions>
-    </CenteredCardLayout>
+    </LayoutCenteredCard>
   )
 }
 
@@ -204,7 +204,7 @@ export default compose(
     if (currentUser === undefined) {
       return lazy(() => import('./loading'))
     } else if (currentUser) {
-      return redirect(params.redirectTo || '/', { exact: false })
+      return redirect(params.redirectTo || '/read', { exact: false })
     } else {
       let previousLoginProviderDoc = backend.deviceConfig.previousLoginProvider
 

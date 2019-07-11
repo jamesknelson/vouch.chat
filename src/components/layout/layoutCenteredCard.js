@@ -8,7 +8,7 @@ import {
   StyledLink,
 } from 'components/button'
 import Card from 'components/card'
-import { Header } from 'components/layout'
+import { LayoutHeaderContent } from 'components/layout'
 import { colors, dimensions, media } from 'theme'
 
 export const StyledButton = styled(Button)`
@@ -86,23 +86,28 @@ export const Title = styled.h1`
   text-align: center;
 `
 
-export const CenteredCardLayout = ({ children, title, ...props }) => (
+export const LayoutCenteredCard = ({ children, title, ...props }) => (
   <>
-    <Header />
+    <LayoutHeaderContent
+      css={css`
+        padding-right: 1rem;
+      `}
+    />
     <div
       {...props}
       css={css`
-        align-items: stretch;
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        justify-content: stretch;
         ${media.phoneOnly`
           padding: 0 1rem;
           margin-top: -6rem;
         `}
         ${media.tabletPlus`
+        align-items: stretch;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: stretch;
           padding: 1rem 1rem 1rem;
+          margin-top: -4.25rem;
         `}
       `}>
       <div
@@ -135,4 +140,4 @@ export const CenteredCardLayout = ({ children, title, ...props }) => (
   </>
 )
 
-export default CenteredCardLayout
+export default LayoutCenteredCard

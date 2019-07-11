@@ -1,20 +1,13 @@
 import React from 'react'
-import Img from 'react-image'
 import styled from 'styled-components/macro'
-import { colors, focusRing } from 'theme'
+import { colors } from 'theme'
+import defaultProfilePicture from 'media/defaultProfilePicture.svg'
+import hash from 'media/hash.svg'
 
-const StyledAvatarImage = styled(Img)`
+const StyledAvatarImage = styled.img`
   border-radius: 9999px;
   max-height: 100%;
   max-width: 100%;
-`
-
-const StyledLoader = styled.span`
-  display: block;
-  border-radius: 9999px;
-  height: 100%;
-  width: 100%;
-  background-color: ${colors.structure.border};
 `
 
 const StyledAvatarContainer = styled.span`
@@ -27,33 +20,29 @@ const StyledAvatarContainer = styled.span`
   width: ${props => props.size};
   position: relative;
   user-select: none;
-
-  ${focusRing('::before', { radius: '9999px' })}
 `
 
 export const Avatar = React.forwardRef(
   ({ className, hidden, style, tabIndex, photoURL, size, ...props }, ref) => (
-    <StyledAvatarImage
-      {...props}
-      loader={<StyledLoader />}
-      container={children => {
-        return (
-          <StyledAvatarContainer
-            className={className}
-            hidden={hidden}
-            size={size || '2.5rem'}
-            style={style}
-            tabIndex={tabIndex}
-            ref={ref}>
-            {children}
-          </StyledAvatarContainer>
-        )
-      }}
-      src={photoURL}
-    />
+    <StyledAvatarContainer
+      className={className}
+      hidden={hidden}
+      size={size || '2.5rem'}
+      style={style}
+      tabIndex={tabIndex}
+      ref={ref}>
+      <StyledAvatarImage {...props} src={photoURL} />
+    </StyledAvatarContainer>
   ),
 )
 
 export const UserAvatar = React.forwardRef(({ user, ...props }, ref) => (
-  <Avatar photoURL={user.photoURL} {...props} />
+  <Avatar
+    photoURL={(user && user.photoURL) || defaultProfilePicture}
+    {...props}
+  />
+))
+
+export const TagAvatar = React.forwardRef(({ tag, ...props }, ref) => (
+  <Avatar photoURL={(tag && tag.photoURL) || hash} {...props} />
 ))

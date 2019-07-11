@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icomoon';
   src:
-    url('fonts/icomoon.ttf?36g0eb') format('truetype'),
-    url('fonts/icomoon.woff?36g0eb') format('woff'),
-    url('fonts/icomoon.svg?36g0eb#icomoon') format('svg');
+    url('fonts/icomoon.ttf?59va1r') format('truetype'),
+    url('fonts/icomoon.woff?59va1r') format('woff'),
+    url('fonts/icomoon.svg?59va1r#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,6 +23,93 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-hash:before {
+  content: "\e924";
+}
+.icon-equalizer:before {
+  content: "\e930";
+}
+.icon-menu1:before {
+  content: "\e931";
+}
+.icon-menu2:before {
+  content: "\e932";
+}
+.icon-cog:before {
+  content: "\e933";
+}
+.icon-chevron-right:before {
+  content: "\e92e";
+}
+.icon-right:before {
+  content: "\e92e";
+}
+.icon-chevron-left:before {
+  content: "\e92f";
+}
+.icon-left:before {
+  content: "\e92f";
+}
+.icon-cross2:before {
+  content: "\e929";
+}
+.icon-cross-square:before {
+  content: "\e92a";
+}
+.icon-cross-circle:before {
+  content: "\e92b";
+}
+.icon-plus2:before {
+  content: "\e92c";
+}
+.icon-cross3:before {
+  content: "\e92d";
+}
+.icon-trash:before {
+  content: "\e928";
+}
+.icon-bin:before {
+  content: "\e928";
+}
+.icon-remove:before {
+  content: "\e928";
+}
+.icon-waste:before {
+  content: "\e928";
+}
+.icon-plus:before {
+  content: "\e925";
+}
+.icon-add:before {
+  content: "\e925";
+}
+.icon-cross:before {
+  content: "\e925";
+}
+.icon-plus-circle:before {
+  content: "\e926";
+}
+.icon-plus1:before {
+  content: "\e926";
+}
+.icon-cross1:before {
+  content: "\e926";
+}
+.icon-eye-plus:before {
+  content: "\e927";
+}
+.icon-eye:before {
+  content: "\e927";
+}
+.icon-vision:before {
+  content: "\e927";
+}
+.icon-view:before {
+  content: "\e927";
+}
+.icon-eye-add:before {
+  content: "\e927";
+}
 .icon-bullhorn:before {
   content: "\e923";
 }
@@ -83,7 +170,7 @@
 .icon-glasses:before {
   content: "\e91d";
 }
-.icon-vision:before {
+.icon-vision1:before {
   content: "\e91d";
 }
 .icon-optometry:before {

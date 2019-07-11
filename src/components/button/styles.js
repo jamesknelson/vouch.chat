@@ -6,6 +6,7 @@ import styled, { css } from 'styled-components/macro'
 import { colors, easings, focusRing, radii, shadows, media } from 'theme'
 import Icon from 'components/icon'
 import { Spinner } from 'components/loading'
+import Tooltip from 'components/tooltip'
 
 export const StyledLink = styled(Link)`
   border: none;
@@ -74,6 +75,72 @@ export const StyledButtonBase = styled.button`
       opacity: 0.5;
     `}
 `
+
+export const StyledIconButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ${props => css`
+    color: ${props.color};
+    text-shadow: 0 0 9px ${rgba(props.color, 0.4)},
+      0 0 2px ${rgba(props.color, 0.2)};
+  `};
+
+  align-items: center;
+  background-color: transparent;
+  cursor: pointer;
+  display: ${props => (props.inline ? 'inline-flex' : 'flex')};
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: color 300ms ${easings.easeOut}, opacity 200ms ${easings.easeOut},
+    text-shadow 200ms ${easings.easeOut};
+  min-width: 3rem;
+  min-height: 3rem;
+
+  > * {
+    position: relative;
+  }
+  ${focusRing('> *::after', { radius: '9999px', padding: '0.5rem' })}
+
+  ${props =>
+    props.disabled &&
+    css`
+      cursor: default;
+      opacity: 0.5;
+    `}
+`
+
+export const IconButton = React.forwardRef(
+  (
+    {
+      color = colors.ink.mid,
+      glyph,
+      size = '1.5rem',
+      tooltip,
+      tooltipPlacement = 'top',
+      ...rest
+    },
+    ref,
+  ) => {
+    let button = (
+      <StyledIconButton color={color} size={size} ref={ref} {...rest}>
+        <Icon glyph={glyph} size={size} />
+      </StyledIconButton>
+    )
+
+    if (tooltip) {
+      return (
+        <Tooltip placement={tooltipPlacement} content={tooltip}>
+          {button}
+        </Tooltip>
+      )
+    } else {
+      return button
+    }
+  },
+)
 
 export const StyledOutlineButton = styled(StyledButtonBase)`
   background-color: ${colors.structure.bg};

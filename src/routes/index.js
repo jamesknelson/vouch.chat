@@ -9,11 +9,11 @@ export default compose(
     '/messages': lazy(() => import('./messages')),
     '/notifications': lazy(() => import('./notifications')),
     '/share': lazy(() => import('./share')),
-    '/watch': lazy(() => import('./watch')),
+    '/read': lazy(() => import('./readingList')),
     '/explore': lazy(() => import('./explore')),
     // '/verify': lazy(() => import('./verify')),
     '/recover': lazy(() => import('./recover')),
-    '/account': lazy(() => import('./account')),
+    '/settings': lazy(() => import('./settings')),
     '/login': lazy(() => import('./login')),
     '/join': lazy(() => import('./join')),
     '/logout': map(async ({ context }) => {

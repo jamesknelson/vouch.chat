@@ -1,21 +1,23 @@
 import React from 'react'
 import Tippy from '@tippy.js/react'
 
-// const Tooltip = (props) => {
-//   const { style = {}, content, ...rest } = props;
+import useMediaQuery from 'hooks/useMedia'
+import { mediaQueries } from 'theme'
 
-//   return (
-//     <Tippy
-//       placement="top"
-//       touch={false}
-//       arrow={true}
-//       arrowType='round'
-//       content={
-//         <span style={{ fontSize: '14px', fontWeight: '600', ...style }}>
-//           {content}
-//         </span>
-//       }
-//       {...rest}
-//     />
-//   );
-// };
+export default function Tooltip({ children, placement = 'top', content }) {
+  let isPhone = useMediaQuery(mediaQueries.phoneOnly)
+  if (isPhone) {
+    return children
+  } else {
+    return (
+      <Tippy
+        placement={placement}
+        touch={false}
+        arrow={true}
+        arrowType="round"
+        content={content}>
+        {children}
+      </Tippy>
+    )
+  }
+}

@@ -3,7 +3,7 @@ import { css } from 'styled-components/macro'
 
 export const breakpoints = {
   mediumPhonePlus: 360,
-  tabletPlus: 720,
+  tabletPlus: 768,
   laptopPlus: 1100,
   widescreenPlus: 1240,
 }
@@ -52,6 +52,7 @@ export const colors = {
     default: '#282A2C',
     secondary: '#384048',
     tertiary: '#607080',
+    subHeading: '#9098B0',
     placeholder: '#778899',
     warning: '#733939',
     link: '#102030',
@@ -102,9 +103,12 @@ export const radii = {
 
 export const shadows = {
   card: (color = 'black') =>
-    `0 0 5px 3px ${rgba(color, 0.01)}, 0 0 2px 0px ${rgba(color, 0.02)}`,
+    `0 0 4px 2px ${rgba(color, 0.01)}, 0 0 2px 0px ${rgba(color, 0.02)}`,
   raisedCard: (color = 'black') => `0 0 6px 1px ${rgba(0, 0, 0, 0.05)},
     0 0 8px 1px ${rgba(0, 0, 0, 0.02)};`,
+  section: (color = colors.structure.wash) =>
+    `0 0 15px 1px ${rgba(color, 0.88)},
+  0 0 10px 2px ${rgba(color, 0.44)} inset`,
   focusHard: (color = colors.focus.default) => `0 0 0 2px ${color}`,
   focusSoft: (color = colors.focus.default) =>
     `0 0 4px 3px ${rgba(color, 0.4)}`,
@@ -157,6 +161,9 @@ export const focusRing = (
       border-radius: ${radius};
       position: absolute;
       display: block;
+    }
+    :hover${selector} {
+      box-shadow: ${shadows.focus(colors.ink.light)};
     }
     :focus${selector} {
       box-shadow: ${shadows.focus(color)};

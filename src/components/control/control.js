@@ -30,6 +30,7 @@ export function Control({
   label,
   radius,
   variant,
+  style,
   ...props
 }) {
   radius = radii[radius] || radius || radii.small
@@ -50,7 +51,7 @@ export function Control({
   }
 
   return (
-    <StyledControlWrapper as={as} {...props} style={{ ...props.style, flex }}>
+    <StyledControlWrapper as={as} {...props} style={{ flex, ...style }}>
       {label && (
         <label htmlFor={controlId} css={srOnly}>
           {label}

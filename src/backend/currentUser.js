@@ -1,5 +1,5 @@
 import Deferred from 'utils/Deferred'
-import anonymous from './anonymous.svg'
+import defaultProfilePicture from 'media/defaultProfilePicture.svg'
 
 /**
  * Firebase limits what can be stored in the user object itself; extra data
@@ -43,7 +43,7 @@ export default class CurrentUser {
               deferred.reject()
             }
             if (data) {
-              let photoURL = data.photoURL || anonymous
+              let photoURL = data.photoURL || defaultProfilePicture
 
               data.availableVouches = 12
               data.username = 'james'

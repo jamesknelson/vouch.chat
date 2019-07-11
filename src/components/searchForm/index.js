@@ -1,31 +1,59 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { rgba } from 'polished'
 import styled from 'styled-components/macro'
 import { Control } from 'components/control'
 import Icon from 'components/icon'
-import { colors, easings } from 'theme'
+import { colors, easings, media } from 'theme'
 
 const StyledSearchInput = styled.input`
+  width: 0;
   background-color: transparent;
   color: ${colors.text.default};
-  flex: 1;
+  flex-grow: 1;
+  flex-shrink: 1;
   font-size: 0.9rem;
-  padding: 0.75rem;
+  padding: 0.75rem 0 0.75rem 0.75rem;
   border-radius: 9999px;
+
+  ::placeholder {
+    color: ${colors.text.placeholder};
+    font-weight: 400;
+  }
 `
 
 const StyledSearchButton = styled.button`
   background-color: transparent;
-  color: ${colors.control.icon.default};
+  color: ${({ variant = 'default' }) => colors.control.icon[variant]};
   cursor: pointer;
+  order: -1;
   border-radius: 1rem;
-  margin-right: 0.75rem;
+  margin-left: 0.75rem;
+  ${media.tabletPlus`
+    margin-right: 0.5rem;
+  `}
 
   transition: text-shadow 200ms ${easings.easeOut},
     color 200ms ${easings.easeOut};
 
   :active,
   ${StyledSearchInput}:focus ~ & {
+    color: ${colors.focus.default};
+    text-shadow: 0 0 3px ${rgba(colors.focus.default, 0.5)};
+  }
+`
+
+const StyledClearButton = styled.button`
+  background-color: transparent;
+  color: ${colors.control.icon.empty};
+  cursor: pointer;
+  border-radius: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.75rem;
+
+  transition: text-shadow 200ms ${easings.easeOut},
+    color 200ms ${easings.easeOut};
+
+  :active {
     color: ${colors.focus.default};
     text-shadow: 0 0 3px ${rgba(colors.focus.default, 0.5)};
   }
@@ -40,21 +68,54 @@ export function SearchForm({
   onSubmit,
   ...props
 }) {
+  let handleKeyDown = useCallback(
+    event => {
+      if (event.key === 'Escape') {
+        onChange('')
+      }
+    },
+    [onChange],
+  )
+
+  let handleChange = useCallback(
+    event => {
+      onChange(event.target.value)
+    },
+    [onChange],
+  )
+
+  let handleClear = useCallback(() => {
+    onChange('')
+  }, [onChange])
+
   return (
     <Control
       as="form"
       id={id}
       label={label}
       className={className}
-      radius={'9999px'}
+      radius="9999px"
       style={style}
       onSubmit={onSubmit}>
       {id => (
         <>
-          <StyledSearchInput id={id} placeholder={label} {...props} />
-          <StyledSearchButton type="submit" tabIndex={-1}>
+          <StyledSearchInput
+            id={id}
+            name="q"
+            placeholder={label}
+            onKeyDown={handleKeyDown}
+            onChange={handleChange}
+            {...props}
+          />
+          <StyledSearchButton
+            type="submit"
+            tabIndex={-1}
+            variant={props.value ? 'default' : 'empty'}>
             <Icon glyph="search" size="1.25rem" />
           </StyledSearchButton>
+          <StyledClearButton type="button" tabIndex={-1} onClick={handleClear}>
+            <Icon glyph="cross2" size="1.25rem" />
+          </StyledClearButton>
         </>
       )}
     </Control>

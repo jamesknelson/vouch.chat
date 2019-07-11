@@ -4,7 +4,7 @@ import { Link } from 'react-navi'
 import AuthLink from 'controls/authLink'
 import { Button } from './styles'
 
-export { Button, StyledLink } from './styles'
+export { Button, IconButton, StyledLink } from './styles'
 
 export const AuthLinkButton = props => <ButtonLink as={AuthLink} {...props} />
 

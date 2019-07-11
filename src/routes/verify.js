@@ -4,11 +4,11 @@ import { useNavigation } from 'react-navi'
 import { css } from 'styled-components/macro'
 
 import { StyledLink } from 'components/button'
-import CenteredCardLayout, {
+import LayoutCenteredCard, {
   Instructions,
   Issue,
   StyledFormSubmitButton,
-} from 'components/centeredCardLayout'
+} from 'components/layout/layoutCenteredCard'
 import { FormInputField } from 'components/field'
 import Form, { FormIssue } from 'controls/form'
 import useOperation from 'hooks/useOperation'
@@ -31,17 +31,17 @@ export const ResetPassword = props => {
 
   if (!props.email) {
     return (
-      <CenteredCardLayout title="Oops">
+      <LayoutCenteredCard title="Oops">
         <Instructions>
           This account recovery link has expired. Please get a new link at the{' '}
           <StyledLink href="/recover">recover account</StyledLink> page.
         </Instructions>
-      </CenteredCardLayout>
+      </LayoutCenteredCard>
     )
   }
 
   return (
-    <CenteredCardLayout title="One more step...">
+    <LayoutCenteredCard title="One more step...">
       <Instructions>Please set a new password below.</Instructions>
       <Form validate={operation.validate} onSubmit={operation.invoke}>
         <FormInputField
@@ -66,7 +66,7 @@ export const ResetPassword = props => {
           Change Password
         </StyledFormSubmitButton>
       </Form>
-    </CenteredCardLayout>
+    </LayoutCenteredCard>
   )
 }
 
