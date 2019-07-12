@@ -13,7 +13,7 @@ export const StyledControlWrapper = styled.span`
 
   > :focus,
   > :focus ~ * {
-    z-index: 8;
+    z-index: 9;
   }
 `
 
@@ -106,6 +106,8 @@ export const StyledControlBorders = styled.div`
     display: block;
   }
   *:hover ~ & {
+    z-index: 5;
+
     ::after {
       box-shadow: ${shadows.focus(colors.ink.light)};
     }

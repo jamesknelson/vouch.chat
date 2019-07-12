@@ -167,12 +167,12 @@ export const NavItems = () => {
         // glyph="bullhorn"
         glyph="pencil"
       />
-      <NavItem
+      {/* <NavItem
         faded={currentUser === null}
         href="/messages"
         tooltip="Chat"
         glyph="envelope"
-      />
+      /> */}
       <NavItem
         faded={currentUser === null}
         href="/notifications"
