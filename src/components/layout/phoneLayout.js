@@ -1,16 +1,14 @@
-import React from 'react'
-import { Link, useCurrentRoute } from 'react-navi'
+import React, { useContext } from 'react'
 import styled, { css } from 'styled-components/macro'
 
-import { BrandImage } from 'components/brand'
-import { LoginButton, RegisterButton } from 'components/button'
 import { phoneOnly } from 'components/media'
 import { Menu } from 'components/menu'
 import Sidebar from 'components/sidebar'
 import useLastScrollDirection from 'hooks/useLastScrollDirection'
 import useTrigger from 'hooks/useTrigger'
-import { colors, dimensions, easings, focusRing, media, shadows } from 'theme'
-import { StyledHeaderActions, StyledHeaderTitle } from './layoutHeader'
+import { colors, dimensions, easings, media, shadows } from 'theme'
+import LayoutContext from './layoutContext'
+import { LayoutHeaderContent } from './layoutHeader'
 import { NavItem, NavItems } from './layoutNavItems'
 import LayoutNavMenuItems from './layoutNavMenuItems'
 import ProfileFlipper from './layoutProfileFlipper'
@@ -46,30 +44,6 @@ const SidebarMoreMenu = ({ children, side }) => {
   )
 }
 
-const HeaderBrandTextLink = () => (
-  <div
-    css={css`
-      /* Insert a flex box to keep other header items aligned */
-      flex: 1;
-    `}>
-    <Link
-      href="/"
-      css={css`
-        position: relative;
-        display: flex;
-        flex: 0;
-
-        ${focusRing('::after')}
-      `}>
-      <BrandImage
-        css={css`
-          height: 1rem;
-        `}
-      />
-    </Link>
-  </div>
-)
-
 const StyledPhoneHeaderOverlay = styled.header`
   display: flex;
   align-items: center;
@@ -77,7 +51,7 @@ const StyledPhoneHeaderOverlay = styled.header`
 
   height: ${dimensions.bar};
   width: 100%;
-  position: ${props => (props.relative ? 'relative' : 'fixed')};
+  position: ${props => (props.minimal ? 'relative' : 'fixed')};
   top: 0;
   z-index: 10;
   left: 0;
@@ -118,29 +92,14 @@ const StyledPhoneNavbar = styled.nav`
   `}
 `
 
-const PhoneHeaderOverlay = ({ hide, relative }) => {
-  let {
-    data: { auth, header, indexHeader },
-    url,
-  } = useCurrentRoute()
-  let headerTitle =
-    (header && header.title) || (indexHeader && indexHeader.title)
-  let actions
-  if (auth) {
-    actions = (
-      <div style={{ margin: '0 1rem' }}>
-        {!/^\/login/.test(url.pathname) ? <LoginButton /> : <RegisterButton />}
-      </div>
-    )
-  } else {
-    actions = (header && header.actions) || (indexHeader && indexHeader.actions)
-  }
+const PhoneHeaderOverlay = ({ hide, indexPathname, minimal }) => {
+  let { showHistoryBack, showIndexOnPhone } = useContext(LayoutContext)
 
   let lhs =
-    header && indexHeader ? (
+    indexPathname && !showIndexOnPhone ? (
       <NavItem
         hideActiveIndicator
-        href={indexHeader.mountpath}
+        href={indexPathname}
         glyph="chevron-left"
         tooltip="Back"
         css={css`
@@ -165,42 +124,36 @@ const PhoneHeaderOverlay = ({ hide, relative }) => {
     )
 
   return (
-    <StyledPhoneHeaderOverlay hide={hide} relative={relative}>
-      {lhs}
-      {auth || !headerTitle ? (
-        <HeaderBrandTextLink />
-      ) : (
-        <StyledHeaderTitle>{headerTitle}</StyledHeaderTitle>
-      )}
-      <StyledHeaderActions>
-        {actions || (
-          <div
-            css={css`
-              margin-left: 1rem;
-            `}
-          />
-        )}
-      </StyledHeaderActions>
+    <StyledPhoneHeaderOverlay hide={hide} minimal={minimal}>
+      <LayoutHeaderContent
+        left={lhs}
+        showBack={showHistoryBack}
+        index={showIndexOnPhone}
+      />
     </StyledPhoneHeaderOverlay>
   )
 }
 
 function PhoneLayoutContent({
   children,
-  className,
-  currentRoute,
+  indexPathname,
+  minimal,
   currentUser,
+  ...rest
 }) {
   let lastScrollDirection = useLastScrollDirection()
 
-  let hideNavbar = currentRoute.data.auth
   let hideTitle =
-    !hideNavbar && lastScrollDirection && lastScrollDirection === 'down'
+    !minimal && lastScrollDirection && lastScrollDirection === 'down'
 
   return (
-    <PhoneWrapper className={className}>
-      <PhoneHeaderOverlay hide={hideTitle} relative={hideNavbar} />
-      <StyledPhoneNavbar leaveTitleSpace={!hideTitle} hide={hideNavbar}>
+    <PhoneWrapper {...rest}>
+      <PhoneHeaderOverlay
+        hide={hideTitle}
+        indexPathname={indexPathname}
+        minimal={minimal}
+      />
+      <StyledPhoneNavbar leaveTitleSpace={!hideTitle} hide={minimal}>
         <NavItems />
         <ProfileFlipper currentUser={currentUser} sizeRem={2} />
       </StyledPhoneNavbar>

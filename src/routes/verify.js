@@ -96,6 +96,9 @@ export default map(async ({ context, params }) => {
     } catch (error) {}
 
     return route({
+      data: {
+        minimalLayout: true,
+      },
       view: <ResetPassword code={oobCode} email={email} />,
     })
   } else {

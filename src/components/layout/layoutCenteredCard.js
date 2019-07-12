@@ -9,6 +9,7 @@ import {
 } from 'components/button'
 import Card from 'components/card'
 import { LayoutHeaderContent } from 'components/layout'
+import { TabletPlus } from 'components/media'
 import { colors, dimensions, media } from 'theme'
 
 export const StyledButton = styled(Button)`
@@ -88,11 +89,9 @@ export const Title = styled.h1`
 
 export const LayoutCenteredCard = ({ children, title, ...props }) => (
   <>
-    <LayoutHeaderContent
-      css={css`
-        padding-right: 1rem;
-      `}
-    />
+    <TabletPlus>
+      <LayoutHeaderContent />
+    </TabletPlus>
     <div
       {...props}
       css={css`
@@ -101,11 +100,11 @@ export const LayoutCenteredCard = ({ children, title, ...props }) => (
           margin-top: -6rem;
         `}
         ${media.tabletPlus`
-        align-items: stretch;
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        justify-content: stretch;
+          align-items: stretch;
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+          justify-content: stretch;
           padding: 1rem 1rem 1rem;
           margin-top: -4.25rem;
         `}

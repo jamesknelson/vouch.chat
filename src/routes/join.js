@@ -2,7 +2,7 @@ import { map, redirect, route } from 'navi'
 import React from 'react'
 import { useNavigation } from 'react-navi'
 
-import { StyledLink } from 'components/button'
+import { LoginButton, StyledLink } from 'components/button'
 import LayoutCenteredCard, {
   Greeting,
   Instructions,
@@ -80,7 +80,8 @@ export default map(({ context, params }) => {
 
   return route({
     data: {
-      auth: true,
+      minimalLayout: true,
+      layoutHeaderActions: <LoginButton style={{ marginRight: '0.75rem' }} />,
     },
     title: 'Join',
     view: <Join {...params} />,

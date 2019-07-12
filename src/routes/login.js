@@ -2,7 +2,7 @@ import { compose, lazy, map, mount, redirect, route, withData } from 'navi'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigation } from 'react-navi'
 
-import { StyledLink } from 'components/button'
+import { RegisterButton, StyledLink } from 'components/button'
 import { ControlGroup, FormInputControl } from 'components/control'
 import LayoutCenteredCard, {
   Greeting,
@@ -196,7 +196,8 @@ function EmailLogin(props) {
 
 export default compose(
   withData({
-    auth: true,
+    minimalLayout: true,
+    layoutHeaderActions: <RegisterButton style={{ marginRight: '0.75rem' }} />,
   }),
   map(async ({ context, params }) => {
     let { backend, currentUser } = context

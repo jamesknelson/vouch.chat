@@ -1,6 +1,7 @@
 import { mount, route } from 'navi'
 import React from 'react'
 import { useNavigation } from 'react-navi'
+import { LoginButton } from 'components/button'
 import LayoutCenteredCard, {
   Instructions,
   StyledFormSubmitButton,
@@ -64,13 +65,15 @@ export const ForgotPasswordSent = () => {
 export default mount({
   '/': route({
     data: {
-      auth: true,
+      minimalLayout: true,
+      layoutHeaderActions: <LoginButton style={{ marginRight: '0.75rem' }} />,
     },
     view: <Recover />,
   }),
   '/sent': route({
     data: {
-      auth: true,
+      minimalLayout: true,
+      layoutHeaderActions: <LoginButton style={{ marginRight: '0.75rem' }} />,
     },
     view: <ForgotPasswordSent />,
   }),

@@ -1,15 +1,20 @@
-import React from 'react'
-import { useCurrentRoute } from 'react-navi'
-import styled from 'styled-components/macro'
+import React, { useContext } from 'react'
+import { Link, useNavigation } from 'react-navi'
+import styled, { css } from 'styled-components/macro'
 
-import { LoginButton, RegisterButton } from 'components/button'
-import { TabletPlus } from 'components/media'
-import { dimensions } from 'theme'
+import { BrandImage } from 'components/brand'
+import { dimensions, focusRing } from 'theme'
+import LayoutContext from './layoutContext'
+import { NavItem } from './layoutNavItems'
 
 export const StyledHeaderTitle = styled.h1`
   flex: 1;
   font-size: 1.2rem;
   font-weight: 700;
+
+  :first-child {
+    padding-left: 1rem;
+  }
 `
 
 export const StyledHeaderActions = styled.div`
@@ -18,43 +23,95 @@ export const StyledHeaderActions = styled.div`
   justify-content: flex-end;
 `
 
-const StyledTabletPlusHeader = styled(TabletPlus)`
+const StyledHeaderContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: ${dimensions.bar};
   width: 100%;
-  padding: 1rem 0 1rem 1rem;
 `
 
-export const LayoutHeaderContent = ({ children, index, ...rest }) => {
+const HeaderBrandTextLink = () => (
+  <div
+    css={css`
+      /* Insert a flex box to keep other header items aligned */
+      flex: 1;
+
+      :first-child {
+        padding-left: 1rem;
+      }
+    `}>
+    <Link
+      href="/"
+      css={css`
+        position: relative;
+        display: flex;
+        flex: 0;
+
+        ${focusRing('::after')}
+      `}>
+      <BrandImage
+        css={css`
+          height: 1rem;
+        `}
+      />
+    </Link>
+  </div>
+)
+
+export const LayoutHeaderContent = ({
+  children,
+  index = undefined,
+  left = undefined,
+  showBack = undefined,
+  ...rest
+}) => {
   let {
-    data: { auth, header, indexHeader },
-    title: routeTitle,
-    url,
-  } = useCurrentRoute()
+    indexHeaderActions,
+    indexHeaderTitle,
+    headerActions,
+    headerTitle,
+    minimal,
+  } = useContext(LayoutContext)
+  let navigation = useNavigation()
 
-  let actions =
-    (index ? indexHeader && indexHeader.actions : header && header.actions) ||
-    children
-  let title = !auth && (index ? indexHeader && indexHeader.title : routeTitle)
+  let title = (index ? indexHeaderTitle : headerTitle) || null
+  let actions = children || (index ? indexHeaderActions : headerActions)
 
-  if (auth) {
-    actions = !/^\/login/.test(url.pathname) ? (
-      <LoginButton />
-    ) : (
-      <RegisterButton />
+  if (minimal) {
+    title = <HeaderBrandTextLink />
+  }
+
+  if (showBack) {
+    left = (
+      <NavItem
+        hideActiveIndicator
+        onClick={() => navigation.goBack()}
+        glyph="chevron-left"
+        tooltip="Back"
+        css={css`
+          flex: 0;
+          margin-right: 0.75rem;
+        `}
+      />
     )
   }
 
   return (
-    <StyledTabletPlusHeader {...rest}>
-      {React.isValidElement(title) ? (
-        title
-      ) : (
-        <StyledHeaderTitle>{title}</StyledHeaderTitle>
-      )}
-      <StyledHeaderActions>{actions}</StyledHeaderActions>
-    </StyledTabletPlusHeader>
+    <StyledHeaderContent {...rest}>
+      {left || null}
+      {React.isValidElement(title)
+        ? title
+        : title && <StyledHeaderTitle>{title}</StyledHeaderTitle>}
+      <StyledHeaderActions>
+        {actions || (
+          <div
+            css={css`
+              margin-left: 1rem;
+            `}
+          />
+        )}
+      </StyledHeaderActions>
+    </StyledHeaderContent>
   )
 }

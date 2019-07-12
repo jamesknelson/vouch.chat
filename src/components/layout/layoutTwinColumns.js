@@ -110,6 +110,7 @@ export function LayoutTwinColumns({
     transitionKey,
     {
       config: {
+        mass: 0.8,
         tension: 320,
       },
       initial: null,

@@ -146,7 +146,12 @@ function ReadingListSearch(props) {
   return (
     <SearchForm
       placeholder="Search Vouch"
-      style={{ flex: '1' }}
+      css={css`
+        flex: 1;
+        :first-child {
+          margin-left: 1rem;
+        }
+      `}
       value={query}
       onChange={setQuery}
       onSubmit={event => {
@@ -160,22 +165,20 @@ function ReadingListSearch(props) {
 export default compose(
   withView(({ params }) => <Read query={params.q} />),
   withData(({ context, mountpath, params }) => ({
-    indexHeader: {
-      actions: (
-        <IconButton
-          color={
-            context.currentUser !== null ? colors.ink.black : colors.ink.light
-          }
-          glyph="cog"
-          tooltip="Options"
-          tooltipPlacement="bottom"
-          size="1.5rem"
-          style={{ width: '3.25rem' }}
-        />
-      ),
-      mountpath,
-      title: <ReadingListSearch query={params.q} />,
-    },
+    layoutIndexHeaderActions: (
+      <IconButton
+        color={
+          context.currentUser !== null ? colors.ink.black : colors.ink.light
+        }
+        glyph="cog"
+        tooltip="Options"
+        tooltipPlacement="bottom"
+        size="1.5rem"
+        style={{ width: '3.25rem' }}
+      />
+    ),
+    layoutIndexHeaderTitle: <ReadingListSearch query={params.q} />,
+    layoutIndexPathname: mountpath,
   })),
   mount({
     // During SSR, this should render a blank page, with the actual page
@@ -185,6 +188,9 @@ export default compose(
     // Leaves the right hand side blank if rendered, while displaying
     // only the left hand side if rendered on a single column device.
     '/list': route({
+      data: {
+        layoutShowIndexOnPhone: true,
+      },
       title: 'Reading List',
     }),
     '/search': route({
@@ -198,11 +204,6 @@ export default compose(
     }),
     '/vouched': route({
       title: 'Recent Activity',
-      data: {
-        header: {
-          title: 'Recent Activity',
-        },
-      },
       view: (
         <>
           <LayoutHeaderSection>
@@ -214,11 +215,6 @@ export default compose(
     }),
     '/by/:user': route({
       getTitle: ({ params }) => `@${params.user}`,
-      getData: ({ params }) => ({
-        header: {
-          title: `@${params.user}`,
-        },
-      }),
       view: (
         <>
           <LayoutHeaderSection>
@@ -230,11 +226,6 @@ export default compose(
     }),
     '/about/:tag': route({
       getTitle: ({ params }) => `#${params.tag}`,
-      getData: ({ params }) => ({
-        header: {
-          title: `#${params.tag}`,
-        },
-      }),
       view: (
         <>
           <LayoutHeaderSection>

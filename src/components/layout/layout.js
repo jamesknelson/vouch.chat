@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useCurrentRoute } from 'react-navi'
+import React, { useEffect, useMemo, useState } from 'react'
 import { animated, useTransition } from 'react-spring'
-import { useCurrentUser } from 'context'
 import { dimensions } from 'theme'
 import LayoutAuthFooter from './layoutAuthFooter'
 import LayoutContext from './layoutContext'
@@ -11,11 +9,20 @@ import TabletPlusLayout from './tabletPlusLayout'
 const AnimatedAuthFooter = animated(LayoutAuthFooter)
 
 const Layout = props => {
-  let currentRoute = useCurrentRoute()
-  let currentUser = useCurrentUser()
+  let {
+    user,
+    minimal = false,
+    indexHeaderActions = null,
+    indexHeaderTitle = null,
+    indexPathname = null,
+    headerActions = null,
+    headerTitle = null,
+    showHistoryBack = false,
+    showIndexOnPhone = false,
+  } = props
 
   let [showAuthFooter, setShowAuthFooter] = useState(false)
-  let shouldShowAuthFooter = currentUser === null && !currentRoute.data.auth
+  let shouldShowAuthFooter = user === null && !minimal
 
   useEffect(() => {
     setShowAuthFooter(shouldShowAuthFooter)
@@ -30,22 +37,47 @@ const Layout = props => {
     leave: { transform: `translateY(100%)` },
   })
 
+  // Wait until the transition has completed before updating this,
+  // as we don't want to hide things during the transition.
+  let footerOverlayHeight =
+    showAuthFooter && authFooterTransitions.length === 1
+      ? dimensions.bar
+      : '0px'
+
+  let context = useMemo(
+    () => ({
+      footerOverlayHeight,
+      minimal,
+      indexHeaderActions,
+      indexHeaderTitle,
+      indexPathname,
+      headerActions,
+      headerTitle,
+      showHistoryBack,
+      showIndexOnPhone,
+    }),
+    [
+      footerOverlayHeight,
+      minimal,
+      indexHeaderActions,
+      indexHeaderTitle,
+      indexPathname,
+      headerActions,
+      headerTitle,
+      showHistoryBack,
+      showIndexOnPhone,
+    ],
+  )
+
   return (
-    <LayoutContext.Provider
-      value={{
-        footerOverlayHeight:
-          // Wait until the transition has completed before updating this,
-          // as we don't want to hide things during the transition.
-          showAuthFooter && authFooterTransitions.length === 1
-            ? dimensions.bar
-            : 0,
-      }}>
-      <PhoneLayout currentRoute={currentRoute} currentUser={currentUser}>
+    <LayoutContext.Provider value={context}>
+      <PhoneLayout
+        currentUser={user}
+        indexPathname={indexPathname}
+        minimal={minimal}>
         {props.children}
       </PhoneLayout>
-      <TabletPlusLayout currentUser={currentUser}>
-        {props.children}
-      </TabletPlusLayout>
+      <TabletPlusLayout currentUser={user}>{props.children}</TabletPlusLayout>
       {authFooterTransitions.map(
         ({ item, props: style, key }) =>
           item && (
