@@ -7,7 +7,7 @@ import { dimensions, focusRing } from 'theme'
 import LayoutContext from './layoutContext'
 import { NavItem } from './layoutNavItems'
 
-export const StyledHeaderTitle = styled.h1`
+const StyledHeaderTitle = styled.h1`
   flex: 1;
   font-size: 1.2rem;
   font-weight: 700;
@@ -17,7 +17,7 @@ export const StyledHeaderTitle = styled.h1`
   }
 `
 
-export const StyledHeaderActions = styled.div`
+const StyledHeaderActions = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;

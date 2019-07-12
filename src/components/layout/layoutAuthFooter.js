@@ -5,7 +5,7 @@ import { IconButton, LoginButton, RegisterButton } from 'components/button'
 import Card from 'components/card'
 import { colors, dimensions, media } from 'theme'
 
-export const StyledAuthFooter = styled(Card)`
+const StyledAuthFooter = styled(Card)`
   align-items: center;
   border-width: 1px 0 0 0;
   border-radius: 0;
@@ -26,7 +26,7 @@ export const StyledAuthFooter = styled(Card)`
   `}
 `
 
-export const StyledAuthFooterButtons = styled.div`
+const StyledAuthFooterButtons = styled.div`
   display: flex;
 
   > * {
@@ -34,14 +34,7 @@ export const StyledAuthFooterButtons = styled.div`
   }
 `
 
-export const StyledAuthFooterCloseButton = styled(IconButton)`
-  margin-right: 1rem;
-  ${media.tabletPlus`
-    margin-right: 2rem;
-  `}
-`
-
-export const AuthFooterCloseButton = props => (
+const AuthFooterCloseButton = props => (
   <IconButton
     glyph="cross2"
     size="1.25rem"
@@ -50,7 +43,7 @@ export const AuthFooterCloseButton = props => (
   />
 )
 
-export const StyledAuthFooterMessage = styled.p`
+const StyledAuthFooterMessage = styled.p`
   color: ${colors.text.secondary};
   flex: 1;
   font-size: 0.8rem;
@@ -61,7 +54,7 @@ export const StyledAuthFooterMessage = styled.p`
   `}
 `
 
-export const LayoutAuthFooter = props => (
+const LayoutAuthFooter = props => (
   <StyledAuthFooter {...props}>
     <AuthFooterCloseButton onClick={props.onClose} />
     <StyledAuthFooterMessage>I'll vouch for you.</StyledAuthFooterMessage>
