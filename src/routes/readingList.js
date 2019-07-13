@@ -15,11 +15,9 @@ import { LogoImage } from 'components/brand'
 import { IconButton } from 'components/button'
 import Icon from 'components/icon'
 import {
-  LayoutHeaderContent,
+  LayoutHeaderSection,
   LayoutTwinColumns,
   LayoutLeftColumnContentScroller,
-  LayoutSection,
-  LayoutHeaderSection,
 } from 'components/layout'
 import {
   List,
@@ -29,7 +27,9 @@ import {
   ListItemIconButton,
 } from 'components/list'
 import SearchForm from 'components/searchForm'
-import { colors } from 'theme'
+import { Gap, Section, SectionSubHeading } from 'components/sections'
+import { colors, mediaQueries } from 'theme'
+import mountByMedia from 'utils/mountByMedia'
 
 const clearEmitter = new EventEmitter()
 
@@ -72,30 +72,35 @@ function Read(props) {
       rightBackgroundOnTabletPlus={!!view}
       left={
         <>
-          <LayoutHeaderSection>
-            <LayoutHeaderContent index />
-          </LayoutHeaderSection>
+          <LayoutHeaderSection index />
           <LayoutLeftColumnContentScroller>
+            <Gap size={1} />
             {typeof query === 'string' && (
-              <LayoutSection>
-                <List>
-                  <ListItemLink
-                    href={'/read/search?q=' + encodeURIComponent(query)}>
-                    <ListItemImage>
-                      <Disc size="2.25rem">
-                        <Icon glyph="search" size="1.5rem" />
-                      </Disc>
-                    </ListItemImage>
-                    <ListItemText title="Search Results" description={query} />
-                    <ListItemIconButton
-                      glyph="plus1"
-                      tooltip="Add to watchlist"
-                    />
-                  </ListItemLink>
-                </List>
-              </LayoutSection>
+              <>
+                <Section>
+                  <List>
+                    <ListItemLink
+                      href={'/read/search?q=' + encodeURIComponent(query)}>
+                      <ListItemImage>
+                        <Disc size="2.25rem">
+                          <Icon glyph="search" size="1.5rem" />
+                        </Disc>
+                      </ListItemImage>
+                      <ListItemText
+                        title="Search Results"
+                        description={query}
+                      />
+                      <ListItemIconButton
+                        glyph="plus1"
+                        tooltip="Add to watchlist"
+                      />
+                    </ListItemLink>
+                  </List>
+                </Section>
+                <Gap size={1} />
+              </>
             )}
-            <LayoutSection>
+            <Section>
               <List>
                 <ListItemLink href="/read/vouched">
                   <ListItemImage>
@@ -108,8 +113,9 @@ function Read(props) {
                   />
                 </ListItemLink>
               </List>
-            </LayoutSection>
-            <LayoutSection title="Your Watchlist">
+            </Section>
+            <SectionSubHeading>Your Watchlist</SectionSubHeading>
+            <Section>
               <List>
                 <ListItemLink href="/read/about/react">
                   <ListItemImage>
@@ -146,7 +152,7 @@ function Read(props) {
                   />
                 </ListItemLink>
               </List>
-            </LayoutSection>
+            </Section>
           </LayoutLeftColumnContentScroller>
         </>
       }
@@ -211,18 +217,16 @@ export default compose(
     layoutIndexPathname: mountpath,
   })),
   mount({
-    // During SSR, this should render a blank page, with the actual page
-    // being selected on the client via the redirect.
-    '/': redirect('./list'),
-
-    // Leaves the right hand side blank if rendered, while displaying
-    // only the left hand side if rendered on a single column device.
-    '/list': route({
-      data: {
-        layoutShowIndexOnPhone: true,
-      },
-      title: 'Reading List',
+    '/': mountByMedia({
+      default: route({
+        data: {
+          layoutShowIndexOnPhone: true,
+        },
+        title: 'Reading List',
+      }),
+      [mediaQueries.tabletPlus]: redirect('./vouched'),
     }),
+
     '/search': route({
       getTitle: ({ params }) =>
         params.q ? `Search for "${decodeURIComponent(params.q)}"` : 'Search',
@@ -236,9 +240,7 @@ export default compose(
       title: 'Recent Activity',
       view: (
         <>
-          <LayoutHeaderSection>
-            <LayoutHeaderContent />
-          </LayoutHeaderSection>
+          <LayoutHeaderSection />
           Test
         </>
       ),
@@ -247,9 +249,7 @@ export default compose(
       getTitle: ({ params }) => `@${params.user}`,
       view: (
         <>
-          <LayoutHeaderSection>
-            <LayoutHeaderContent />
-          </LayoutHeaderSection>
+          <LayoutHeaderSection />
           Test
         </>
       ),
@@ -258,9 +258,7 @@ export default compose(
       getTitle: ({ params }) => `#${params.tag}`,
       view: (
         <>
-          <LayoutHeaderSection>
-            <LayoutHeaderContent />
-          </LayoutHeaderSection>
+          <LayoutHeaderSection />
           Test
         </>
       ),

@@ -49,9 +49,11 @@ const columnStyles = css`
 `
 
 const StyledLayoutGrid = styled.div`
-  ${media.tabletPlus`
+  ${props => media.tabletPlus`
     display: grid;
-    grid-template-columns: minmax(320px, 400px) minmax(320px, 400px) 1fr;
+    grid-template-columns: minmax(0px, ${
+      props.maxLeftColumnWidth
+    }) minmax(0px, ${props.maxLeftColumnWidth}) 1fr;
     grid-template-areas: 'index content content';
     gap: 1rem;
     margin: 0 1rem;
@@ -83,7 +85,6 @@ const StyledColumnGridColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  overflow: hidden;
 `
 
 const StyledAnimatedLayoutGridRightColumn = animated(styled.div`
@@ -98,6 +99,7 @@ export function LayoutTwinColumns({
   leftBackgroundOnTabletPlus = true,
   right,
   rightBackgroundOnTabletPlus = true,
+  maxLeftColumnWidth = `400px`,
   visibleColumnOnPhone,
   transitionKey,
 }) {
@@ -142,7 +144,7 @@ export function LayoutTwinColumns({
   let lastIndexStateRef = useRef('initial')
 
   return (
-    <StyledLayoutGrid>
+    <StyledLayoutGrid maxLeftColumnWidth={maxLeftColumnWidth}>
       {indexTransitions.map(({ item, props: { index }, key, state }) => {
         // When viewing a non-index page on mobile, initially
         // this will be `true`, at which point it'll do a leave

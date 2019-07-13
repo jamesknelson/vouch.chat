@@ -1,5 +1,4 @@
 export { default } from './layout'
-export { LayoutHeaderContent } from './layoutHeaderContent'
+export { LayoutHeaderContent, LayoutHeaderSection } from './layoutHeader'
 export * from './layoutSingleColumn'
 export * from './layoutTwinColumns'
-export * from './layoutSections'

@@ -6,10 +6,11 @@ import styled from 'styled-components/macro'
 import { InputControl } from 'components/control'
 import Icon from 'components/icon'
 import useControlId from 'hooks/useControlId'
-import { colors } from 'theme'
+import { colors, dimensions } from 'theme'
 
 export const StyledField = styled.div`
-  margin: 1rem 0;
+  margin: 0.5rem 0 1.5rem;
+  max-width: ${dimensions.defaultMaxFieldWidth};
 `
 
 export const StyledLabel = styled.label`
@@ -17,9 +18,9 @@ export const StyledLabel = styled.label`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 95%;
+  font-size: 90%;
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.125rem;
   text-align: left;
 `
 
@@ -30,7 +31,7 @@ export const StyledLabelIcon = styled(Icon)`
 
 export const StyledFieldMessage = styled.div`
   color: ${props => colors.text[props.variant || 'tertiary']};
-  font-size: 90%;
+  font-size: 85%;
   line-height: 1.4rem;
   margin: 0.25rem 0 0.5rem;
   text-align: left;

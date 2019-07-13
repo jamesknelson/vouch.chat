@@ -3,7 +3,9 @@ import { Link, useNavigation } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 
 import { BrandImage } from 'components/brand'
-import { dimensions, focusRing } from 'theme'
+import { tabletPlus } from 'components/media'
+import { Section } from 'components/sections'
+import { colors, dimensions, focusRing } from 'theme'
 import LayoutContext from './layoutContext'
 import { NavItem } from './layoutNavItems'
 
@@ -60,10 +62,12 @@ const HeaderBrandTextLink = () => (
 )
 
 export const LayoutHeaderContent = ({
-  children,
+  children = null,
   index = undefined,
   left = undefined,
   showBack = undefined,
+  title = undefined,
+  actions = undefined,
   ...rest
 }) => {
   let {
@@ -75,8 +79,12 @@ export const LayoutHeaderContent = ({
   } = useContext(LayoutContext)
   let navigation = useNavigation()
 
-  let title = (index ? indexHeaderTitle : headerTitle) || null
-  let actions = children || (index ? indexHeaderActions : headerActions)
+  if (title === undefined) {
+    title = (index ? indexHeaderTitle : headerTitle) || null
+  }
+  if (actions === undefined) {
+    actions = children || (index ? indexHeaderActions : headerActions)
+  }
 
   if (minimal) {
     title = <HeaderBrandTextLink />
@@ -113,5 +121,43 @@ export const LayoutHeaderContent = ({
         )}
       </StyledHeaderActions>
     </StyledHeaderContent>
+  )
+}
+
+const StyledLayoutHeaderSection = styled(Section)`
+  height: ${dimensions.bar};
+  border-bottom: 1px solid ${colors.structure.divider};
+  border-top-width: 0;
+  z-index: 10;
+
+  ${props =>
+    props.sticky &&
+    css`
+      position: sticky;
+      top: 0;
+    `}
+`
+
+const TabletPlusLayoutHeaderSection = tabletPlus(StyledLayoutHeaderSection)
+
+export const LayoutHeaderSection = ({
+  index = undefined,
+  left = undefined,
+  showBack = undefined,
+  title = undefined,
+  actions = undefined,
+  sticky = false,
+  ...rest
+}) => {
+  return (
+    <TabletPlusLayoutHeaderSection {...rest} stick={sticky}>
+      <LayoutHeaderContent
+        index={index}
+        left={left}
+        showBack={showBack}
+        title={title}
+        actions={actions}
+      />
+    </TabletPlusLayoutHeaderSection>
   )
 }

@@ -64,6 +64,7 @@ export const dimensions = {
   base: '16px',
   bar: '4rem',
   narrowCard: '360px',
+  defaultMaxFieldWidth: '460px',
 }
 
 export const easings = {

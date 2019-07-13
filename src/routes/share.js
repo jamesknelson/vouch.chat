@@ -3,19 +3,13 @@ import React from 'react'
 import { css } from 'styled-components/macro'
 
 import Button from 'components/button'
-import {
-  LayoutSingleColumn,
-  LayoutHeaderSection,
-  LayoutHeaderContent,
-} from 'components/layout'
+import { LayoutSingleColumn, LayoutHeaderSection } from 'components/layout'
 import authenticated from 'utils/authenticated'
 
 function Pen(props) {
   return (
     <LayoutSingleColumn>
-      <LayoutHeaderSection>
-        <LayoutHeaderContent />
-      </LayoutHeaderSection>
+      <LayoutHeaderSection />
       <h1
         css={css`
           font-size: 1.4rem;

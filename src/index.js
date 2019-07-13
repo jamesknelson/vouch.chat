@@ -16,6 +16,11 @@ async function main() {
   let context = {
     backend,
     currentUser: undefined,
+
+    // Hydrate expects the original content to be identical to the server
+    // rendered content, so we'll start out with ssr: true and change it
+    // after the hydrate.
+    ssr: true,
   }
   let navigation = createBrowserNavigation({
     routes,
@@ -52,7 +57,9 @@ async function main() {
 
   let currentUser = await backend.currentUser.getCurrentValue()
   if (currentUser !== undefined) {
-    updateContext({ currentUser })
+    updateContext({ currentUser, ssr: false })
+  } else {
+    updateContext({ ssr: false })
   }
   backend.currentUser.subscribe(currentUser => {
     updateContext({ currentUser })

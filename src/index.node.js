@@ -22,6 +22,7 @@ const renderer = async (request, response) => {
       context: {
         backend,
         currentUser: undefined,
+        ssr: true,
       },
       request,
       routes,

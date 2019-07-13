@@ -1,75 +1,80 @@
-import { route } from 'navi'
+import { compose, lazy, mount, redirect, route, withData, withView } from 'navi'
 import React from 'react'
-import { css } from 'styled-components/macro'
-import Card, { CardHeader } from 'components/card'
-import { LayoutHeaderContent } from 'components/layout'
+import { useCurrentRoute, useViewElement } from 'react-navi'
+
+import {
+  LayoutHeaderSection,
+  LayoutLeftColumnContentScroller,
+  LayoutTwinColumns,
+} from 'components/layout'
 import { List, ListItemLink, ListItemText } from 'components/list'
-import { TabletPlus } from 'components/media'
-import TwinColumnLayout from 'components/twinColumnLayout'
-import { media } from 'theme'
+import { Section, Gap } from 'components/sections'
+import { mediaQueries } from 'theme'
+import mountByMedia from 'utils/mountByMedia'
 
-// todo: use a main layout header at the top
+function Settings(props) {
+  let route = useCurrentRoute()
+  let view = useViewElement()
 
-function Account(props) {
   return (
-    <TwinColumnLayout
-      primary="left"
+    <LayoutTwinColumns
+      maxLeftColumnWidth="280px"
+      transitionKey={route.url.href}
+      visibleColumnOnPhone={view ? 'right' : 'left'}
+      rightBackgroundOnTabletPlus={!!view}
       left={
-        <Card
-          borders={[false, true]}
-          radius={0}
-          css={css`
-            display: block;
-            padding-bottom: 2rem;
-            overflow: hidden;
-
-            ${media.phoneOnly`
-              background-color: transparent;
-            `}
-          `}>
-          <TabletPlus>
-            <CardHeader>
-              <LayoutHeaderContent index />
-            </CardHeader>
-          </TabletPlus>
-          <List>
-            <ListItemLink href="/settings/account-details">
-              <ListItemText title="Account Details" />
-            </ListItemLink>
-          </List>
-        </Card>
+        <>
+          <LayoutHeaderSection index />
+          <LayoutLeftColumnContentScroller>
+            <Gap size={1} />
+            <Section>
+              <List>
+                <ListItemLink href="/settings/account-details">
+                  <ListItemText
+                    title="Account Details"
+                    description="Username, email & language."
+                  />
+                </ListItemLink>
+                <ListItemLink href="/settings/password">
+                  <ListItemText
+                    title="Password"
+                    description="Set a new password."
+                  />
+                </ListItemLink>
+                <ListItemLink href="/settings/billing">
+                  <ListItemText
+                    title="Billing"
+                    description="Plan, billing card & history."
+                  />
+                </ListItemLink>
+              </List>
+            </Section>
+          </LayoutLeftColumnContentScroller>
+        </>
       }
-      right={
-        <Card
-          borders={[false, true]}
-          radius={0}
-          css={css`
-            display: block;
-            padding-bottom: 2rem;
-            overflow: hidden;
-
-            ${media.phoneOnly`
-              background-color: transparent;
-            `}
-          `}>
-          <TabletPlus>
-            <CardHeader>
-              <LayoutHeaderContent />
-            </CardHeader>
-          </TabletPlus>
-          <p>stuff</p>
-        </Card>
-      }
+      right={view}
     />
   )
 }
 
-export default route({
-  data: {
-    indexHeader: {
-      title: 'Settings',
-    },
-  },
-  title: 'Account Details',
-  view: <Account />,
-})
+export default compose(
+  withView(<Settings />),
+  withData(({ mountpath }) => ({
+    layoutIndexHeaderTitle: 'Settings',
+    layoutIndexPathname: mountpath,
+  })),
+  mount({
+    '/': mountByMedia({
+      default: route({
+        data: {
+          layoutShowIndexOnPhone: true,
+        },
+        title: 'Settings',
+      }),
+      [mediaQueries.tabletPlus]: redirect('./account-details'),
+    }),
+    '/account-details': lazy(() => import('./accountDetails')),
+    '/billing': lazy(() => import('./billing')),
+    '/password': lazy(() => import('./password')),
+  }),
+)
