@@ -1,3 +1,4 @@
+import { rgba } from 'polished'
 import styled, { css } from 'styled-components/macro'
 import React from 'react'
 import { useField } from 'react-final-form'
@@ -7,8 +8,8 @@ import { colors, radii } from 'theme'
 // The border radius on the input is set in case the browser forces the
 // background-color to something other than transparent, e.g. in case of
 // autofill.
-const StyledInput = styled.input`
-  background-color: transparent;
+const StyledSelect = styled.select`
+  background-color: ${rgba(colors.ink.mid, 0.04)};
   color: ${colors.text.default};
   flex: 1;
   font-size: 0.9rem;
@@ -22,12 +23,29 @@ const StyledInput = styled.input`
     `}
 `
 
+const StyledArrow = styled.div`
+  position: absolute;
+  right: 0.5rem;
+  border: 4px solid transparent;
+  border-top-color: ${colors.ink.mid};
+  margin-top: 5px;
+
+  &::after {
+    content: ' ';
+    position: absolute;
+    border: 4px solid transparent;
+    border-bottom-color: ${colors.ink.mid};
+    margin-left: -4px;
+    margin-top: -14px;
+  }
+`
+
 const StyledControlIconLabel = styled(ControlIconLabel)`
   position: absolute;
   left: 0;
 `
 
-export const InputControl = ({
+export const SelectControl = ({
   onChange,
   glyph,
   className,
@@ -57,7 +75,7 @@ export const InputControl = ({
               variant={variant || (!value && 'empty')}
             />
           )}
-          <StyledInput
+          <StyledSelect
             {...props}
             id={id}
             hasIconLabel={hasIconLabel}
@@ -65,20 +83,21 @@ export const InputControl = ({
             value={value}
             onChange={event => onChange && onChange(event.target.value)}
           />
+          <StyledArrow />
         </>
       )}
     </Control>
   )
 }
 
-export function FormInputControl({ name, initialValue, variant, ...props }) {
+export function FormSelectControl({ name, initialValue, variant, ...props }) {
   let field = useField(name, {
     initialValue,
   })
   let error = field.meta.submitFailed && field.meta.invalid
 
   return (
-    <InputControl
+    <SelectControl
       {...field.input}
       {...props}
       variant={variant || (error && 'warning')}
@@ -86,4 +105,4 @@ export function FormInputControl({ name, initialValue, variant, ...props }) {
   )
 }
 
-export default InputControl
+export default SelectControl

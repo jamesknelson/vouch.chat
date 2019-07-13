@@ -3,13 +3,13 @@ import React from 'react'
 import { useField } from 'react-final-form'
 import styled from 'styled-components/macro'
 
-import { InputControl } from 'components/control'
+import { InputControl, SelectControl } from 'components/control'
 import Icon from 'components/icon'
 import useControlId from 'hooks/useControlId'
 import { colors, dimensions } from 'theme'
 
 export const StyledField = styled.div`
-  margin: 0.5rem 0 1.5rem;
+  margin: 0 0 1rem;
   max-width: ${dimensions.defaultMaxFieldWidth};
 `
 
@@ -63,6 +63,63 @@ export const Field = ({
         : React.cloneElement(React.Children.only(children), { id: controlId })}
       <StyledFieldMessage variant={variant}>{message}</StyledFieldMessage>
     </StyledField>
+  )
+}
+
+export const SelectField = ({
+  message,
+  label,
+  labelGlyph,
+  className,
+  id,
+  style,
+  hidden,
+  variant,
+  ...props
+}) => (
+  <Field
+    message={message}
+    label={label}
+    labelGlyph={labelGlyph}
+    className={className}
+    id={id}
+    style={style}
+    hidden={hidden}
+    variant={variant}>
+    <SelectControl {...props} variant={variant} />
+  </Field>
+)
+
+export function FormSelectField({
+  name,
+  hint,
+  initialValue,
+  label,
+  message,
+  messages = {},
+  ...props
+}) {
+  let field = useField(name, {
+    initialValue,
+  })
+  let error = field.meta.submitFailed && field.meta.invalid
+  let errorCode =
+    field.meta.submitFailed &&
+    ((error && field.meta.submitError) || field.meta.error)
+
+  label = label || humanizeString(name)
+  if (errorCode) {
+    errorCode = messages[errorCode] || errorCode
+  }
+
+  return (
+    <SelectField
+      {...field.input}
+      {...props}
+      label={label}
+      message={message || errorCode || hint}
+      variant={props.variant || (error ? 'warning' : undefined)}
+    />
   )
 }
 

@@ -30,6 +30,7 @@ export function Control({
   label,
   radius,
   variant,
+  size,
   style,
   ...props
 }) {
@@ -50,8 +51,16 @@ export function Control({
     bottomLeft: lastRow && firstColumn ? radius : 0,
   }
 
+  if (controlGroupItem && size === undefined) {
+    size = 'large'
+  }
+
   return (
-    <StyledControlWrapper as={as} {...props} style={{ flex, ...style }}>
+    <StyledControlWrapper
+      as={as}
+      size={size}
+      {...props}
+      style={{ flex, ...style }}>
       {label && (
         <label htmlFor={controlId} css={srOnly}>
           {label}

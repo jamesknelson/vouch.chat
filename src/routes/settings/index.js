@@ -19,9 +19,9 @@ function Settings(props) {
   return (
     <LayoutTwinColumns
       maxLeftColumnWidth="280px"
-      transitionKey={route.url.href}
+      transitionKey={!route.data.loading && route.url.href}
       visibleColumnOnPhone={view ? 'right' : 'left'}
-      rightBackgroundOnTabletPlus={!!view}
+      rightBackgroundOnTabletPlus={!!view && !route.data.loading}
       left={
         <>
           <LayoutHeaderSection index />
@@ -38,7 +38,7 @@ function Settings(props) {
                 <ListItemLink href="/settings/password">
                   <ListItemText
                     title="Password"
-                    description="Set a new password."
+                    description="Change or recover your password."
                   />
                 </ListItemLink>
                 <ListItemLink href="/settings/billing">
@@ -52,7 +52,7 @@ function Settings(props) {
           </LayoutLeftColumnContentScroller>
         </>
       }
-      right={view}
+      right={!route.data.loading && view}
     />
   )
 }

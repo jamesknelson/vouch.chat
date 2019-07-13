@@ -1,50 +1,110 @@
 import { route } from 'navi'
 import React from 'react'
+import { FormSpy } from 'react-final-form'
 import styled, { css } from 'styled-components/macro'
 
-import Button from 'components/button'
-import { InputField } from 'components/field'
+import Button, { FormSubmitButton } from 'components/button'
+import { FormInputField, FormSelectField } from 'components/field'
 import { LayoutHeaderSection } from 'components/layout'
-import { Gap, Gutter, Section, SectionFooter } from 'components/sections'
-import { colors } from 'theme'
 import { TabletPlus } from 'components/media'
+import {
+  Gap,
+  Gutter,
+  Section,
+  SectionFooter,
+  SectionFooterMessage,
+} from 'components/sections'
+import { useCurrentUser } from 'context'
+import { Form, FormMessage } from 'controls/form'
+import useOperation from 'hooks/useOperation'
+import sendVerificationEmail from 'operations/sendVerificationEmail'
+import updateAccountDetails from 'operations/updateAccountDetails'
+import { colors } from 'theme'
+import authenticated from 'utils/authenticated'
 
 function AccountDetails() {
+  let updateOperation = useOperation(updateAccountDetails)
+  let sendVerification = useOperation(sendVerificationEmail)
+  let user = useCurrentUser()
+
+  let emailVariant
+  let emailMessage
+  if (sendVerification.lastValue) {
+    emailMessage = 'Your verification email could not be sent.'
+    emailVariant = 'warning'
+  } else if (sendVerification.lastStatus === 'success') {
+    emailMessage = 'Verification email sent. Please check your inbox.'
+  } else if (!user.emailVerified) {
+    emailMessage = (
+      <>
+        Your email still needs to be verified. It will not be displayed
+        publicly.
+        <br />
+        <Button
+          spinnerColor={colors.brandPrimary}
+          size="small"
+          disabled={sendVerification.busy}
+          busy={sendVerification.busy}
+          onClick={sendVerification.invoke}
+          style={{ margin: '0.25rem 0' }}
+          inline
+          outline>
+          Send verification email
+        </Button>
+      </>
+    )
+  }
+
   return (
     <>
       <LayoutHeaderSection />
       <Gap />
       <Section>
-        <Gutter vertical={0.5}>
-          <InputField
-            label="Username"
-            message="https://vouch.chat/james"
-            value="james"
-          />
-          <InputField
-            label="Email"
-            message={
-              <>
-                This will <em>not</em> be publicly displayed.
-              </>
-            }
-            value="james@jamesknelson.com"
-          />
-          <InputField label="Language" value="English" />
-        </Gutter>
-        <SectionFooter>
-          <Gutter vertical={1}>
-            <Button inline>Save</Button>
-            <span
-              css={css`
-                color: ${colors.text.tertiary};
-                font-size: 90%;
-                margin-left: 1rem;
-              `}>
-              You have unsaved changes.
-            </span>
+        <Form
+          onSubmit={updateOperation.invoke}
+          validate={updateOperation.validate}>
+          <Gutter>
+            <Gap size={1} />
+            <FormSpy>
+              {state => (
+                <FormInputField
+                  label="Username"
+                  name="username"
+                  hint={`https://vouch.chat/${state.values.username || ''}`}
+                />
+              )}
+            </FormSpy>
+            <FormInputField
+              initialValue={user.email}
+              label="Email"
+              name="email"
+              hint={
+                emailMessage || (
+                  <>
+                    This will <em>not</em> be publicly displayed.
+                  </>
+                )
+              }
+              variant={emailVariant}
+            />
+            <FormSelectField label="Language" name="language">
+              <option value="en">English</option>
+              <option value="ja">日本語</option>
+            </FormSelectField>
           </Gutter>
-        </SectionFooter>
+          <SectionFooter>
+            <Gutter vertical={1}>
+              <FormSubmitButton inline>Save</FormSubmitButton>
+              <FormMessage dirty except={['username', 'email']}>
+                {({ message, variant }) => (
+                  <SectionFooterMessage variant={variant}>
+                    {message}
+                  </SectionFooterMessage>
+                )}
+              </FormMessage>
+            </Gutter>
+          </SectionFooter>
+        </Form>
       </Section>
 
       <Gap />
@@ -83,7 +143,9 @@ const StyledHeaderSubTitle = styled.h2`
   margin: 1.5rem 0 1rem;
 `
 
-export default route({
-  title: 'Account Details',
-  view: <AccountDetails />,
-})
+export default authenticated(
+  route({
+    title: 'Account Details',
+    view: <AccountDetails />,
+  }),
+)

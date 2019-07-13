@@ -13,7 +13,7 @@ import LayoutCenteredCard, {
 } from 'components/layout/layoutCenteredCard'
 import { ControlGroup, FormInputControl } from 'components/control'
 import Divider from 'components/divider'
-import { Form, FormIssue } from 'controls/form'
+import { Form, FormMessage } from 'controls/form'
 import AuthLink from 'controls/authLink'
 import useOperation from 'hooks/useOperation'
 import emailRegister from 'operations/emailRegister'
@@ -47,9 +47,9 @@ function Join({ redirectTo, plan }) {
             type="password"
           />
         </ControlGroup>
-        <FormIssue>
-          {message => (message ? <Issue>{message}</Issue> : null)}
-        </FormIssue>
+        <FormMessage>
+          {({ issue }) => issue && <Issue>{issue}</Issue>}
+        </FormMessage>
         <StyledFormSubmitButton>Join in</StyledFormSubmitButton>
       </Form>
       <RelatedLinkGroup>

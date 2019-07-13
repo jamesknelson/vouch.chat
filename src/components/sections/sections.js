@@ -110,3 +110,9 @@ export const SectionFooter = ({ children, ...rest }) => (
     </StyledSectionFooter>
   </>
 )
+
+export const SectionFooterMessage = styled.span`
+  color: ${props => colors.text[props.variant || 'tertiary']};
+  font-size: 90%;
+  margin-left: 1rem;
+`

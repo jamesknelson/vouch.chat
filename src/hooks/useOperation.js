@@ -178,8 +178,11 @@ function useOperation(
     .filter(invocation => invocation.status === 'value')
     .map(invocation => invocation.value)
 
+  let lastInvocation = publicInvocations[publicInvocations.length - 1]
+
   let lastError = errors[errors.length - 1]
   let lastValue = values[values.length - 1]
+  let lastStatus = lastInvocation && lastInvocation.status
 
   return {
     busy: publicInvocations.some(params => params.status === 'busy'),
@@ -189,6 +192,7 @@ function useOperation(
     invocations: publicInvocations,
     invoke: invokeOperation,
     lastError,
+    lastStatus,
     lastValue,
     validate: validateOperation,
     value: lastValue,

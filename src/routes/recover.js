@@ -13,6 +13,7 @@ import AuthLink from 'controls/authLink'
 import { Form } from 'controls/form'
 import useOperation from 'hooks/useOperation'
 import sendPasswordResetEmail from 'operations/sendPasswordResetEmail'
+import { Gap } from 'components/sections'
 
 function Recover(props) {
   let navigation = useNavigation()
@@ -32,11 +33,12 @@ function Recover(props) {
         }}>
         <FormInputField
           label="Your email"
-          labelGlyph="envelope"
+          glyph="envelope1"
           name="email"
           type="email"
           showLabelAsPlaceholder
         />
+        <Gap size={'1px'} />
         <StyledFormSubmitButton>Recover account</StyledFormSubmitButton>
       </Form>
       <RelatedLinkGroup>

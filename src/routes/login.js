@@ -16,7 +16,7 @@ import LayoutCenteredCard, {
 } from 'components/layout/layoutCenteredCard'
 import Divider from 'components/divider'
 import AuthLink from 'controls/authLink'
-import { Form, FormIssue } from 'controls/form'
+import { Form, FormMessage } from 'controls/form'
 import useOperation from 'hooks/useOperation'
 import emailLogin from 'operations/emailLogin'
 import socialLogin from 'operations/socialLogin'
@@ -167,9 +167,9 @@ function EmailLogin(props) {
             type="password"
           />
         </ControlGroup>
-        <FormIssue>
-          {message => (message ? <Issue>{message}</Issue> : null)}
-        </FormIssue>
+        <FormMessage>
+          {({ issue }) => issue && <Issue>{issue}</Issue>}
+        </FormMessage>
         <StyledFormSubmitButton>Sign in</StyledFormSubmitButton>
       </Form>
       <RelatedLinkGroup>

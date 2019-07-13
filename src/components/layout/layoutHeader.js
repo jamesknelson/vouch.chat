@@ -150,7 +150,7 @@ export const LayoutHeaderSection = ({
   ...rest
 }) => {
   return (
-    <TabletPlusLayoutHeaderSection {...rest} stick={sticky}>
+    <TabletPlusLayoutHeaderSection {...rest} sticky={sticky}>
       <LayoutHeaderContent
         index={index}
         left={left}

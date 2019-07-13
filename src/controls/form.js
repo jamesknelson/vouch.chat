@@ -71,10 +71,24 @@ export function Form({
   )
 }
 
-export function FormIssue({ children, ...rest }) {
+export function FormMessage({ children, dirty, ...rest }) {
   let formState = useFormState()
   let issues = getFormIssues({ formState, ...rest })
-  return children(issues && Object.values(issues)[0])
+  let issue = null
+  let message = null
+  let variant = null
+  if (issues) {
+    issue = message = issues && Object.values(issues)[0]
+    variant = 'warning'
+  } else if (dirty && formState.dirty) {
+    message = 'You have unsaved changes.'
+  }
+  return children({
+    dirty: formState.dirty,
+    issue,
+    message,
+    variant,
+  })
 }
 
 export default Form

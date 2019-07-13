@@ -10,7 +10,7 @@ import LayoutCenteredCard, {
   StyledFormSubmitButton,
 } from 'components/layout/layoutCenteredCard'
 import { FormInputField } from 'components/field'
-import Form, { FormIssue } from 'controls/form'
+import Form, { FormMessage } from 'controls/form'
 import useOperation from 'hooks/useOperation'
 import resetPassword from 'operations/resetPassword'
 import loading from './loading'
@@ -56,9 +56,9 @@ export const ResetPassword = props => {
           name="passwordConfirmation"
           type="password"
         />
-        <FormIssue except={['password', 'passwordConfirmation']}>
-          {message => (message ? <Issue>{message}</Issue> : null)}
-        </FormIssue>
+        <FormMessage except={['password', 'passwordConfirmation']}>
+          {({ issue }) => issue && <Issue>{issue}</Issue>}
+        </FormMessage>
         <StyledFormSubmitButton
           css={css`
             margin-top: 1.5rem;

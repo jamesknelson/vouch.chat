@@ -6,6 +6,7 @@ export const StyledControlWrapper = styled.span`
   align-items: center;
   position: relative;
   display: flex;
+  padding: ${props => (props.size === 'large' ? '0.25rem' : 0)};
 
   > * {
     z-index: 6;
@@ -13,7 +14,7 @@ export const StyledControlWrapper = styled.span`
 
   > :focus,
   > :focus ~ * {
-    z-index: 9;
+    z-index: 8;
   }
 `
 
@@ -22,6 +23,7 @@ export const StyledControlIconLabel = styled.label`
 
   color: ${props =>
     colors.control.icon[props.variant] || colors.control.icon['default']};
+  display: flex;
   text-shadow: 0 0 3px
     ${props =>
       rgba(

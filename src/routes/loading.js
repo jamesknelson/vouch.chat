@@ -18,6 +18,9 @@ function Loading() {
 }
 
 const loadingRoute = route({
+  data: {
+    loading: true,
+  },
   view: <Loading />,
 })
 
