@@ -1,6 +1,5 @@
 import { route } from 'navi'
 import React from 'react'
-import { Link } from 'react-navi'
 
 import { FormSubmitButton, StyledLink } from 'components/button'
 import { FormInputField } from 'components/field'

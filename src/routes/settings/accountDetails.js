@@ -27,14 +27,12 @@ function AccountDetails() {
   let sendVerification = useOperation(sendVerificationEmail)
   let user = useCurrentUser()
 
-  console.log('lastStatus', sendVerification.lastStatus)
-
   let emailVariant
   let emailMessage
   if (sendVerification.lastValue) {
     emailMessage = 'Your verification email could not be sent.'
     emailVariant = 'warning'
-  } else if (sendVerification.lastStatus === 'success') {
+  } else if (sendVerification.lastStatus === 'value') {
     emailMessage = 'Verification email sent. Please check your inbox.'
   } else if (!user.emailVerified) {
     emailMessage = (
