@@ -103,9 +103,19 @@ export function LayoutTwinColumns({
   visibleColumnOnPhone,
   transitionKey,
 }) {
+  let context = useContext(LayoutContext)
   let isPhone = useMediaQuery(mediaQueries.phoneOnly)
   let transitions = useTransition(
     {
+      // Context holds the header title/actions, which will usually differ
+      // between the in and out elements.
+      context,
+
+      // If this isn't stored with each of the transitioning elements, then
+      // you can get a flash of white background appear when sliding in the
+      // first card, which is super distracting.
+      rightBackgroundOnTabletPlus,
+
       visibleColumnOnPhone,
       right,
     },
@@ -170,23 +180,30 @@ export function LayoutTwinColumns({
       })}
       {transitions.map(
         ({
-          item: { right, visibleColumnOnPhone },
+          item: {
+            context,
+            right,
+            visibleColumnOnPhone,
+            rightBackgroundOnTabletPlus,
+          },
           props: { content },
           key,
           state,
         }) =>
           (visibleColumnOnPhone === 'right' || !isPhone) && (
-            <LayoutRightColumn
-              key={key}
-              entering={state === 'enter'}
-              leaving={state === 'leave'}
-              withBackgroundOnTabletPlus={rightBackgroundOnTabletPlus}
-              visibleOnPhone={visibleColumnOnPhone === 'right'}
-              style={{
-                transform: content,
-              }}>
-              {right}
-            </LayoutRightColumn>
+            <LayoutContext.Provider value={{ ...context }}>
+              <LayoutRightColumn
+                key={key}
+                entering={state === 'enter'}
+                leaving={state === 'leave'}
+                withBackgroundOnTabletPlus={rightBackgroundOnTabletPlus}
+                visibleOnPhone={visibleColumnOnPhone === 'right'}
+                style={{
+                  transform: content,
+                }}>
+                {right}
+              </LayoutRightColumn>
+            </LayoutContext.Provider>
           ),
       )}
     </StyledLayoutGrid>

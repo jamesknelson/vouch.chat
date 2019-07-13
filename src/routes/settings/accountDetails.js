@@ -20,7 +20,6 @@ import useOperation from 'hooks/useOperation'
 import sendVerificationEmail from 'operations/sendVerificationEmail'
 import updateAccountDetails from 'operations/updateAccountDetails'
 import { colors } from 'theme'
-import authenticated from 'utils/authenticated'
 
 function AccountDetails() {
   let updateOperation = useOperation(updateAccountDetails)
@@ -143,9 +142,7 @@ const StyledHeaderSubTitle = styled.h2`
   margin: 1.5rem 0 1rem;
 `
 
-export default authenticated(
-  route({
-    title: 'Account Details',
-    view: <AccountDetails />,
-  }),
-)
+export default route({
+  title: 'Account Details',
+  view: <AccountDetails />,
+})

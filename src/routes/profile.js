@@ -1,7 +1,6 @@
 import { route } from 'navi'
 import React from 'react'
 import { css } from 'styled-components/macro'
-import Card from 'components/card'
 import { colors } from 'theme'
 
 function Profile(props) {

@@ -10,6 +10,7 @@ import {
 import { List, ListItemLink, ListItemText } from 'components/list'
 import { Section, Gap } from 'components/sections'
 import { mediaQueries } from 'theme'
+import authenticated from 'utils/authenticated'
 import mountByMedia from 'utils/mountByMedia'
 
 function Settings(props) {
@@ -57,24 +58,26 @@ function Settings(props) {
   )
 }
 
-export default compose(
-  withView(<Settings />),
-  withData(({ mountpath }) => ({
-    layoutIndexHeaderTitle: 'Settings',
-    layoutIndexPathname: mountpath,
-  })),
-  mount({
-    '/': mountByMedia({
-      default: route({
-        data: {
-          layoutShowIndexOnPhone: true,
-        },
-        title: 'Settings',
+export default authenticated(
+  compose(
+    withView(<Settings />),
+    withData(({ mountpath }) => ({
+      layoutIndexHeaderTitle: 'Settings',
+      layoutIndexPathname: mountpath,
+    })),
+    mount({
+      '/': mountByMedia({
+        default: route({
+          data: {
+            layoutShowIndexOnPhone: true,
+          },
+          title: 'Settings',
+        }),
+        [mediaQueries.tabletPlus]: redirect('./account-details'),
       }),
-      [mediaQueries.tabletPlus]: redirect('./account-details'),
+      '/account-details': lazy(() => import('./accountDetails')),
+      '/billing': lazy(() => import('./billing')),
+      '/password': lazy(() => import('./password')),
     }),
-    '/account-details': lazy(() => import('./accountDetails')),
-    '/billing': lazy(() => import('./billing')),
-    '/password': lazy(() => import('./password')),
-  }),
+  ),
 )
