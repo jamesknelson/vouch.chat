@@ -17,7 +17,7 @@ export function useCurrentLanguage() {
 
 // Mutatively store data that can be used later on when creating accounts
 // and subscriptions, e.g. email, referrer, coupon, etc.
-export const MutableTrackingObjectContext = React.createContext({})
-export function useMutableTrackingObject() {
-  return useContext(MutableTrackingObjectContext)
+export const MutableStoreContext = React.createContext({})
+export function useMutableStore() {
+  return useContext(MutableStoreContext)
 }

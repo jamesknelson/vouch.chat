@@ -29,7 +29,7 @@ async function main() {
 
   await navigation.getRoute()
 
-  ReactDOM.render(
+  ReactDOM.hydrate(
     <HelmetProvider>
       <BackendContext.Provider value={backend}>
         <StripeProvider

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { rgba } from 'polished'
 import styled from 'styled-components/macro'
 import { Control } from 'components/control'
@@ -65,9 +65,12 @@ export function SearchForm({
   label,
   id,
   onChange,
+  onClear,
   onSubmit,
   ...props
 }) {
+  let inputRef = useRef()
+
   let handleKeyDown = useCallback(
     event => {
       if (event.key === 'Escape') {
@@ -85,8 +88,20 @@ export function SearchForm({
   )
 
   let handleClear = useCallback(() => {
-    onChange('')
-  }, [onChange])
+    onClear()
+
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [onClear])
+
+  let handleSubmit = useCallback(
+    event => {
+      event.preventDefault()
+      onSubmit()
+    },
+    [onSubmit],
+  )
 
   return (
     <Control
@@ -96,12 +111,13 @@ export function SearchForm({
       className={className}
       radius="9999px"
       style={style}
-      onSubmit={onSubmit}>
+      onSubmit={handleSubmit}>
       {id => (
         <>
           <StyledSearchInput
             id={id}
             name="q"
+            ref={inputRef}
             placeholder={label}
             onKeyDown={handleKeyDown}
             onChange={handleChange}

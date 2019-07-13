@@ -1,6 +1,12 @@
+import EventEmitter from 'events'
 import { compose, mount, redirect, route, withData, withView } from 'navi'
 import React, { useEffect, useState } from 'react'
-import { useNavigation, useCurrentRoute, useViewElement } from 'react-navi'
+import {
+  useNavigation,
+  useCurrentRoute,
+  useViewElement,
+  useActive,
+} from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 
 import { TagAvatar, UserAvatar } from 'components/avatar'
@@ -25,6 +31,8 @@ import {
 import SearchForm from 'components/searchForm'
 import { colors } from 'theme'
 
+const clearEmitter = new EventEmitter()
+
 const Disc = styled.div`
   display: flex;
   align-items: center;
@@ -38,9 +46,24 @@ const Disc = styled.div`
   `}
 `
 
-function Read({ query }) {
+function Read(props) {
   let route = useCurrentRoute()
   let view = useViewElement()
+  let [query, setQuery] = useState(props.query)
+
+  useEffect(() => {
+    if (typeof props.query === 'string') {
+      setQuery(props.query || '')
+    }
+  }, [props.query])
+
+  useEffect(() => {
+    let listener = () => {
+      setQuery(null)
+    }
+    clearEmitter.on('clear', listener)
+    return () => clearEmitter.off('clear', listener)
+  }, [])
 
   return (
     <LayoutTwinColumns
@@ -53,7 +76,7 @@ function Read({ query }) {
             <LayoutHeaderContent index />
           </LayoutHeaderSection>
           <LayoutLeftColumnContentScroller>
-            {query && (
+            {typeof query === 'string' && (
               <LayoutSection>
                 <List>
                   <ListItemLink
@@ -63,7 +86,7 @@ function Read({ query }) {
                         <Icon glyph="search" size="1.5rem" />
                       </Disc>
                     </ListItemImage>
-                    <ListItemText title="Search Results" description="test" />
+                    <ListItemText title="Search Results" description={query} />
                     <ListItemIconButton
                       glyph="plus1"
                       tooltip="Add to watchlist"
@@ -135,13 +158,14 @@ function Read({ query }) {
 function ReadingListSearch(props) {
   let [query, setQuery] = useState(props.query)
   let navigation = useNavigation()
+  let isViewingSearch = useActive('/read/search')
 
   // Keep the query up to date with navigation.
   useEffect(() => {
-    if (props.query !== query) {
-      setQuery(props.query)
+    if (typeof props.query === 'string') {
+      setQuery(props.query || '')
     }
-  }, [query, props.query])
+  }, [props.query])
 
   return (
     <SearchForm
@@ -152,10 +176,16 @@ function ReadingListSearch(props) {
           margin-left: 1rem;
         }
       `}
-      value={query}
+      value={query || ''}
+      onClear={() => {
+        setQuery('')
+        clearEmitter.emit('clear')
+        if (isViewingSearch) {
+          navigation.navigate('/read')
+        }
+      }}
       onChange={setQuery}
-      onSubmit={event => {
-        event.preventDefault()
+      onSubmit={() => {
         navigation.navigate('/read/search?q=' + encodeURIComponent(query))
       }}
     />
