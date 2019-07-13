@@ -55,6 +55,7 @@ export const colors = {
     subHeading: '#9098B0',
     placeholder: '#778899',
     warning: '#733939',
+    success: '#112233',
     link: '#102030',
     light: 'rgba(255, 255, 255, 0.93)',
   },

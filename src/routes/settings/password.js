@@ -2,40 +2,78 @@ import { route } from 'navi'
 import React from 'react'
 import { Link } from 'react-navi'
 
-import Button from 'components/button'
-import { InputField } from 'components/field'
+import { FormSubmitButton, StyledLink } from 'components/button'
+import { FormInputField } from 'components/field'
 import { LayoutHeaderSection } from 'components/layout'
-import { Gap, Gutter, Section, SectionFooter } from 'components/sections'
+import {
+  Gap,
+  Gutter,
+  Section,
+  SectionFooter,
+  SectionFooterMessage,
+} from 'components/sections'
+import { Form, FormMessage } from 'controls/form'
+import useOperation from 'hooks/useOperation'
+import updatePassword from 'operations/updatePassword'
 import { colors } from 'theme'
 
 function Password() {
+  let operation = useOperation(updatePassword)
+
   return (
     <>
       <LayoutHeaderSection />
       <Gap />
       <Section>
-        <Gutter>
-          <Gap size={1} />
-          <InputField
-            label="Current Password"
-            message={
-              <>
-                Not sure what your password is?{' '}
-                <Link href="/recover" style={{ color: colors.ink.black }}>
-                  Recover your password here.
-                </Link>
-              </>
-            }
-            type="password"
-          />
-          <InputField label="New Password" type="password" />
-          <InputField label="Confirm Password" type="password" />
-        </Gutter>
-        <SectionFooter>
-          <Gutter vertical={1}>
-            <Button inline>Update Password</Button>
+        <Form onSubmit={operation.invoke} validate={operation.validate}>
+          <Gutter>
+            <Gap size={1} />
+            <FormInputField
+              label="Current Password"
+              name="currentPassword"
+              type="password"
+              hint={
+                <>
+                  Not sure what your password is?{' '}
+                  <StyledLink
+                    href="/recover"
+                    style={{ color: colors.ink.black }}>
+                    Recover your password here.
+                  </StyledLink>
+                </>
+              }
+            />
+            <FormInputField
+              label="New Password"
+              type="password"
+              name="password"
+            />
+            <FormInputField
+              label="Confirm Password"
+              type="password"
+              name="passwordConfirmation"
+            />
           </Gutter>
-        </SectionFooter>
+          <SectionFooter>
+            <Gutter vertical={1}>
+              <FormSubmitButton inline>Update Password</FormSubmitButton>
+              <FormMessage
+                dirty="You have unsaved changes."
+                success="Your password was successfully changed."
+                except={[
+                  'password',
+                  'currentPassword',
+                  'passwordConfirmation',
+                ]}>
+                {({ message, variant }) => (
+                  <SectionFooterMessage variant={variant}>
+                    {message}
+                  </SectionFooterMessage>
+                )}
+              </FormMessage>
+            </Gutter>
+          </SectionFooter>
+        </Form>
       </Section>
 
       <Gap size="50vh" />

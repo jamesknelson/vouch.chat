@@ -7,17 +7,17 @@ const emailErrorMessages = {
   invalid: "That email doesn't look quite right.",
 }
 
-emailLogin.useDependencies = function useDependencies() {
+updateAccountDetails.useDependencies = function useDependencies() {
   return useBackend()
 }
 
-emailLogin.validate = function validate(params) {
+updateAccountDetails.validate = function validate(params) {
   return normalizeIssues({
     email: emailErrorMessages[validateEmail(params.email)],
     username: params.username ? undefined : 'You need a username.',
   })
 }
 
-export default async function emailLogin(params, backend) {
+export default async function updateAccountDetails(params, backend) {
   return normalizeIssues('Not implemented.')
 }

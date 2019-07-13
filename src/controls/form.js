@@ -17,6 +17,8 @@ export function Form({
     onRequestSubmit,
     onSubmitSucceeded,
     onSubmitFailed,
+
+    lastSubmittedValues: null,
   })
 
   useEffect(() => {
@@ -31,14 +33,19 @@ export function Form({
   if (!formSubmitCallbacksRef.current) {
     formSubmitCallbacksRef.current = createDecorator({
       beforeSubmit: form => {
+        let values = form.getState().values
+
+        submitCallbacksRef.current.lastSubmittedValues = values
+
         if (submitCallbacksRef.current.onRequestSubmit) {
-          submitCallbacksRef.current.onRequestSubmit(
-            form.getState().values,
-            form,
-          )
+          submitCallbacksRef.current.onRequestSubmit(values, form)
         }
       },
       afterSubmitSucceeded: form => {
+        // Reset the form to the submitted values, so that
+        // `pristine` and `dirty` no longer show any changes.
+        form.initialize(submitCallbacksRef.current.lastSubmittedValues)
+
         if (submitCallbacksRef.current.onSubmitSucceeded) {
           submitCallbacksRef.current.onSubmitSucceeded(
             form.getState().values,
@@ -71,7 +78,7 @@ export function Form({
   )
 }
 
-export function FormMessage({ children, dirty, ...rest }) {
+export function FormMessage({ children, dirty, success, ...rest }) {
   let formState = useFormState()
   let issues = getFormIssues({ formState, ...rest })
   let issue = null
@@ -80,8 +87,11 @@ export function FormMessage({ children, dirty, ...rest }) {
   if (issues) {
     issue = message = issues && Object.values(issues)[0]
     variant = 'warning'
-  } else if (dirty && formState.dirty) {
-    message = 'You have unsaved changes.'
+  } else if (!formState.submitting && dirty && formState.dirty) {
+    message = typeof dirty === 'string' ? dirty : 'You have unsaved changes.'
+  } else if (formState.submitSucceeded && success) {
+    message = typeof success === 'string' ? success : 'Your changes were saved.'
+    variant = 'success'
   }
   return children({
     dirty: formState.dirty,

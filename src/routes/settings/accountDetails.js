@@ -27,6 +27,8 @@ function AccountDetails() {
   let sendVerification = useOperation(sendVerificationEmail)
   let user = useCurrentUser()
 
+  console.log('lastStatus', sendVerification.lastStatus)
+
   let emailVariant
   let emailMessage
   if (sendVerification.lastValue) {
