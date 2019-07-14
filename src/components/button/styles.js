@@ -54,6 +54,12 @@ export const StyledButtonBase = styled.button`
   ${focusRing('::after', { radius: '9999px' })}
 
   ${props =>
+    props.width &&
+    css`
+      width: ${props.width};
+    `}
+
+  ${props =>
     props.size === 'small'
       ? css`
           font-size: 0.8rem;
@@ -191,6 +197,7 @@ export const Button = ({
   inline = false,
   type = 'button',
   outline = false,
+  width = undefined,
   ...props
 }) => {
   let StyledButton = outline ? StyledOutlineButton : StyledSolidButton
@@ -222,6 +229,7 @@ export const Button = ({
       leaveGlyphSpace={busy !== undefined || glyph !== undefined}
       type={type}
       outline={outline}
+      width={width}
       {...props}>
       {glyphTransitions.map(
         ({ item, props: { t }, key }) =>

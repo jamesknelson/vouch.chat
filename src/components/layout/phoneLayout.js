@@ -14,13 +14,17 @@ import LayoutNavMenuItems from './layoutNavMenuItems'
 import ProfileFlipper from './layoutProfileFlipper'
 
 const PhoneWrapper = styled.div`
-  height: 100%;
   min-height: 100%;
 `
 
 const StyledMain = styled.main`
   min-height: 100%;
-  padding-top: calc(${dimensions.bar} * 7 / 4);
+
+  ${props =>
+    !props.minimal &&
+    css`
+      padding-top: calc(${dimensions.bar} * 7 / 4);
+    `}
 `
 
 const SidebarMoreMenu = ({ children, side }) => {
@@ -134,13 +138,7 @@ const PhoneHeaderOverlay = ({ hide, indexPathname, minimal }) => {
   )
 }
 
-function PhoneLayoutContent({
-  children,
-  indexPathname,
-  minimal,
-  currentUser,
-  ...rest
-}) {
+function PhoneLayoutContent({ children, indexPathname, minimal, ...rest }) {
   let lastScrollDirection = useLastScrollDirection()
 
   let hideTitle =
@@ -155,9 +153,9 @@ function PhoneLayoutContent({
       />
       <StyledPhoneNavbar leaveTitleSpace={!hideTitle} hide={minimal}>
         <NavItems />
-        <ProfileFlipper currentUser={currentUser} sizeRem={2} />
+        <ProfileFlipper sizeRem={2} />
       </StyledPhoneNavbar>
-      <StyledMain>{children}</StyledMain>
+      <StyledMain minimal={minimal}>{children}</StyledMain>
     </PhoneWrapper>
   )
 }

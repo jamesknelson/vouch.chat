@@ -3,12 +3,11 @@ import React from 'react'
 import { useNavigation } from 'react-navi'
 import { css } from 'styled-components/macro'
 
-import { StyledLink } from 'components/button'
-import LayoutCenteredCard, {
+import { FormSubmitButton, StyledLink } from 'components/button'
+import LayoutPageCard, {
   Instructions,
   Issue,
-  StyledFormSubmitButton,
-} from 'components/layout/layoutCenteredCard'
+} from 'components/layout/layoutPageCard'
 import { FormInputField } from 'components/field'
 import Form, { FormMessage } from 'controls/form'
 import useOperation from 'hooks/useOperation'
@@ -31,17 +30,17 @@ export const ResetPassword = props => {
 
   if (!props.email) {
     return (
-      <LayoutCenteredCard title="Oops">
+      <LayoutPageCard title="Oops">
         <Instructions>
           This account recovery link has expired. Please get a new link at the{' '}
           <StyledLink href="/recover">recover account</StyledLink> page.
         </Instructions>
-      </LayoutCenteredCard>
+      </LayoutPageCard>
     )
   }
 
   return (
-    <LayoutCenteredCard title="One more step...">
+    <LayoutPageCard title="One more step...">
       <Instructions>Please set a new password below.</Instructions>
       <Form validate={operation.validate} onSubmit={operation.invoke}>
         <FormInputField
@@ -59,14 +58,15 @@ export const ResetPassword = props => {
         <FormMessage except={['password', 'passwordConfirmation']}>
           {({ issue }) => issue && <Issue>{issue}</Issue>}
         </FormMessage>
-        <StyledFormSubmitButton
+        <FormSubmitButton
           css={css`
             margin-top: 1.5rem;
+            width: 100%;
           `}>
           Change Password
-        </StyledFormSubmitButton>
+        </FormSubmitButton>
       </Form>
-    </LayoutCenteredCard>
+    </LayoutPageCard>
   )
 }
 

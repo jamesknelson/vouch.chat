@@ -2,18 +2,18 @@ import { map, redirect, route } from 'navi'
 import React from 'react'
 import { useNavigation } from 'react-navi'
 
-import { LoginButton, StyledLink } from 'components/button'
-import LayoutCenteredCard, {
+import { FormSubmitButton, LoginButton, StyledLink } from 'components/button'
+import LayoutPageCard, {
   Greeting,
   Instructions,
   Issue,
-  StyledFormSubmitButton,
   RelatedLinkGroup,
   RelatedLink,
-} from 'components/layout/layoutCenteredCard'
+} from 'components/layout/layoutPageCard'
 import { ControlGroup, FormInputControl } from 'components/control'
 import Divider from 'components/divider'
 import { Form, FormMessage } from 'controls/form'
+import { Gap } from 'components/sections'
 import AuthLink from 'controls/authLink'
 import useOperation from 'hooks/useOperation'
 import emailRegister from 'operations/emailRegister'
@@ -29,7 +29,7 @@ function Join({ redirectTo, plan }) {
   })
 
   return (
-    <LayoutCenteredCard title="Join in">
+    <LayoutPageCard title="Join in">
       <Greeting>Every journey starts with a single step.</Greeting>
       <Form onSubmit={operation.invoke} validate={operation.validate}>
         <ControlGroup>
@@ -50,7 +50,8 @@ function Join({ redirectTo, plan }) {
         <FormMessage>
           {({ issue }) => issue && <Issue>{issue}</Issue>}
         </FormMessage>
-        <StyledFormSubmitButton>Join in</StyledFormSubmitButton>
+        <Gap />
+        <FormSubmitButton width="100%">Join in</FormSubmitButton>
       </Form>
       <RelatedLinkGroup>
         <RelatedLink as={AuthLink} href="/login">
@@ -67,7 +68,7 @@ function Join({ redirectTo, plan }) {
         <StyledLink href="/pages/conduct">Code of Conduct</StyledLink>, and the{' '}
         <StyledLink href="/pages/privacy">Terms of Service</StyledLink>.
       </Instructions>
-    </LayoutCenteredCard>
+    </LayoutPageCard>
   )
 }
 

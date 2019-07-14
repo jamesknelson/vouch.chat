@@ -71,13 +71,10 @@ const Layout = props => {
 
   return (
     <LayoutContext.Provider value={context}>
-      <PhoneLayout
-        currentUser={user}
-        indexPathname={indexPathname}
-        minimal={minimal}>
+      <PhoneLayout indexPathname={indexPathname} minimal={minimal}>
         {props.children}
       </PhoneLayout>
-      <TabletPlusLayout currentUser={user}>{props.children}</TabletPlusLayout>
+      <TabletPlusLayout>{props.children}</TabletPlusLayout>
       {authFooterTransitions.map(
         ({ item, props: style, key }) =>
           item && (

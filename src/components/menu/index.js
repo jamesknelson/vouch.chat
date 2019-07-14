@@ -38,6 +38,10 @@ export const MenuDivider = styled.hr`
 export const MenuItem = props => {
   let { onDidSelect, readonly } = useContext(MenuContext)
 
+  if (props.onDidSelect) {
+    onDidSelect = props.onDidSelect
+  }
+
   return (
     <StyledMenuItem
       onClick={event => {

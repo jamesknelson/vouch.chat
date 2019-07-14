@@ -1,25 +1,33 @@
 import { compose, lazy, map, mount, redirect, route, withData } from 'navi'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigation } from 'react-navi'
+import { css } from 'styled-components/macro'
 
-import { RegisterButton, StyledLink } from 'components/button'
+import Button, {
+  AuthLinkButton,
+  FormSubmitButton,
+  RegisterButton,
+  StyledLink,
+} from 'components/button'
 import { ControlGroup, FormInputControl } from 'components/control'
-import LayoutCenteredCard, {
+import LayoutPageCard, {
   Greeting,
   Instructions,
   Issue,
   RelatedLink,
   RelatedLinkGroup,
-  StyledAuthButtonLink,
-  StyledButton,
-  StyledFormSubmitButton,
-} from 'components/layout/layoutCenteredCard'
+} from 'components/layout/layoutPageCard'
 import Divider from 'components/divider'
 import AuthLink from 'controls/authLink'
 import { Form, FormMessage } from 'controls/form'
 import useOperation from 'hooks/useOperation'
 import emailLogin from 'operations/emailLogin'
 import socialLogin from 'operations/socialLogin'
+
+const buttonStyles = css`
+  margin: 1rem 0;
+  width: 100%;
+`
 
 function useSocialLoginOperation(providerName) {
   // If nothing goes wrong, wait for navigation to complete before removing
@@ -71,20 +79,22 @@ function Login(props) {
     twitterLoginOperation.busy
 
   return (
-    <LayoutCenteredCard title="Sign in">
+    <LayoutPageCard title="Sign in">
       <Greeting>
         {props.required !== undefined
           ? "You'll need to login to access that feature."
           : "I'll vouch for you."}
       </Greeting>
-      <StyledAuthButtonLink
+      <AuthLinkButton
+        css={buttonStyles}
         glyph="envelope1"
         href="/login/email"
         disabled={disabled}
         outline={disabled || previousLoginProvider !== undefined}>
         Sign in with Email
-      </StyledAuthButtonLink>
-      <StyledButton
+      </AuthLinkButton>
+      <Button
+        css={buttonStyles}
         glyph="facebook"
         color="#4267b2"
         outline={
@@ -95,13 +105,14 @@ function Login(props) {
         busy={facebookLoginOperation.busy}
         onClick={() => login(facebookLoginOperation)}>
         Sign in with Facebook
-      </StyledButton>
+      </Button>
       {facebookLoginOperation.value && (
         <Issue style={{ textAlign: 'center' }}>
           {Object.values(facebookLoginOperation.value)[0]}
         </Issue>
       )}
-      <StyledButton
+      <Button
+        css={buttonStyles}
         glyph="google"
         color="#ea4335"
         outline={
@@ -112,8 +123,9 @@ function Login(props) {
         busy={googleLoginOperation.busy}
         onClick={() => login(googleLoginOperation)}>
         Sign in with Google
-      </StyledButton>
-      <StyledButton
+      </Button>
+      <Button
+        css={buttonStyles}
         glyph="twitter"
         color="#00ACED"
         outline={
@@ -124,7 +136,7 @@ function Login(props) {
         busy={twitterLoginOperation.busy}
         onClick={() => login(twitterLoginOperation)}>
         Sign in with Twitter
-      </StyledButton>
+      </Button>
       <Divider />
       <Instructions>
         Please sign in only if you agree to our marvellous{' '}
@@ -132,7 +144,7 @@ function Login(props) {
         <StyledLink href="/pages/conduct">Code of Conduct</StyledLink>, and the{' '}
         <StyledLink href="/pages/privacy">Terms of Service</StyledLink>.
       </Instructions>
-    </LayoutCenteredCard>
+    </LayoutPageCard>
   )
 }
 
@@ -141,7 +153,7 @@ function EmailLogin(props) {
   let emailLoginDependencies = emailLogin.useDependencies()
 
   return (
-    <LayoutCenteredCard title="Sign in">
+    <LayoutPageCard title="Sign in">
       <Form
         onSubmit={async value => {
           let error = await emailLogin(value, emailLoginDependencies)
@@ -170,7 +182,7 @@ function EmailLogin(props) {
         <FormMessage>
           {({ issue }) => issue && <Issue>{issue}</Issue>}
         </FormMessage>
-        <StyledFormSubmitButton>Sign in</StyledFormSubmitButton>
+        <FormSubmitButton css={buttonStyles}>Sign in</FormSubmitButton>
       </Form>
       <RelatedLinkGroup>
         <RelatedLink as={AuthLink} href="/join">
@@ -190,7 +202,7 @@ function EmailLogin(props) {
         <StyledLink href="/pages/conduct">Code of Conduct</StyledLink>, and the{' '}
         <StyledLink href="/pages/privacy">Terms of Service</StyledLink>.
       </Instructions>
-    </LayoutCenteredCard>
+    </LayoutPageCard>
   )
 }
 

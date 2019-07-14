@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="84px" height="100px" viewBox="0 0 84 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>big-wig</title>
+    <desc>Created with Sketch.</desc>
+    <g id="big-wig" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <ellipse id="Oval" stroke="#606672" stroke-width="3" fill="#FFFFFF" cx="14" cy="38.5" rx="9" ry="9.5"></ellipse>
+        <ellipse id="Oval" stroke="#606672" stroke-width="3" fill="#FFFFFF" cx="70" cy="38.5" rx="9" ry="9.5"></ellipse>
+        <ellipse id="Oval" stroke="#606672" stroke-width="3" fill="#FFFFFF" cx="14" cy="57.5" rx="9" ry="9.5"></ellipse>
+        <ellipse id="Oval" stroke="#606672" stroke-width="3" fill="#FFFFFF" cx="70" cy="57.5" rx="9" ry="9.5"></ellipse>
+        <path d="M42,69 C57.9977426,69 69.8042757,73.4468958 76.1430662,81.8600208 C80.8934669,88.1649792 80.9994265,94.6116875 81,94.6666667 C81,95.9532083 79.9708015,97 78.7058824,97 L5.29411765,97 C4.02919853,97 3,95.9532083 3,94.676 C3.00043015,94.6116875 3.10653309,88.1649792 7.85707721,81.8600208 C14.1957243,73.4468958 26.002114,69 42,69 Z M42,17 C55.2335,17 66,27.5420347 66,40.5 C66,53.4579653 55.2335,64 42,64 C28.7663333,64 18,53.4579653 18,40.5 C18,27.5420347 28.7663333,17 42,17 Z" id="User" stroke="#606672" stroke-width="3" fill="#606672" fill-rule="nonzero"></path>
+        <circle id="Oval" stroke="#606672" stroke-width="3" fill="#FFFFFF" cx="14" cy="76" r="9"></circle>
+        <circle id="Oval" stroke="#606672" stroke-width="3" fill="#FFFFFF" cx="70" cy="76" r="9"></circle>
+        <ellipse id="Oval" stroke="#606672" stroke-width="3" fill="#FFFFFF" cx="18.5" cy="24" rx="10.5" ry="11"></ellipse>
+        <ellipse id="Oval" stroke="#606672" stroke-width="3" fill="#FFFFFF" cx="65.5" cy="24" rx="11.5" ry="11"></ellipse>
+        <path d="M42,19.4071721 C40.0925858,23.8714534 35.6616485,27 30.5,27 C23.5964406,27 18,21.4035594 18,14.5 C18,7.59644063 23.5964406,2 30.5,2 C35.6616485,2 40.0925858,5.12854659 42,9.59282786 C43.9074142,5.12854659 48.3383515,2 53.5,2 C60.4035594,2 66,7.59644063 66,14.5 C66,21.4035594 60.4035594,27 53.5,27 C48.3383515,27 43.9074142,23.8714534 42,19.4071721 Z" id="Combined-Shape" stroke="#606672" stroke-width="3" fill="#FFFFFF"></path>
+    </g>
+</svg>

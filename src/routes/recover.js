@@ -1,13 +1,13 @@
 import { mount, route } from 'navi'
 import React from 'react'
 import { useNavigation } from 'react-navi'
-import { LoginButton } from 'components/button'
-import LayoutCenteredCard, {
+
+import { FormSubmitButton, LoginButton } from 'components/button'
+import LayoutPageCard, {
   Instructions,
-  StyledFormSubmitButton,
   RelatedLinkGroup,
   RelatedLink,
-} from 'components/layout/layoutCenteredCard'
+} from 'components/layout/layoutPageCard'
 import { FormInputField } from 'components/field'
 import AuthLink from 'controls/authLink'
 import { Form } from 'controls/form'
@@ -20,7 +20,7 @@ function Recover(props) {
   let operation = useOperation(sendPasswordResetEmail)
 
   return (
-    <LayoutCenteredCard title="Recover your account">
+    <LayoutPageCard title="Recover your account">
       <Instructions>
         Can't login to your account? Just enter your email to reset your
         password.
@@ -38,8 +38,8 @@ function Recover(props) {
           type="email"
           showLabelAsPlaceholder
         />
-        <Gap size={'1px'} />
-        <StyledFormSubmitButton>Recover account</StyledFormSubmitButton>
+        <Gap size={1} />
+        <FormSubmitButton width="100%">Recover account</FormSubmitButton>
       </Form>
       <RelatedLinkGroup>
         <RelatedLink as={AuthLink} href="/join">
@@ -49,18 +49,18 @@ function Recover(props) {
           Sign in
         </RelatedLink>
       </RelatedLinkGroup>
-    </LayoutCenteredCard>
+    </LayoutPageCard>
   )
 }
 
 export const ForgotPasswordSent = () => {
   return (
-    <LayoutCenteredCard title="One more step.">
+    <LayoutPageCard title="One more step.">
       <Instructions>
         I've just sent you an email. Follow the link in the email to reset your
         password.
       </Instructions>
-    </LayoutCenteredCard>
+    </LayoutPageCard>
   )
 }
 

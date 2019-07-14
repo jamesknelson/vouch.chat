@@ -1,36 +1,37 @@
 import React from 'react'
 import { useFormState } from 'react-final-form'
-import { Link } from 'react-navi'
-import AuthLink from 'controls/authLink'
+import { useLinkProps } from 'react-navi'
+
+import useAuthURL from 'hooks/useAuthURL'
 import { Button } from './styles'
 
 export { Button, IconButton, StyledLink } from './styles'
 
-export const AuthLinkButton = props => <ButtonLink as={AuthLink} {...props} />
+export const AuthLinkButton = ({ href, ...rest }) => {
+  let url = useAuthURL(href)
+  return <ButtonLink href={url} {...rest} />
+}
 
 export const ButtonLink = ({
-  as = Link,
   color,
   glyph,
   glyphColor,
   inline = false,
-  passthrough,
   outline,
   ...rest
-}) =>
-  React.createElement(as, {
-    ...rest,
-    render: ({ anchorProps }) => (
-      <Button
-        {...anchorProps}
-        as="a"
-        glyph={glyph}
-        glyphColor={glyphColor}
-        inline={inline}
-        outline={outline}
-      />
-    ),
-  })
+}) => {
+  let anchorProps = useLinkProps(rest)
+  return (
+    <Button
+      {...anchorProps}
+      as="a"
+      glyph={glyph}
+      glyphColor={glyphColor}
+      inline={inline}
+      outline={outline}
+    />
+  )
+}
 
 export function FormSubmitButton(props) {
   let formState = useFormState({

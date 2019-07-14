@@ -45,8 +45,8 @@ export default class CurrentUser {
             if (data) {
               let photoURL = data.photoURL || defaultProfilePicture
 
-              data.availableVouches = 12
-              data.username = 'james'
+              data.availableVouches = 0 // 12
+              // data.username = 'james'
 
               // Wait until the profile photo has loaded
               data.photoImage = await new Promise((resolve, reject) => {

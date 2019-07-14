@@ -38,10 +38,7 @@ const HeaderBrandTextLink = () => (
     css={css`
       /* Insert a flex box to keep other header items aligned */
       flex: 1;
-
-      :first-child {
-        padding-left: 1rem;
-      }
+      display: flex;
     `}>
     <Link
       href="/"

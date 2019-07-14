@@ -151,9 +151,12 @@ export const NavItem = React.forwardRef(
 
 export const NavItems = () => {
   let currentUser = useCurrentUser()
+  let isDisabled = currentUser && !currentUser.username
+
   return (
     <>
       <NavItem
+        faded={isDisabled}
         href="/read"
         tooltip="Read"
         // unreadCount={4}
@@ -161,20 +164,20 @@ export const NavItems = () => {
         glyph="glasses"
       />
       <NavItem
-        faded={currentUser === null}
+        faded={isDisabled || currentUser === null}
         href="/share"
         tooltip="Create"
         // glyph="bullhorn"
         glyph="pencil"
       />
       {/* <NavItem
-        faded={currentUser === null}
+        faded={isDisabled || currentUser === null}
         href="/messages"
         tooltip="Chat"
         glyph="envelope"
       /> */}
       <NavItem
-        faded={currentUser === null}
+        faded={isDisabled || currentUser === null}
         href="/notifications"
         tooltip="Alerts"
         glyph="bell1"

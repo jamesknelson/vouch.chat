@@ -1,6 +1,7 @@
-import { createURLDescriptor } from 'navi'
 import React from 'react'
-import { Link, useCurrentRoute } from 'react-navi'
+import { Link } from 'react-navi'
+
+import useAuthURL from 'hooks/useAuthURL'
 
 /**
  * A link that passes through any auth-related URL parameters on auth screens,
@@ -8,17 +9,9 @@ import { Link, useCurrentRoute } from 'react-navi'
  *
  * Defaults to pointing to the "login" screen.
  */
-function AuthLink(props) {
-  let currentRoute = useCurrentRoute()
-  let url = createURLDescriptor(props.href || '/login')
-
-  if (currentRoute.data.auth) {
-    Object.assign(url.query, currentRoute.url.query)
-  } else {
-    url.query.redirectTo = currentRoute.url.href
-  }
-
-  return <Link {...props} href={url} />
+function AuthLink({ href, ...rest }) {
+  let url = useAuthURL(href)
+  return <Link {...rest} href={url} />
 }
 
 export default AuthLink

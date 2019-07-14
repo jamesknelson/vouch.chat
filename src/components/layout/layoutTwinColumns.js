@@ -191,9 +191,8 @@ export function LayoutTwinColumns({
           state,
         }) =>
           (visibleColumnOnPhone === 'right' || !isPhone) && (
-            <LayoutContext.Provider value={{ ...context }}>
+            <LayoutContext.Provider key={key} value={{ ...context }}>
               <LayoutRightColumn
-                key={key}
                 entering={state === 'enter'}
                 leaving={state === 'leave'}
                 withBackgroundOnTabletPlus={rightBackgroundOnTabletPlus}

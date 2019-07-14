@@ -5,6 +5,7 @@ import { colors } from 'theme'
 import { UserAvatar } from 'components/avatar'
 import { Spinner } from 'components/loading'
 import { CurrentUserVouchCountWrapper } from 'components/badge'
+import { useCurrentUser } from 'context'
 import { StyledNavLink } from './layoutNavItems'
 import logo from 'media/anonymous.svg'
 import { useLoadingRoute } from 'react-navi'
@@ -59,7 +60,13 @@ const StyledCutout = styled.div`
 
 const ProfileFlipper = React.forwardRef(
   (
-    { currentUser, sizeRem = 3, badgeSizeRem = 1.25, className, style },
+    {
+      sizeRem = 3,
+      badgeSizeRem = 1.25,
+      className,
+      style,
+      withoutSpinner = false,
+    },
     ref,
   ) => {
     let config = {
@@ -67,6 +74,7 @@ const ProfileFlipper = React.forwardRef(
       tension: 180,
       friction: 16,
     }
+    let currentUser = useCurrentUser()
     let [flickAngle, setFlickAngle] = useState(0)
     let transitionProps = useSpring({
       config,
@@ -107,17 +115,19 @@ const ProfileFlipper = React.forwardRef(
           position: relative;
           width: 100%;
         `}>
-        <Spinner
-          active={isLoading}
-          backgroundColor={colors.structure.bg}
-          color={colors.ink.black}
-          css={css`
-            position: absolute;
-            z-index: 0;
-            height: ${sizeRem}rem;
-            width: ${sizeRem}rem;
-          `}
-        />
+        {!withoutSpinner && (
+          <Spinner
+            active={isLoading}
+            backgroundColor={colors.structure.bg}
+            color={colors.ink.black}
+            css={css`
+              position: absolute;
+              z-index: 0;
+              height: ${sizeRem}rem;
+              width: ${sizeRem}rem;
+            `}
+          />
+        )}
         <StyledCutout size={sizeRem - 0.5 + 'rem'}>
           <CurrentUserVouchCountWrapper badgeSizeRem={badgeSizeRem}>
             <AnimatedDisc

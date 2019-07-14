@@ -2,18 +2,29 @@ import React from 'react'
 import { css } from 'styled-components/macro'
 import { mount, route } from 'navi'
 
+import { Spinner } from 'components/loading'
+import { colors, media } from 'theme'
+
 function Loading() {
   return (
     <div
       css={css`
+        position: fixed;
+        height: 4rem;
+        width: 4rem;
+        top: calc(50% - 2rem);
         margin: 0 auto;
-        height: 100%;
-        width: 100%;
-        padding-right: 1rem;
-        position: relative;
-        text-align: center;
-      `}
-    />
+
+        left: calc(50%);
+        ${media.phoneOnly`
+        left: calc(50% - 2rem);
+        `}
+      `}>
+      <Spinner
+        backgroundColor={colors.structure.wash}
+        color={colors.structure.border}
+      />
+    </div>
   )
 }
 
