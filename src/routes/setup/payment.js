@@ -84,7 +84,7 @@ const InactivePlan = () => {
           margin-top: 1.5rem;
           width: 100%;
         `}
-        href="../plan">
+        href="/wigs">
         See Plans
       </ButtonLink>
     </Card>

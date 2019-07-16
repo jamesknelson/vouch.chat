@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { createMemoryNavigation } from 'navi'
+import { createMemoryNavigation, NotFoundError } from 'navi'
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { NaviProvider, View } from 'react-navi'
@@ -29,7 +29,9 @@ const renderer = async (request, response) => {
     })
     sheet = new ServerStyleSheet()
 
-    await navigation.getRoute()
+    let route = await navigation.getRoute()
+
+    console.log(route.chunks.map(chunk => chunk.type).join(', '))
 
     // The index.html file is a template, which will have environment variables
     // and bundled scripts and stylesheets injected during the build step, and
@@ -68,6 +70,12 @@ const renderer = async (request, response) => {
     let html = header + state + styleTags + '<div id="root">' + body + footer
     response.send(html)
   } catch (error) {
+    if (error instanceof NotFoundError) {
+      let html = header + '<div id="root">' + footer
+      response.status(404).send(html)
+      return
+    }
+
     let html
     console.error(error)
     if (process.env.NODE_ENV === 'production') {

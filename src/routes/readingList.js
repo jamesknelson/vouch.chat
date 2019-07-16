@@ -1,5 +1,5 @@
 import EventEmitter from 'events'
-import { compose, mount, redirect, route, withData, withView } from 'navi'
+import { compose, map, mount, redirect, route, withData, withView } from 'navi'
 import React, { useEffect, useState } from 'react'
 import {
   useNavigation,
@@ -129,7 +129,7 @@ function Read(props) {
                     meta="2 hours ago"
                   />
                 </ListItemLink>
-                <ListItemLink href="/read/by/elonmusk">
+                <ListItemLink href="/@elonmusk">
                   <ListItemImage>
                     <UnreadBadgeWrapper count={3}>
                       <UserAvatar size="2.25rem" />
@@ -216,52 +216,64 @@ export default compose(
     layoutIndexHeaderTitle: <ReadingListSearch query={params.q} />,
     layoutIndexPathname: mountpath,
   })),
-  mount({
-    '/': mountByMedia({
-      default: route({
-        data: {
-          layoutShowIndexOnPhone: true,
-        },
-        title: 'Reading List',
-      }),
-      [mediaQueries.tabletPlus]: redirect('./vouched'),
-    }),
+  map(({ params, query }) => {
+    if (params.username && !query.username) {
+      console.log(params.username[0])
+      if (params.username[0] !== '@') {
+        return mount({})
+      }
 
-    '/search': route({
-      getTitle: ({ params }) =>
-        params.q ? `Search for "${decodeURIComponent(params.q)}"` : 'Search',
-      view: <div />,
-    }),
-    '/edit': route({
-      title: 'Edit',
-      view: <div />,
-    }),
-    '/vouched': route({
-      title: 'Recent Activity',
-      view: (
-        <>
-          <LayoutHeaderSection />
-          Test
-        </>
-      ),
-    }),
-    '/by/:user': route({
-      getTitle: ({ params }) => `@${params.user}`,
-      view: (
-        <>
-          <LayoutHeaderSection />
-          Test
-        </>
-      ),
-    }),
-    '/about/:tag': route({
-      getTitle: ({ params }) => `#${params.tag}`,
-      view: (
-        <>
-          <LayoutHeaderSection />
-          Test
-        </>
-      ),
-    }),
+      let username = params.username.slice(1)
+
+      return route({
+        title: '@' + username,
+        view: (
+          <>
+            <LayoutHeaderSection />
+            Test
+          </>
+        ),
+      })
+    }
+
+    return mount({
+      '/': mountByMedia({
+        default: route({
+          data: {
+            layoutShowIndexOnPhone: true,
+          },
+          title: 'Reading List',
+        }),
+        [mediaQueries.tabletPlus]: redirect('./vouched'),
+      }),
+
+      '/search': route({
+        getTitle: ({ params }) =>
+          params.q ? `Search for "${decodeURIComponent(params.q)}"` : 'Search',
+        view: <div />,
+      }),
+      '/edit': route({
+        title: 'Edit',
+        view: <div />,
+      }),
+      '/vouched': route({
+        title: 'Recent Activity',
+        view: (
+          <>
+            <LayoutHeaderSection />
+            Test
+          </>
+        ),
+      }),
+      '/about/:tag': route({
+        getTitle: ({ params }) => `#${params.tag}`,
+        view: (
+          <>
+            <LayoutHeaderSection />
+            Test
+          </>
+        ),
+      }),
+    })
   }),
 )

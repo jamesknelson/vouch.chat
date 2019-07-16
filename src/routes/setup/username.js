@@ -283,7 +283,7 @@ function UsernamePicker({ suggestedPlan }) {
                   Upgrade my wig
                 </Button>
               ) : (
-                <ButtonLink href="/setup/plan" size="small">
+                <ButtonLink href="/wigs" size="small">
                   Get a wig
                 </ButtonLink>
               )}

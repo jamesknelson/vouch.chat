@@ -4,6 +4,7 @@ import React from 'react'
 import { View, useLinkProps } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 
+import { RegisterButton } from 'components/button'
 import { LayoutHeaderContent } from 'components/layout'
 import ProfileFlipper from 'components/layout/layoutProfileFlipper'
 import { TabletPlus } from 'components/media'
@@ -63,9 +64,7 @@ const InnerOnboardingPosition = styled.div`
   border-radius: 9999px;
 `
 
-const OnboardingFlowIndicator = ({ step }) => {
-  let user = useCurrentUser()
-
+const OnboardingFlowIndicator = ({ step, user }) => {
   return (
     <div
       css={css`
@@ -83,7 +82,7 @@ const OnboardingFlowIndicator = ({ step }) => {
         `}
       />
       <OnboardingPosition
-        href={user && !user.hasActiveSubscription && '/setup/plan'}
+        href={user && !user.hasActiveSubscription && '/wigs'}
         percentage={0}
         active={step === 1}
         complete={step > 1}
@@ -119,7 +118,9 @@ const OnboardingFlowIndicator = ({ step }) => {
 }
 
 function SetupLayout({ step }) {
-  let onboardingIndicator = <OnboardingFlowIndicator step={step} />
+  let user = useCurrentUser()
+  let onboardingIndicator = <OnboardingFlowIndicator step={step} user={user} />
+  let actions = user ? onboardingIndicator : <RegisterButton />
 
   return (
     <div
@@ -127,7 +128,7 @@ function SetupLayout({ step }) {
         padding: 0 1rem;
       `}>
       <TabletPlus>
-        <LayoutHeaderContent actions={onboardingIndicator} />
+        <LayoutHeaderContent actions={actions} />
       </TabletPlus>
       {/* <PhoneOnly
         css={css`

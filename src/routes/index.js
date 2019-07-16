@@ -9,26 +9,21 @@ let logout = map(async ({ context }) => {
 
 let routes = mount({
   '/': lazy(() => import('./landing')),
-  '/messages': lazy(() => import('./messages')),
+  // '/chat': lazy(() => import('./messages')),
   '/notifications': lazy(() => import('./notifications')),
-  '/share': lazy(() => import('./share')),
+  '/cast': lazy(() => import('./share')),
+
+  // The `readList` route can route just by having a username param on
+  // the params (so long as it's not also on the query).
   '/read': lazy(() => import('./readingList')),
+  '/:username': lazy(() => import('./readingList')),
+
   '/explore': lazy(() => import('./explore')),
   '/recover': lazy(() => import('./recover')),
   '/login': lazy(() => import('./login')),
   '/join': lazy(() => import('./join')),
-  '/plans': lazy(() => import('./plans')),
-  '/:username': map(async ({ params }) => {
-    if (params.username === 'james') {
-      const { default: profile } = await import('./profile')
-      return profile
-    } else {
-      return mount({})
-    }
-  }),
+
   '/welcome': lazy(() => import('./welcome')),
-  // '/subscribe': lazy(() => import('./subscribe')),
-  // '/thankyou': lazy(() => import('./thankyou')),
 })
 
 let routesWithUserRedirects = map((request, context) => {
@@ -39,7 +34,7 @@ let routesWithUserRedirects = map((request, context) => {
       if (request.params.plan) {
         to = '/setup/payment?plan=' + request.params.plan
       } else {
-        to = '/setup/plan'
+        to = '/wigs'
       }
     } else if (!user.username) {
       if (user.canSetUsername) {
@@ -55,6 +50,7 @@ let routesWithUserRedirects = map((request, context) => {
     '/settings': lazy(() => import('./settings')),
     '/setup': lazy(() => import('./setup')),
     '/verify': lazy(() => import('./verify')),
+    '/wigs': lazy(() => import('./setup/plans')),
     '*': to ? redirect(to, { exact: false }) : routes,
   })
 })

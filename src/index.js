@@ -32,9 +32,10 @@ async function main() {
     navigation.setContext(context)
   }
 
-  await navigation.getRoute()
+  let route = await navigation.getRoute()
+  let renderer = route.type === 'ready' ? ReactDOM.hydrate : ReactDOM.render
 
-  ReactDOM.hydrate(
+  renderer(
     <HelmetProvider>
       <BackendContext.Provider value={backend}>
         <StripeProvider
@@ -46,7 +47,6 @@ async function main() {
             */}
             <GlobalResetStyle />
             <GlobalIconFontStyle />
-
             <View />
           </NaviProvider>
         </StripeProvider>

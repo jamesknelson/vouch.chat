@@ -8642,17 +8642,17 @@ react-is@^16.6.0, react-is@^16.8.1, react-is@^16.8.4:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
 
-react-navi-helmet-async@^0.13.0-beta.0:
-  version "0.13.0-beta.0"
-  resolved "https://registry.yarnpkg.com/react-navi-helmet-async/-/react-navi-helmet-async-0.13.0-beta.0.tgz#77c078453e1d33c02dac1068985d03965c8daa86"
-  integrity sha512-aDADaPyFEjw2ywCQ2rnzEcBtWwT1WJ2Wf0ktF4wsF0iFN9PIpfyhMZ9QHsk5a0pZMERcB12fE1lyj1BR8H/n3Q==
+react-navi-helmet-async@^0.13.0-beta.4:
+  version "0.13.0-beta.4"
+  resolved "https://registry.yarnpkg.com/react-navi-helmet-async/-/react-navi-helmet-async-0.13.0-beta.4.tgz#0c5b77c3390c9d0007918396fe57c428aed9b55b"
+  integrity sha512-QFRoX2CB+zfgYKAabXwiqA0fTYxKnRA9TrS/KiKHiCNG61MtXVs9fRNSFdZg8G7Aiq714T8jDck41pAU/dRZhA==
   dependencies:
     react-helmet-async "^1.0.2"
 
-react-navi@^0.13.0-beta.2:
-  version "0.13.0-beta.2"
-  resolved "https://registry.yarnpkg.com/react-navi/-/react-navi-0.13.0-beta.2.tgz#23f2a8047fc7be841cafe5b97cdab9a4985745fc"
-  integrity sha512-1qRVnWFtKm7DQ6hYV75iY/zpW/uYawzKVyakdrxvDkb6rzSvn9YV4JJ49lR0bqdpC378M0uYw3LT4IwWWsmbvg==
+react-navi@^0.13.0-beta.4:
+  version "0.13.0-beta.4"
+  resolved "https://registry.yarnpkg.com/react-navi/-/react-navi-0.13.0-beta.4.tgz#6e08ff469a6ae514943ffa6310abc14a74de622c"
+  integrity sha512-99L156i3RcohuRff8tGHp091C4tBUzqNUkg+q449qB0Hu7AuqWVkhHu71wN6eKymGUtDl/zmGxEys9U88hRULw==
   dependencies:
     "@types/history" "^4.6.2"
 

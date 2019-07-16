@@ -1,6 +1,7 @@
 import React from 'react'
-import { View, useCurrentRoute } from 'react-navi'
+import { View, useCurrentRoute, NotFoundBoundary } from 'react-navi'
 import Layout from 'components/layout'
+import NotFound from 'components/notFound'
 import { CurrentUserContext, CurrentLanguageContext } from 'context'
 import { ControlIdProvider } from 'hooks/useControlId'
 
@@ -32,12 +33,18 @@ function App({ navigationContext = {} }) {
             headerTitle={headerTitle}
             showHistoryBack={showHistoryBack}
             showIndexOnPhone={showIndexOnPhone}>
-            <View />
+            <NotFoundBoundary render={renderNotFound}>
+              <View />
+            </NotFoundBoundary>
           </Layout>
         </CurrentLanguageContext.Provider>
       </CurrentUserContext.Provider>
     </ControlIdProvider>
   )
+}
+
+function renderNotFound() {
+  return <NotFound />
 }
 
 export default App

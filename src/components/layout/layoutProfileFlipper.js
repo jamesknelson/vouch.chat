@@ -91,7 +91,14 @@ const ProfileFlipper = React.forwardRef(
     return (
       <StyledNavLink
         exact
-        href={currentUser ? '/james' : '/login'}
+        activeClassName=""
+        href={
+          currentUser
+            ? currentUser.username
+              ? `/@${currentUser.username}`
+              : `/`
+            : '/login'
+        }
         focusRingSize={`${sizeRem - 0.25}rem`}
         onTouchStart={() => {
           setFlickAngle(Math.PI / 6)

@@ -1,4 +1,4 @@
-import { map, redirect, route } from 'navi'
+import { map, route } from 'navi'
 import React from 'react'
 import styled, { css } from 'styled-components/macro'
 
@@ -290,15 +290,21 @@ function Plans(props) {
           You can continue for free, but you won't be able to vouch, <br />
           and you'll only be able to make one cast a day.
         </p>
-        <Button
-          inline
-          outline
-          color={colors.ink.mid}
-          busy={chooseFreePlanOperation.busy}
-          disabled={chooseFreePlanOperation.busy}
-          onClick={chooseFreePlanOperation.invoke}>
-          Continue for free
-        </Button>
+        {currentUser ? (
+          <Button
+            inline
+            outline
+            color={colors.ink.mid}
+            busy={chooseFreePlanOperation.busy}
+            disabled={chooseFreePlanOperation.busy}
+            onClick={chooseFreePlanOperation.invoke}>
+            Continue for free
+          </Button>
+        ) : (
+          <ButtonLink inline outline color={colors.ink.mid} href="/join">
+            Continue for free
+          </ButtonLink>
+        )}
       </div>
     </Card>
   )
@@ -307,10 +313,6 @@ function Plans(props) {
 export default wrapRouteWithSetupLayout(
   1,
   map(async ({ context, state }) => {
-    if (context.currentUser && context.currentUser.hasActiveSubscription) {
-      return redirect('/setup/username')
-    }
-
     let backend = context.backend
     let getPlans = backend.functions.httpsCallable('api-getPlans')
 
