@@ -34,13 +34,15 @@ const MenuHeader = ({ disabled, displayName, username, photoURL }) => {
           `}>
           {displayName}
         </h4>
-        <p
-          css={css`
-            color: ${colors.text.tertiary};
-            font-size: 0.8rem;
-          `}>
-          @{username}
-        </p>
+        {username && (
+          <p
+            css={css`
+              color: ${colors.text.tertiary};
+              font-size: 0.8rem;
+            `}>
+            @{username}
+          </p>
+        )}
       </div>
       <Avatar
         photoURL={photoURL}
@@ -67,16 +69,12 @@ export default function LayoutNavMenuItems() {
       <MenuHeader
         disabled={requiresOnboarding}
         displayName="James K Nelson"
-        username="james"
+        username={currentUser.username}
         photoURL={currentUser.photoURL}
       />
       <MenuDivider />
-      {!requiresOnboarding && (
-        <>
-          <MenuLink href="/settings">Settings</MenuLink>
-          <MenuDivider />
-        </>
-      )}
+      <MenuLink href="/settings">Settings</MenuLink>
+      <MenuDivider />
       <MenuLink href="/logout">Logout</MenuLink>
     </>
   ) : (

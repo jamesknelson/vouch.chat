@@ -22,8 +22,10 @@ export default class CurrentUser {
       }
 
       if (user) {
-        let docReference = db.collection('users').doc(user.uid)
+        let uid = user.uid
+        let docReference = db.collection('users').doc(uid)
         let deferred = new Deferred()
+        let settled = false
         this._setCurrentUser(deferred.promise)
 
         this._unsubscribeSnapshot = docReference.onSnapshot({
@@ -39,14 +41,17 @@ export default class CurrentUser {
             }
 
             let data = doc.data()
+
             if (!data) {
               deferred.reject()
             }
             if (data) {
               let photoURL = data.photoURL || defaultProfilePicture
 
-              data.availableVouches = 0 // 12
-              // data.username = 'james'
+              data.hasActiveSubscription =
+                data.stripeSubscription &&
+                data.stripeSubscription.status === 'active'
+              data.availableVouches = data.availableVouches || 0
 
               // Wait until the profile photo has loaded
               data.photoImage = await new Promise((resolve, reject) => {
@@ -56,11 +61,19 @@ export default class CurrentUser {
                 img.src = photoURL
               })
 
-              deferred.resolve({
+              let user = {
                 ...auth.currentUser,
                 ...data,
+                uid,
                 photoURL,
-              })
+              }
+
+              if (!settled) {
+                settled = true
+                deferred.resolve(user)
+              } else {
+                this._setCurrentUser(user)
+              }
             }
           },
         })

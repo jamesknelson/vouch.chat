@@ -1,10 +1,16 @@
-const functions = require('firebase-functions');
-const renderer = require('./renderer');
+const admin = require('firebase-admin')
+const functions = require('firebase-functions')
+const renderer = require('./renderer')
 
-exports.renderer = functions.https.onRequest(renderer);
+const serviceAccount = require('./.serviceaccount.json')
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+})
+
+exports.renderer = functions.https.onRequest(renderer)
 
 exports.api = {
-  echo: functions.https.onRequest((req, res) => {
-    res.send(req.query);
-  })
+  ...require('./billing'),
+  ...require('./usernames'),
 }

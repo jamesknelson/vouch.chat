@@ -23,6 +23,7 @@
 .firebase
 .firebaserc
 functions/.runtimeconfig.json
+functions/.serviceaccount.json
 functions/renderer.tgz
 /notes
 
@@ -30,3 +31,4 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
+firestore-debug.log*

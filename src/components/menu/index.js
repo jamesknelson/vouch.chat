@@ -35,30 +35,24 @@ export const MenuDivider = styled.hr`
   width: 100%;
 `
 
-export const MenuItem = props => {
-  let { onDidSelect, readonly } = useContext(MenuContext)
+export const MenuItem = ({ onDidSelect, onClick, ...rest }) => {
+  let context = useContext(MenuContext)
 
-  if (props.onDidSelect) {
-    onDidSelect = props.onDidSelect
+  if (!onDidSelect) {
+    onDidSelect = context.onDidSelect
   }
 
   return (
     <StyledMenuItem
       onClick={event => {
-        if (readonly) {
-          event.preventDefault()
-          event.stopPropagation()
-          return
-        }
-
-        if (props.onClick) {
-          props.onClick(event)
+        if (onClick) {
+          onClick(event)
         }
         if (!event.defaultPrevented && onDidSelect) {
           onDidSelect()
         }
       }}
-      {...props}
+      {...rest}
     />
   )
 }
@@ -68,8 +62,8 @@ export const MenuLink = props => {
 }
 
 export const Menu = React.forwardRef(
-  ({ children, onDidSelect = undefined, readonly = false, ...rest }, ref) => (
-    <MenuContext.Provider value={{ onDidSelect, readonly }}>
+  ({ children, onDidSelect = undefined, ...rest }, ref) => (
+    <MenuContext.Provider value={{ onDidSelect }}>
       <StyledMenu ref={ref} {...rest}>
         {children}
       </StyledMenu>

@@ -35,7 +35,7 @@ function useSocialLoginOperation(providerName) {
   let navigation = useNavigation()
   let onSettled = useCallback(
     async issue => {
-      if (issue) {
+      if (!issue) {
         await navigation.getRoute()
       }
     },

@@ -14,7 +14,7 @@ import { BackendContext } from 'context'
 const renderer = async (request, response) => {
   let backend, navigation, sheet
   let template = fs.readFileSync(process.env.HTML_TEMPLATE_PATH, 'utf8')
-  let [header, footer] = template.split('%RENDERED_CONTENT%')
+  let [header, footer] = template.split('<div id="root">%RENDERED_CONTENT%')
 
   try {
     backend = new Backend()
@@ -58,8 +58,14 @@ const renderer = async (request, response) => {
         </BackendContext.Provider>,
       ),
     )
+
+    // Extract the navigation state into a script tag to bootstrap the browser Navigation.
+    let state = `<script>window.__NAVI_STATE__=${JSON.stringify(
+      navigation.extractState(),
+    ).replace(/</g, '\\u003c')};</script>`
+
     let styleTags = sheet.getStyleTags()
-    let html = header + styleTags + body + footer
+    let html = header + state + styleTags + '<div id="root">' + body + footer
     response.send(html)
   } catch (error) {
     let html

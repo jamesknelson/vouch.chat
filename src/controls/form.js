@@ -85,7 +85,11 @@ export function FormMessage({ children, dirty, success, ...rest }) {
   let message = null
   let variant = null
   if (issues) {
-    issue = message = issues && Object.values(issues)[0]
+    let firstIssue = Object.values(issues)[0]
+    if (Array.isArray(firstIssue)) {
+      firstIssue = firstIssue[0]
+    }
+    issue = message = firstIssue
     variant = 'warning'
   } else if (!formState.submitting && dirty && formState.dirty) {
     message = typeof dirty === 'string' ? dirty : 'You have unsaved changes.'

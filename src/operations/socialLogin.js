@@ -12,9 +12,7 @@ export default async function socialLogin({ providerName }, backend) {
     let userCredential = await backend.auth.signInWithPopup(provider)
     let firebaseUser = userCredential.user
     let dbUser = {
-      uid: firebaseUser.uid,
-      email: firebaseUser.email,
-      isNewUser: userCredential.additionalUserInfo.isNewUser,
+      contactEmail: firebaseUser.email,
       originalProviderId: userCredential.additionalUserInfo.providerId,
       displayName:
         firebaseUser.displayName === null
@@ -23,10 +21,10 @@ export default async function socialLogin({ providerName }, backend) {
       photoURL: firebaseUser.photoURL,
     }
 
-    if (dbUser.isNewUser) {
+    if (userCredential.additionalUserInfo.isNewUser) {
       await backend.db
         .collection('users')
-        .doc(dbUser.uid)
+        .doc(firebaseUser.uid)
         .set(dbUser, { merge: true })
     }
 

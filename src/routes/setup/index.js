@@ -5,6 +5,7 @@ export default mount({
   '/plan': lazy(() => import('./plan')),
   '/payment': lazy(() => import('./payment')),
   '/username': lazy(() => import('./username')),
+  '/profile': lazy(() => import('./profile')),
   '/free-cast': route({
     view: <div>What if I told you</div>,
   }),

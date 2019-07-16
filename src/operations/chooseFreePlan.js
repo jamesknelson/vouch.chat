@@ -1,18 +1,25 @@
-import { useBackend } from 'context'
+import { useBackend, useCurrentUser } from 'context'
 import { normalizeIssues } from 'utils/Issues'
 
 chooseFreePlan.useDependencies = function useDependencies() {
-  return useBackend()
+  return [useCurrentUser(), useBackend()]
 }
 
-chooseFreePlan.validate = function validate(params, backend) {
-  // this should fail if the user already has a plan.
-  // instead of picking the free plan, you'll want to cancel the existing plan.
+chooseFreePlan.validate = function validate(params, [currentUser]) {
+  if (currentUser.hasActiveSubscription) {
+    return normalizeIssues(
+      "You've already signed up for a wig. You can cancel it from the account settings page.",
+    )
+  }
 }
 
-export default async function chooseFreePlan(params, backend) {
-  // set user.hasChosenPlan
-  // no special access control needed for this, so can just use db
-
-  return normalizeIssues('Not implemented.')
+export default async function chooseFreePlan(params, [currentUser, backend]) {
+  try {
+    await backend.db
+      .collection('users')
+      .doc(currentUser.uid)
+      .set({ hasChosenPlan: true }, { merge: true })
+  } catch (error) {
+    return error.message || 'Something went wrong'
+  }
 }

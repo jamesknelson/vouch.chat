@@ -86,7 +86,7 @@ function useOperation(
   let invokeOperation = useCallback(
     async params => {
       let paramsWithDefaults = { ...defaultProps, ...params }
-      let error = validateOperation(paramsWithDefaults)
+      let error = await validateOperation(paramsWithDefaults)
       let outcome = error
         ? Promise.resolve(error)
         : operation(paramsWithDefaults, dependencies)
@@ -112,8 +112,8 @@ function useOperation(
         updatePublicInvocations()
       }
 
-      invocation.outcome.then(
-        value => {
+      invocation.outcome
+        .then(async value => {
           let i = invocationsRef.current.indexOf(invocation)
           let updatedInvocation = (invocationsRef.current[i] = {
             ...invocation,
@@ -121,9 +121,12 @@ function useOperation(
             value,
           })
           effectRequiredRef.current.push(updatedInvocation)
+          if (onSettled) {
+            await onSettled(value)
+          }
           updatePublicInvocations()
-        },
-        error => {
+        })
+        .catch(error => {
           let i = invocationsRef.current.indexOf(invocation)
           let updatedInvocation = (invocationsRef.current[i] = {
             ...invocation,
@@ -132,8 +135,7 @@ function useOperation(
           })
           effectRequiredRef.current.push(updatedInvocation)
           updatePublicInvocations()
-        },
-      )
+        })
 
       return invocation.effect
     },
@@ -143,6 +145,7 @@ function useOperation(
       defaultProps,
       dependencies,
       operation,
+      onSettled,
       timeout,
       validateOperation,
     ],
@@ -157,19 +160,13 @@ function useOperation(
     for (let invocation of effectRequired) {
       if (invocation.status !== 'busy') {
         if (invocation.status === 'value') {
-          if (onSettled) {
-            onSettled(invocation.value).then(() =>
-              invocation.resolve(invocation.value),
-            )
-          } else {
-            invocation.resolve(invocation.value)
-          }
+          invocation.resolve(invocation.value)
         } else {
           invocation.reject(invocation.error)
         }
       }
     }
-  }, [effectRequired, onSettled])
+  }, [effectRequired])
 
   let errors = publicInvocations
     .filter(invocation => invocation.status === 'error')

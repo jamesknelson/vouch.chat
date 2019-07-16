@@ -21,6 +21,16 @@ export default class Backend {
     this.deviceStorage = new DeviceStorage(deviceStorageOptions)
     this.auth = this.firebaseApp.auth()
     this.db = this.firebaseApp.firestore()
+
+    // Firestore emulator is not currently supported in the browser.
+    // See: https://github.com/firebase/firebase-tools/issues/1001
+    // if (process.env.NODE_ENV !== 'production') {
+    //   this.db.settings({
+    //     host: process.env.REACT_APP_FIRESTORE_HOST || 'localhost:8080',
+    //     ssl: false,
+    //   })
+    // }
+
     this.currentUser = new CurrentUser(this.auth, this.db)
 
     this.deviceConfig = {

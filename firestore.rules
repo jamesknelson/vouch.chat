@@ -4,8 +4,16 @@ service cloud.firestore {
     // document. The wildcard expression {userId} makes the userId variable
     // available in rules.
     match /users/{userId} {
-      allow read, update, delete: if request.auth.uid == userId;
-      allow create: if request.auth.uid != null;
+      allow get: if request.auth.uid == userId;
+      allow create, update: if
+      	request.auth.uid == userId &&
+        request.resource.data.keys().hasOnly([
+        	'contactEmail',
+          'originalProviderId',
+          'displayName',
+          'hasChosenPlan',
+          'photoURL'
+        ]);
     }
   }
 }

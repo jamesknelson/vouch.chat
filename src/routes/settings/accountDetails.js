@@ -68,14 +68,16 @@ function AccountDetails() {
               {state => (
                 <FormInputField
                   label="Username"
+                  initialValue={user.username}
                   name="username"
-                  hint={`https://vouch.chat/${state.values.username || ''}`}
+                  hint={`https://vouch.chat/${state.values.username ||
+                    user.username}`}
                 />
               )}
             </FormSpy>
             <FormInputField
-              initialValue={user.email}
               label="Email"
+              initialValue={user.email}
               name="email"
               hint={
                 emailMessage || (
@@ -86,10 +88,10 @@ function AccountDetails() {
               }
               variant={emailVariant}
             />
-            <FormSelectField label="Language" name="language">
+            {/* <FormSelectField label="Language" name="language">
               <option value="en">English</option>
               <option value="ja">日本語</option>
-            </FormSelectField>
+            </FormSelectField> */}
           </Gutter>
           <SectionFooter>
             <Gutter vertical={1}>

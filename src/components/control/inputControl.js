@@ -15,6 +15,10 @@ const StyledInput = styled.input`
   line-height: 1rem;
   padding: 0.5rem;
   border-radius: ${radii.small};
+
+  /* Required to allow the input to be sized with flexbox */
+  width: 0;
+
   ${props =>
     props.hasIconLabel &&
     css`

@@ -1,4 +1,3 @@
-import { rgba } from 'polished'
 import styled, { css } from 'styled-components/macro'
 import React from 'react'
 import { useField } from 'react-final-form'
@@ -9,13 +8,17 @@ import { colors, radii } from 'theme'
 // background-color to something other than transparent, e.g. in case of
 // autofill.
 const StyledSelect = styled.select`
-  background-color: ${rgba(colors.ink.mid, 0.04)};
+  background-color: transparent;
   color: ${colors.text.default};
   flex: 1;
   font-size: 0.9rem;
   line-height: 1rem;
   padding: 0.5rem;
   border-radius: ${radii.small};
+
+  /* Required to allow the input to be sized with flexbox */
+  width: 0;
+
   ${props =>
     props.hasIconLabel &&
     css`
@@ -90,18 +93,32 @@ export const SelectControl = ({
   )
 }
 
-export function FormSelectControl({ name, initialValue, variant, ...props }) {
+export function FormSelectControl({
+  name,
+  children,
+  emptyLabel = null,
+  initialValue = undefined,
+  variant = undefined,
+  ...props
+}) {
   let field = useField(name, {
     initialValue,
   })
   let error = field.meta.submitFailed && field.meta.invalid
+  let empty = field.input.value === ''
 
   return (
     <SelectControl
       {...field.input}
       {...props}
-      variant={variant || (error && 'warning')}
-    />
+      variant={variant || (error && 'warning')}>
+      {emptyLabel && empty && (
+        <option value="" key="empty">
+          {emptyLabel}
+        </option>
+      )}
+      {children}
+    </SelectControl>
   )
 }
 

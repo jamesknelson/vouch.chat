@@ -22,7 +22,7 @@ function Join({ redirectTo, plan }) {
   let navigation = useNavigation()
   let operation = useOperation(emailRegister, {
     onSettled: async issue => {
-      if (issue) {
+      if (!issue) {
         await navigation.getRoute()
       }
     },

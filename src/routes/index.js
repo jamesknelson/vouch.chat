@@ -16,7 +16,6 @@ let routes = mount({
   '/explore': lazy(() => import('./explore')),
   // '/verify': lazy(() => import('./verify')),
   '/recover': lazy(() => import('./recover')),
-  '/settings': lazy(() => import('./settings')),
   '/login': lazy(() => import('./login')),
   '/join': lazy(() => import('./join')),
   '/plans': lazy(() => import('./plans')),
@@ -50,6 +49,7 @@ let routesWithUserRedirects = map((request, context) => {
   }
 
   return mount({
+    '/settings': lazy(() => import('./settings')),
     '/setup': lazy(() => import('./setup')),
     '/logout': logout,
     '*': to ? redirect(to, { exact: false }) : routes,

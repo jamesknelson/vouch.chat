@@ -1,10 +1,12 @@
-import { route } from 'navi'
+import { map, redirect, route } from 'navi'
 import React from 'react'
 import styled, { css } from 'styled-components/macro'
 
 import Button, { ButtonLink } from 'components/button'
 import Card from 'components/card'
 import Icon from 'components/icon'
+import useOperation from 'hooks/useOperation'
+import chooseFreePlan from 'operations/chooseFreePlan'
 import { colors, media } from 'theme'
 
 import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
@@ -12,6 +14,7 @@ import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
 import littleWig from './little-wig.svg'
 import standardWig from './standard-wig.svg'
 import bigWig from './big-wig.svg'
+import { useNavigation } from 'react-navi'
 
 export const Plan = ({
   planId,
@@ -167,9 +170,27 @@ export const Description = styled.p`
 `
 
 function Plans(props) {
-  let littlePlanId = 'little-monthly'
-  let balancedPlanId = 'balanced-monthly'
-  let bigPlanId = 'bid-monthly'
+  let {
+    littleMonthly,
+    balancedMonthly,
+    bigMonthly,
+    //   littleYearly,
+    //   balancedYearly,
+    //   bigYearly,
+  } = props.plans
+
+  let littlePlan = littleMonthly
+  let balancedPlan = balancedMonthly
+  let bigPlan = bigMonthly
+
+  let navigation = useNavigation()
+  let chooseFreePlanOperation = useOperation(chooseFreePlan, {
+    onSettled: async error => {
+      if (!error) {
+        await navigation.navigate('/setup/username')
+      }
+    },
+  })
 
   return (
     <Card radius="small">
@@ -193,46 +214,46 @@ function Plans(props) {
         `}>
         <PhonePlanDivider />
         <Plan
-          planId={bigPlanId}
+          planId={bigPlan.id}
           name="Big Wig"
           description="For the maximum possible exposure"
           nameSize="1.4rem"
           nameWeight="500"
           image={bigWig}
-          monthlyPrice={1000}
+          monthlyPrice={bigPlan.amount}
           points={[
-            'Get 5 vouches a day',
-            'Get 4+ casts a day',
+            `Get ${bigPlan.metadata.dailyVouches} vouches a day`,
+            `Get ${bigPlan.metadata.dailyCasts}+ casts a day`,
             "We'll vouch for you :-)",
           ]}
         />
         <PhonePlanDivider />
         <Plan
-          planId={balancedPlanId}
+          planId={balancedPlan.id}
           name="Balanced Wig"
           description="Gives you the most vouch for your cash"
           nameSize="1.3rem"
           nameWeight="400"
           image={standardWig}
-          monthlyPrice={500}
+          monthlyPrice={balancedPlan.amount}
           points={[
-            'Get 3 vouches a day',
-            'Get 3+ casts a day',
+            `Get ${balancedPlan.metadata.dailyVouches} vouches a day`,
+            `Get ${balancedPlan.metadata.dailyCasts}+ casts a day`,
             'Pick any available username',
           ]}
         />
         <PhonePlanDivider />
         <Plan
-          planId={littlePlanId}
+          planId={littlePlan.id}
           name="Little Wig"
           description="Everything you need to get started"
           nameSize="1.2rem"
           nameWeight="300"
           image={littleWig}
-          monthlyPrice={200}
+          monthlyPrice={littlePlan.amount}
           points={[
-            'Get 1 vouch a day',
-            'Get 2+ casts a day',
+            `Get ${littlePlan.metadata.dailyVouches} vouch a day`,
+            `Get ${littlePlan.metadata.dailyCasts}+ casts a day`,
             <>
               <Icon size="1rem" />
               <em>Your username must contain a number</em>
@@ -265,7 +286,12 @@ function Plans(props) {
           You can continue for free, but you won't be able to vouch, <br />
           and you'll only be able to make one cast a day.
         </p>
-        <Button inline outline color={colors.ink.mid}>
+        <Button
+          inline
+          outline
+          color={colors.ink.mid}
+          busy={chooseFreePlanOperation.busy}
+          onClick={chooseFreePlanOperation.invoke}>
           Continue for free
         </Button>
       </div>
@@ -275,8 +301,24 @@ function Plans(props) {
 
 export default wrapRouteWithSetupLayout(
   1,
-  route({
-    title: 'Which wig are you?',
-    view: <Plans />,
+  map(async ({ context, state }) => {
+    if (context.currentUser && context.currentUser.hasActiveSubscription) {
+      return redirect('/setup/username?thankyou')
+    }
+
+    let backend = context.backend
+    let getPlans = backend.functions.httpsCallable('api-getPlans')
+
+    let plans = state.plans
+    if (!plans) {
+      const { data } = await getPlans()
+      plans = data
+    }
+
+    return route({
+      state: { plans },
+      title: 'Which wig are you?',
+      view: <Plans plans={plans} />,
+    })
   }),
 )
