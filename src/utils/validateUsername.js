@@ -10,8 +10,7 @@ export default function validateUsername(user, username) {
   // This should be the last test as we don't want to recommend that people
   // upgrade their plan if the username won't work.
   else if (
-    (!user.stripeSubscription ||
-      !user.stripeSubscription.plan.metadata.premiumUsername) &&
+    (!user.subscription || !user.subscription.plan.premiumUsername) &&
     !/\d/.test(username)
   ) {
     return 'premium'

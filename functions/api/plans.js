@@ -4,6 +4,7 @@ const pickers = require('../util/pickers')
 const { stripeConfig, stripe } = require('../util/stripe')
 
 const db = admin.firestore()
+const members = db.collection('members')
 
 exports.getPlan = functions.https.onCall(async (id, context) => {
   let plan = await stripe.plans.retrieve(id)
@@ -17,16 +18,17 @@ exports.getPlan = functions.https.onCall(async (id, context) => {
 exports.getUsernameUpgradePlan = functions.https.onCall(
   async (data, context) => {
     let uid = context.auth.uid
-    let userSnapshot = await db
-      .collection('users')
+    let accountSnapshot = await members
       .doc(uid)
+      .collection('private')
+      .doc('account')
       .get()
-    let user = userSnapshot.data()
-    let planId = user.stripeSubscription.plan.id
-    let currentPlan = await stripe.plans.retrieve(planId)
-    let upgradePlanId = currentPlan.metadata.usernameUpgradePlanId
-    if (upgradePlanId) {
-      return pickers.plan(await stripe.plans.retrieve(upgradePlanId))
+    let account = accountSnapshot.data()
+    let stripePlanId = account.subscription.plan.id
+    let currentStripePlan = await stripe.plans.retrieve(stripePlanId)
+    let upgradeStripePlanId = currentStripePlan.metadata.usernameUpgradePlanId
+    if (upgradeStripePlanId) {
+      return pickers.plan(await stripe.plans.retrieve(upgradeStripePlanId))
     } else {
       return null
     }
@@ -38,18 +40,18 @@ exports.getPlans = functions.https.onCall(async (data, context) => {
 })
 
 async function fetchPlans() {
-  const { data: plans } = await stripe.plans.list({
+  const { data: stripePlans } = await stripe.plans.list({
     active: true,
     product: stripeConfig.product_id,
     expand: ['data.product'],
   })
   let results = {}
-  for (let plan of plans) {
-    let entry = Object.entries(plan.product.metadata).find(
-      ([_, id]) => id === plan.id,
+  for (let stripePlan of stripePlans) {
+    let entry = Object.entries(stripePlan.product.metadata).find(
+      ([_, id]) => id === stripePlan.id,
     )
     if (entry) {
-      results[entry[0]] = pickers.plan(plan)
+      results[entry[0]] = pickers.plan(stripePlan)
     }
   }
   return results

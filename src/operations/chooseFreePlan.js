@@ -13,12 +13,12 @@ chooseFreePlan.validate = function validate(params, [currentUser]) {
   }
 }
 
-export default async function chooseFreePlan(params, [currentUser, backend]) {
+export default async function chooseFreePlan(params, [_, backend]) {
   try {
-    await backend.db
-      .collection('users')
-      .doc(currentUser.uid)
-      .update({ hasChosenPlan: true })
+    let createFreeAccount = backend.functions.httpsCallable(
+      'api-createFreeAccount',
+    )
+    await createFreeAccount()
   } catch (error) {
     return error.message || 'Something went wrong'
   }

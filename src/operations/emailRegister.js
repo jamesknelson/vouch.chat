@@ -33,23 +33,22 @@ export default async function emailRegister(params, backend) {
     )
     let firebaseUser = userCredential.user
     let dbUser = {
-      contactEmail: params.email,
       displayName: params.name,
     }
 
     let dbUpdatePromise = backend.db
-      .collection('users')
+      .collection('members')
       .doc(firebaseUser.uid)
       .set(dbUser, { merge: true })
 
-    let profileUpdatePromise = backend.auth.currentUser.updateProfile({
+    await backend.auth.currentUser.updateProfile({
       displayName: params.name,
     })
 
     // Send email verification *after* updating display name
     backend.auth.currentUser.sendEmailVerification()
 
-    await Promise.all([dbUpdatePromise, profileUpdatePromise])
+    await dbUpdatePromise
     await backend.currentUser.getCurrentValue()
     await backend.deviceConfig.previousLoginProvider.set(null)
   } catch (error) {

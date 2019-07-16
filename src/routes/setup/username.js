@@ -139,7 +139,7 @@ function UsernamePicker({ suggestedPlan }) {
     if (
       window.confirm(
         `I can upgrade you to the ${
-          suggestedPlan.metadata.name
+          suggestedPlan.name
         } plan for $${suggestedPlan.amount / 100} / ${
           suggestedPlan.interval
         }. Okay?`,
@@ -328,7 +328,7 @@ export default wrapRouteWithSetupLayout(
     let suggestedPlan
     if (
       currentUser.hasActiveSubscription &&
-      !currentUser.stripeSubscription.plan.metadata.premiumUsername
+      !currentUser.subscription.plan.premiumUsername
     ) {
       let getUsernameUpgradePlan = backend.functions.httpsCallable(
         'api-getUsernameUpgradePlan',

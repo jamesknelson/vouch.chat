@@ -1,31 +1,31 @@
-function plan(plan) {
+function plan(stripePlan) {
   return {
-    id: plan.id,
-    active: plan.active,
-    amount: plan.amount,
-    currency: plan.currency,
-    interval: plan.interval,
-    interval_count: plan.interval_count,
-    metadata: plan.metadata,
+    id: stripePlan.id,
+    active: stripePlan.active,
+    amount: stripePlan.amount,
+    currency: stripePlan.currency,
+    interval: stripePlan.interval,
+    intervalCount: stripePlan.interval_count,
+    ...stripePlan.metadata,
   }
 }
 
-function card(card) {
+function card(stripeCard) {
   return {
-    brand: card.brand,
-    last4: card.last4,
-    exp_month: card.exp_month,
-    exp_year: card.exp_year,
+    brand: stripeCard.brand,
+    last4: stripeCard.last4,
+    expMonth: stripeCard.exp_month,
+    expYear: stripeCard.exp_year,
   }
 }
 
-function subscription(subscription) {
+function subscription(stripeSubscription) {
   return {
-    id: subscription.id,
-    status: subscription.status,
-    cancel_at_period_end: subscription.cancel_at_period_end,
-    current_period_end: subscription.current_period_end,
-    plan: plan(subscription.plan),
+    stripeId: stripeSubscription.id,
+    status: stripeSubscription.status,
+    cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
+    currentPeriodEnd: stripeSubscription.current_period_end,
+    plan: plan(stripeSubscription.plan),
   }
 }
 

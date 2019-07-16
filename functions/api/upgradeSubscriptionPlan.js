@@ -5,27 +5,31 @@ const { stripe } = require('../util/stripe')
 const topUp = require('../util/topUp')
 
 const db = admin.firestore()
+const members = db.collection('members')
 
 exports.upgradeSubscriptionPlan = functions.https.onCall(
   async ({ planId }, context) => {
     let uid = context.auth.uid
-    let userDoc = db.collection('users').doc(uid)
-    let userSnapshot = await userDoc.get()
-    let user = await userSnapshot.data()
-    let { stripeSubscription } = user
+    let accountRef = members
+      .doc(uid)
+      .collection('private')
+      .doc('account')
+    let accountSnapshot = await accountRef.get()
+    let account = await accountSnapshot.data()
+    let { subscription } = account
 
     try {
-      let subscription = await stripe.subscriptions.update(
-        stripeSubscription.id,
+      let stripeSubscription = await stripe.subscriptions.update(
+        subscription.stripeId,
         {
           expand: ['plan'],
           plan: planId,
         },
       )
-      await userDoc.update({
-        stripeSubscription: pickers.subscription(subscription),
+      await accountRef.update({
+        subscription: pickers.subscription(stripeSubscription),
       })
-      await topUp(userDoc.id)
+      await topUp(accountRef)
       return {
         status: 'success',
       }

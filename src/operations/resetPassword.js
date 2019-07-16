@@ -31,6 +31,10 @@ export default async function resetPassword(params, backend) {
     await backend.auth.confirmPasswordReset(params.code, params.password)
     await backend.auth.signInWithEmailAndPassword(params.email, params.password)
     await backend.currentUser.getCurrentValue()
+
+    // After resetting a user's password, the provider will always be
+    // email/password, even if the user first signed up through another
+    // provider.
     await backend.deviceConfig.previousLoginProvider.set(null)
   } catch (error) {
     return normalizeIssues(error.message || 'Something went wrong')

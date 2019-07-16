@@ -5,11 +5,12 @@ const { stripe } = require('../util/stripe')
 const topUp = require('../util/topUp')
 
 const db = admin.firestore()
+const members = db.collection('members')
 
 exports.createCustomerAndSubscription = functions.https.onCall(
   async (data, context) => {
-    let plan = await stripe.plans.retrieve(data.planId)
-    if (!plan.active) {
+    let stripePlan = await stripe.plans.retrieve(data.planId)
+    if (!stripePlan.active) {
       return {
         status: 'error',
         error: {
@@ -20,10 +21,16 @@ exports.createCustomerAndSubscription = functions.https.onCall(
 
     let email = context.auth.token.email
     let uid = context.auth.uid
-    let userDoc = db.collection('users').doc(uid)
-    let userSnapshot = await userDoc.get()
-    let user = await userSnapshot.data()
-    let stripeCustomerId = user.stripeCustomerId
+    let accountRef = await members
+      .doc(uid)
+      .collection('private')
+      .doc('account')
+    let accountSnapshot = await accountRef.get()
+    let account = accountSnapshot.exists ? accountSnapshot.data() : {}
+
+    let stripeCustomerId = account.stripeCustomerId
+    let stripeSubscriptionId =
+      account.subscription && account.subscription.stripeId
 
     // Override any old/broken customer ids
     if (stripeCustomerId) {
@@ -40,7 +47,7 @@ exports.createCustomerAndSubscription = functions.https.onCall(
     // Try setting up payment source for customer
     try {
       if (!stripeCustomerId) {
-        let customer = await stripe.customers.create({
+        let stripeCustomer = await stripe.customers.create({
           preferred_locales: [data.language],
           source: data.token,
           email: email,
@@ -51,9 +58,9 @@ exports.createCustomerAndSubscription = functions.https.onCall(
           },
         })
 
-        stripeCustomerId = customer.id
+        stripeCustomerId = stripeCustomer.id
 
-        await userDoc.set(
+        await accountRef.set(
           {
             stripeCustomerId,
             country: data.country,
@@ -69,7 +76,7 @@ exports.createCustomerAndSubscription = functions.https.onCall(
             country: data.country,
           },
         })
-        await userDoc.update({
+        await accountRef.update({
           country: data.country,
         })
       }
@@ -78,15 +85,12 @@ exports.createCustomerAndSubscription = functions.https.onCall(
       return { status: 'error', error }
     }
 
-    let stripeSubscriptionId =
-      user.stripeSubscription && user.stripeSubscription.id
-
     // If there's an existing subscription id, the upgrade/downgrade
     // functions should be used instead.
     if (stripeSubscriptionId) {
-      let subscription
+      let stripeSubscription
       try {
-        subscription = await stripe.subscriptions.retrieve(
+        stripeSubscription = await stripe.subscriptions.retrieve(
           stripeSubscriptionId,
           {
             expand: ['latest_invoice'],
@@ -94,9 +98,9 @@ exports.createCustomerAndSubscription = functions.https.onCall(
         )
       } catch (error) {}
 
-      if (subscription) {
+      if (stripeSubscription) {
         // Let's not create a new subscription if one already exists.
-        if (subscription.status === 'active') {
+        if (stripeSubscription.status === 'active') {
           return {
             status: 'error',
             error: {
@@ -106,9 +110,7 @@ exports.createCustomerAndSubscription = functions.https.onCall(
         }
       }
 
-      // TODO:
-      // - check if coupon matches too
-      if (subscription.plan.id !== plan.id) {
+      if (stripeSubscription.plan.id !== stripePlan.id) {
         // The existing incomplete subscription has the wrong plan, so nuke it
         // and continue to create a new one.
         await stripe.subscriptions.del(stripeSubscriptionId)
@@ -118,7 +120,7 @@ exports.createCustomerAndSubscription = functions.https.onCall(
         // source.
         try {
           let invoice = await stripe.invoices.pay(
-            subscription.latest_invoice.id,
+            stripeSubscription.latest_invoice.id,
             {
               expand: ['payment_intent'],
             },
@@ -127,8 +129,7 @@ exports.createCustomerAndSubscription = functions.https.onCall(
           return await renderSubscriptionPaymentAttempt(
             await stripe.subscriptions.retrieve(stripeSubscriptionId),
             invoice,
-            userDoc,
-            plan,
+            accountRef,
           )
         } catch (error) {
           console.error(error)
@@ -139,21 +140,20 @@ exports.createCustomerAndSubscription = functions.https.onCall(
 
     // Create a new subscription, and return the payment status.
     try {
-      let subscription = await stripe.subscriptions.create({
+      let stripeSubscription = await stripe.subscriptions.create({
         expand: ['latest_invoice.payment_intent'],
         customer: stripeCustomerId,
         items: [
           {
-            plan: plan.id,
+            plan: stripePlan.id,
           },
         ],
       })
 
       return await renderSubscriptionPaymentAttempt(
-        subscription,
-        subscription.latest_invoice,
-        userDoc,
-        plan,
+        stripeSubscription,
+        stripeSubscription.latest_invoice,
+        accountRef,
       )
     } catch (error) {
       console.error(error)
@@ -163,16 +163,16 @@ exports.createCustomerAndSubscription = functions.https.onCall(
 )
 
 async function renderSubscriptionPaymentAttempt(
-  subscription,
-  invoice,
-  userDoc,
+  stripeSubscription,
+  stripeInvoice,
+  accountRef,
 ) {
-  let stripeSubscription = pickers.subscription(subscription)
-  let paymentIntentStatus = invoice.payment_intent.status
+  let subscription = pickers.subscription(stripeSubscription)
+  let paymentIntentStatus = stripeInvoice.payment_intent.status
   if (paymentIntentStatus === 'requires_payment_method') {
-    await userDoc.set(
+    await accountRef.set(
       {
-        stripeSubscription,
+        subscription,
       },
       { merge: true },
     )
@@ -185,21 +185,21 @@ async function renderSubscriptionPaymentAttempt(
     }
   }
 
-  await userDoc.set(
+  await accountRef.set(
     {
       // This exists separately from stripeSubscription so that it is possible
       // to indicate that the user wants to use the free plan.
       hasChosenPlan: true,
-      stripeSubscription,
+      subscription,
     },
     { merge: true },
   )
 
-  await topUp(userDoc.id)
+  await topUp(accountRef)
 
   return {
     status: 'success',
-    subscriptionStatus: subscription.status,
+    subscriptionStatus: stripeSubscription.status,
     paymentIntentStatus,
   }
 }

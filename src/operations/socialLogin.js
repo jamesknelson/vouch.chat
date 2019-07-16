@@ -12,7 +12,6 @@ export default async function socialLogin({ providerName }, backend) {
     let userCredential = await backend.auth.signInWithPopup(provider)
     let firebaseUser = userCredential.user
     let dbUser = {
-      contactEmail: firebaseUser.email,
       displayName:
         firebaseUser.displayName === null
           ? undefined
@@ -22,7 +21,7 @@ export default async function socialLogin({ providerName }, backend) {
 
     if (userCredential.additionalUserInfo.isNewUser) {
       await backend.db
-        .collection('users')
+        .collection('members')
         .doc(firebaseUser.uid)
         .set(dbUser, { merge: true })
     }

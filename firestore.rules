@@ -1,18 +1,46 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Make sure the uid of the requesting user matches name of the user
-    // document. The wildcard expression {userId} makes the userId variable
-    // available in rules.
-    match /users/{userId} {
-      allow get: if request.auth.uid == userId;
-      allow create, update: if
-      	request.auth.uid == userId &&
-        request.resource.data.keys().hasOnly([
-        	'contactEmail',
-          'displayName',
-          'hasChosenPlan',
-          'photoURL'
-        ]);
+    // Keep everything locked down by default
+    match /{document=**} {
+      allow read, write: if false;
     }
+
+    match /members/{userId} {
+      allow get;
+      allow create, update: if
+        requestedByUser(userId) &&
+        notUpdating('username') &&
+        hasOnlyKeys([
+          'username',
+          'displayName',
+          'photoURL',
+          'bio',
+          'location',
+          'website',
+          'email'
+        ]);
+      
+      // created once user has picked a plan
+      match /private/account {
+        allow get: if requestedByUser(userId);
+      }
+    }
+  }
+
+  function hasOnlyKeys(keys) {
+    return request.resource.data.keys().hasOnly(keys)
+  }
+
+  function isSignedIn() {
+    return request.auth != null;
+  }
+
+  function requestedByUser(userId) {
+    return isSignedIn() && request.auth.uid == userId
+  }
+
+  function notUpdating(field) {
+    return !(field in request.resource.data)
+      || resource.data[field] == request.resource.data[field]
   }
 }

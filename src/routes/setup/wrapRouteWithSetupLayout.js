@@ -78,7 +78,7 @@ const OnboardingFlowIndicator = ({ step }) => {
           box-shadow: 0 0 0 1px ${colors.ink.black} inset,
             0 0 10px 0px ${rgba(colors.ink.black, 0.33)},
             0 0 3px 1px ${rgba(colors.ink.black, 0.1)};
-          width: 150px;
+          width: 200px;
           height: 1px;
         `}
       />
@@ -91,17 +91,27 @@ const OnboardingFlowIndicator = ({ step }) => {
       />
       <OnboardingPosition
         href={
-          user && user.hasChosenPlan && user.canSetUsername && '/setup/username'
+          user &&
+          user.hasChosenPlan &&
+          user.canSetUsername &&
+          !user.username &&
+          '/setup/username'
         }
-        percentage={50}
+        percentage={33}
         active={step === 2}
         complete={step > 2}
         tooltip="Pick your username"
       />
       <OnboardingPosition
-        percentage={100}
+        percentage={66}
         active={step === 3}
         complete={step > 3}
+        tooltip="Create your profile"
+      />
+      <OnboardingPosition
+        percentage={100}
+        active={step === 4}
+        complete={step > 4}
         tooltip="Make a cast"
       />
     </div>

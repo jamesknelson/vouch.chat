@@ -226,8 +226,8 @@ function Plans(props) {
           image={bigWig}
           monthlyPrice={bigPlan.amount}
           points={[
-            `Get ${bigPlan.metadata.dailyVouches} vouches a day`,
-            `Get ${bigPlan.metadata.dailyCasts}+ casts a day`,
+            `Get ${bigPlan.dailyVouches} vouches a day`,
+            `Get ${bigPlan.dailyCasts}+ casts a day`,
             "We'll vouch for you :-)",
           ]}
         />
@@ -241,8 +241,8 @@ function Plans(props) {
           image={standardWig}
           monthlyPrice={balancedPlan.amount}
           points={[
-            `Get ${balancedPlan.metadata.dailyVouches} vouches a day`,
-            `Get ${balancedPlan.metadata.dailyCasts}+ casts a day`,
+            `Get ${balancedPlan.dailyVouches} vouches a day`,
+            `Get ${balancedPlan.dailyCasts}+ casts a day`,
             'Pick any available username',
           ]}
         />
@@ -256,8 +256,8 @@ function Plans(props) {
           image={littleWig}
           monthlyPrice={littlePlan.amount}
           points={[
-            `Get ${littlePlan.metadata.dailyVouches} vouch a day`,
-            `Get ${littlePlan.metadata.dailyCasts}+ casts a day`,
+            `Get ${littlePlan.dailyVouches} vouch a day`,
+            `Get ${littlePlan.dailyCasts}+ casts a day`,
             <>
               <Icon size="1rem" />
               <em>Your username must contain a number</em>
@@ -295,6 +295,7 @@ function Plans(props) {
           outline
           color={colors.ink.mid}
           busy={chooseFreePlanOperation.busy}
+          disabled={chooseFreePlanOperation.busy}
           onClick={chooseFreePlanOperation.invoke}>
           Continue for free
         </Button>

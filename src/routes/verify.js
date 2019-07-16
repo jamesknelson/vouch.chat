@@ -108,6 +108,11 @@ export default map(async ({ context, params, mountpath }) => {
     if (oobCode && (!currentUser || !currentUser.emailVerified)) {
       await backend.auth.applyActionCode(oobCode)
     }
+    if (currentUser === null) {
+      // `applyActionCode` doesn't automatically log in the user, so if
+      // they're logged out, we should redirect them to the login page.
+      return redirect('/login')
+    }
     if (mode === 'recoverEmail') {
       return redirect('/?recovered')
     }

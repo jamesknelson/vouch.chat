@@ -11,6 +11,7 @@ admin.initializeApp({
 exports.renderer = functions.https.onRequest(renderer)
 
 exports.api = {
+  ...require('./api/createFreeAccount'),
   ...require('./api/payAndSubscribe'),
   ...require('./api/plans'),
   ...require('./api/upgradeSubscriptionPlan'),

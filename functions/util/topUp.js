@@ -2,25 +2,22 @@ const admin = require('firebase-admin')
 
 const db = admin.firestore()
 
-module.exports = async function topUp(uid) {
-  let userRef = db.collection('users').doc(uid)
-
+module.exports = async function topUp(accountRef) {
   await db.runTransaction(async tx => {
-    let userSnapshot = await tx.get(userRef)
+    let accountSnapshot = await tx.get(accountRef)
 
     let {
       availableCasts = 0,
       availableVouches = 0,
-      stripeSubscription,
-    } = userSnapshot.data()
-    let planMetadata = stripeSubscription.plan.metadata
+      subscription,
+    } = accountSnapshot.data()
+    let plan = subscription.plan
 
     await tx.set(
-      userRef,
+      accountRef,
       {
-        availableCasts: availableCasts + parseInt(planMetadata.dailyCasts),
-        availableVouches:
-          availableVouches + parseInt(planMetadata.dailyVouches),
+        availableCasts: availableCasts + parseInt(plan.dailyCasts),
+        availableVouches: availableVouches + parseInt(plan.dailyVouches),
         lastTopUpAt: Date.now(),
       },
       {
