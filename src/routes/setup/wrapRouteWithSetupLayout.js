@@ -90,7 +90,9 @@ const OnboardingFlowIndicator = ({ step }) => {
         tooltip="Pick your wig"
       />
       <OnboardingPosition
-        href={user && user.hasChosenPlan && '/setup/username'}
+        href={
+          user && user.hasChosenPlan && user.canSetUsername && '/setup/username'
+        }
         percentage={50}
         active={step === 2}
         complete={step > 2}

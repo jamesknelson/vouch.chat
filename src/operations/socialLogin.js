@@ -13,7 +13,6 @@ export default async function socialLogin({ providerName }, backend) {
     let firebaseUser = userCredential.user
     let dbUser = {
       contactEmail: firebaseUser.email,
-      originalProviderId: userCredential.additionalUserInfo.providerId,
       displayName:
         firebaseUser.displayName === null
           ? undefined

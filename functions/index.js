@@ -11,6 +11,8 @@ admin.initializeApp({
 exports.renderer = functions.https.onRequest(renderer)
 
 exports.api = {
-  ...require('./billing'),
-  ...require('./usernames'),
+  ...require('./api/payAndSubscribe'),
+  ...require('./api/plans'),
+  ...require('./api/upgradeSubscriptionPlan'),
+  ...require('./api/usernames'),
 }

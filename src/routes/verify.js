@@ -1,5 +1,5 @@
 import { map, redirect, route } from 'navi'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigation } from 'react-navi'
 import { css } from 'styled-components/macro'
 
@@ -12,7 +12,7 @@ import { FormInputField } from 'components/field'
 import Form, { FormMessage } from 'controls/form'
 import useOperation from 'hooks/useOperation'
 import resetPassword from 'operations/resetPassword'
-import loading from './loading'
+import loading, { Loading } from './loading'
 
 export const ResetPassword = props => {
   let navigation = useNavigation()
@@ -70,7 +70,29 @@ export const ResetPassword = props => {
   )
 }
 
-export default map(async ({ context, params }) => {
+function ReloadAfterVerification({ backend }) {
+  let [verified, setVerified] = useState(null)
+
+  useEffect(() => {
+    // This will cause the route to be recomputed so we can't do it in the
+    // map() call or it'll create an infinite loop.
+    backend.currentUser.reload().then(() => {
+      setVerified(backend.currentUser.emailVerified)
+    })
+  }, [backend])
+
+  if (verified === false) {
+    return (
+      <LayoutPageCard title="Oops">
+        <Instructions>Your account couldn't be verified.</Instructions>
+      </LayoutPageCard>
+    )
+  }
+
+  return <Loading />
+}
+
+export default map(async ({ context, params, mountpath }) => {
   let { currentUser, backend } = context
 
   if (currentUser === undefined) {
@@ -81,14 +103,28 @@ export default map(async ({ context, params }) => {
   // - recoverEmail: switch back to a previous email if someone's email address is changed.
   // - verifyEmail: verify new emails.
   // - resetPassword: part of the recover account flow.
-  const { mode, oobCode } = params
+  const { mode, oobCode, ...query } = params
   if (mode === 'verifyEmail' || mode === 'recoverEmail') {
-    if (!currentUser || !currentUser.emailVerified) {
+    if (oobCode && (!currentUser || !currentUser.emailVerified)) {
       await backend.auth.applyActionCode(oobCode)
     }
-    return redirect(
-      mode === 'verifyEmail' ? '/welcome?verified' : '/?recovered',
-    )
+    if (mode === 'recoverEmail') {
+      return redirect('/?recovered')
+    }
+    if (mode === 'verifyEmail') {
+      if (currentUser.emailVerified) {
+        return redirect('/welcome?verified')
+      } else if (oobCode) {
+        // Redirect to the same URL without the oobcode, so we won't try to
+        // the same action code again.
+        return redirect({ query: { ...query, mode }, pathname: mountpath })
+      } else {
+        // Display the verification status/result.
+        return route({
+          view: <ReloadAfterVerification backend={backend} />,
+        })
+      }
+    }
   } else if (mode === 'resetPassword') {
     let email
     try {

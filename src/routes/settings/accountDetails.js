@@ -4,7 +4,7 @@ import { FormSpy } from 'react-final-form'
 import styled, { css } from 'styled-components/macro'
 
 import Button, { FormSubmitButton } from 'components/button'
-import { FormInputField, FormSelectField } from 'components/field'
+import { FormInputField } from 'components/field'
 import { LayoutHeaderSection } from 'components/layout'
 import { TabletPlus } from 'components/media'
 import {

@@ -5,7 +5,7 @@ import { mount, route } from 'navi'
 import { Spinner } from 'components/loading'
 import { colors, media } from 'theme'
 
-function Loading() {
+export function Loading() {
   return (
     <div
       css={css`

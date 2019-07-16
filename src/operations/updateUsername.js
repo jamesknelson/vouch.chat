@@ -2,19 +2,19 @@ import { useBackend, useCurrentUser } from 'context'
 import { normalizeIssues } from 'utils/Issues'
 import validateUsername from 'utils/validateUsername'
 
-setUsername.useDependencies = function useDependencies() {
+updateUsername.useDependencies = function useDependencies() {
   return [useBackend(), useCurrentUser()]
 }
 
-setUsername.validate = async function validate(params, [_, currentUser]) {
+updateUsername.validate = async function validate(params, [_, currentUser]) {
   return normalizeIssues({
     username: validateUsername(currentUser, params.username),
   })
 }
 
-export default async function setUsername({ username }, [backend]) {
+export default async function updateUsername({ username }, [backend]) {
   try {
-    let setUsername = backend.functions.httpsCallable('api-setUsername')
+    let setUsername = backend.functions.httpsCallable('api-updateUsername')
     let { data } = await setUsername({ username })
 
     if (data.status !== 'success') {

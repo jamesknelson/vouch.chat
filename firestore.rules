@@ -9,7 +9,6 @@ service cloud.firestore {
       	request.auth.uid == userId &&
         request.resource.data.keys().hasOnly([
         	'contactEmail',
-          'originalProviderId',
           'displayName',
           'hasChosenPlan',
           'photoURL'

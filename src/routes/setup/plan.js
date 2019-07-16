@@ -15,6 +15,7 @@ import littleWig from './little-wig.svg'
 import standardWig from './standard-wig.svg'
 import bigWig from './big-wig.svg'
 import { useNavigation } from 'react-navi'
+import { useCurrentUser } from 'context'
 
 export const Plan = ({
   planId,
@@ -183,11 +184,14 @@ function Plans(props) {
   let balancedPlan = balancedMonthly
   let bigPlan = bigMonthly
 
+  let currentUser = useCurrentUser()
   let navigation = useNavigation()
   let chooseFreePlanOperation = useOperation(chooseFreePlan, {
     onSettled: async error => {
       if (!error) {
-        await navigation.navigate('/setup/username')
+        await navigation.navigate(
+          currentUser.canSetUsername ? '/setup/username/' : '/setup/verify',
+        )
       }
     },
   })
@@ -303,7 +307,7 @@ export default wrapRouteWithSetupLayout(
   1,
   map(async ({ context, state }) => {
     if (context.currentUser && context.currentUser.hasActiveSubscription) {
-      return redirect('/setup/username?thankyou')
+      return redirect('/setup/username')
     }
 
     let backend = context.backend

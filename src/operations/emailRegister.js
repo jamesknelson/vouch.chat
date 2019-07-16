@@ -34,7 +34,6 @@ export default async function emailRegister(params, backend) {
     let firebaseUser = userCredential.user
     let dbUser = {
       contactEmail: params.email,
-      originalProviderId: 'email',
       displayName: params.name,
     }
 

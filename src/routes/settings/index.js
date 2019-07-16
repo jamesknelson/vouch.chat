@@ -30,7 +30,7 @@ function Settings(props) {
             <Gap size={1} />
             <Section>
               <List>
-                <ListItemLink href="/settings/account-details">
+                <ListItemLink href="/settings/account">
                   <ListItemText
                     title="Account Details"
                     description="Username, email & language."
@@ -73,9 +73,9 @@ export default authenticated(
           },
           title: 'Settings',
         }),
-        [mediaQueries.tabletPlus]: redirect('./account-details'),
+        [mediaQueries.tabletPlus]: redirect('./account'),
       }),
-      '/account-details': lazy(() => import('./accountDetails')),
+      '/account': lazy(() => import('./accountDetails')),
       '/billing': lazy(() => import('./billing')),
       '/password': lazy(() => import('./password')),
     }),

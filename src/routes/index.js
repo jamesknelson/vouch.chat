@@ -14,7 +14,6 @@ let routes = mount({
   '/share': lazy(() => import('./share')),
   '/read': lazy(() => import('./readingList')),
   '/explore': lazy(() => import('./explore')),
-  // '/verify': lazy(() => import('./verify')),
   '/recover': lazy(() => import('./recover')),
   '/login': lazy(() => import('./login')),
   '/join': lazy(() => import('./join')),
@@ -28,7 +27,6 @@ let routes = mount({
     }
   }),
   '/welcome': lazy(() => import('./welcome')),
-  '/verify': lazy(() => import('./verify')),
   // '/subscribe': lazy(() => import('./subscribe')),
   // '/thankyou': lazy(() => import('./thankyou')),
 })
@@ -44,14 +42,19 @@ let routesWithUserRedirects = map((request, context) => {
         to = '/setup/plan'
       }
     } else if (!user.username) {
-      to = '/setup/username'
+      if (user.canSetUsername) {
+        to = '/setup/username'
+      } else {
+        to = '/setup/verify'
+      }
     }
   }
 
   return mount({
+    '/logout': logout,
     '/settings': lazy(() => import('./settings')),
     '/setup': lazy(() => import('./setup')),
-    '/logout': logout,
+    '/verify': lazy(() => import('./verify')),
     '*': to ? redirect(to, { exact: false }) : routes,
   })
 })

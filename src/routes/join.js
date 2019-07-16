@@ -18,7 +18,7 @@ import AuthLink from 'controls/authLink'
 import useOperation from 'hooks/useOperation'
 import emailRegister from 'operations/emailRegister'
 
-function Join({ redirectTo, plan }) {
+function Join() {
   let navigation = useNavigation()
   let operation = useOperation(emailRegister, {
     onSettled: async issue => {
@@ -36,7 +36,7 @@ function Join({ redirectTo, plan }) {
           <FormInputControl label="Name" glyph="person" name="name" />
           <FormInputControl
             label="Email"
-            glyph="envelope"
+            glyph="envelope1"
             name="email"
             type="email"
           />
@@ -74,7 +74,7 @@ function Join({ redirectTo, plan }) {
 
 export default map(({ context, params }) => {
   // Only redirect automatically if the user was already logged in when they
-  // first landed at this page, as otherwise we'll want to t
+  // first landed at this page.
   if (context.currentUser) {
     return redirect('/welcome')
   }
@@ -85,6 +85,6 @@ export default map(({ context, params }) => {
       layoutHeaderActions: <LoginButton style={{ marginRight: '0.75rem' }} />,
     },
     title: 'Join',
-    view: <Join {...params} />,
+    view: <Join />,
   })
 })

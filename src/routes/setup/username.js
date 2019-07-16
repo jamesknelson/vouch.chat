@@ -8,7 +8,8 @@ import Icon from 'components/icon'
 import { Gap } from 'components/sections'
 import { useCurrentUser, useBackend } from 'context'
 import useOperation from 'hooks/useOperation'
-import setUsernameOperation from 'operations/setUsername'
+import updateUsername from 'operations/updateUsername'
+import upgradeSubscriptionPlan from 'operations/upgradeSubscriptionPlan'
 import { colors } from 'theme'
 
 import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
@@ -49,37 +50,54 @@ const Message = styled.p`
 
 const DebounceDelay = 250
 
-function UsernamePicker(props) {
-  let [username, setUsername] = useState('')
+function UsernamePicker({ suggestedPlan }) {
+  let [usernameInput, setUsernameInput] = useState('')
   let [validationIssue, setValidationIssue] = useState(null)
   let [available, setAvailable] = useState(false)
   let backend = useBackend()
   let user = useCurrentUser()
-  let operation = useOperation(setUsernameOperation)
-  let hasSubmitted = !!operation.lastValue || operation.busy
+  let updateUsernameOperation = useOperation(updateUsername)
+  let upgradeSubscriptionPlanOperation = useOperation(upgradeSubscriptionPlan)
+  let hasSubmitted =
+    !!updateUsernameOperation.lastValue || updateUsernameOperation.busy
   let submitIssue =
-    operation.lastValue && Object.values(operation.lastValue)[0][0]
+    updateUsernameOperation.lastValue &&
+    Object.values(updateUsernameOperation.lastValue)[0][0]
 
   let issue = validationIssue || submitIssue
 
   useEffect(() => {
-    operation.clearSettled()
+    if (!suggestedPlan) {
+      updateUsernameOperation.clearSettled()
+      setValidationIssue(null)
+    }
+    // We only want to do this when suggestedPlan goes null after
+    // upgrading the plan.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [!!suggestedPlan])
 
-    if (username) {
-      operation.validate({ username }).then(issues => {
-        setValidationIssue(issues && Object.values(issues)[0][0])
-      })
+  useEffect(() => {
+    updateUsernameOperation.clearSettled()
+
+    if (usernameInput) {
+      updateUsernameOperation
+        .validate({ username: usernameInput })
+        .then(issues => {
+          setValidationIssue(issues && Object.values(issues)[0][0])
+        })
 
       let setResult = setAvailable
 
       setAvailable(undefined)
       let timeout = setTimeout(async () => {
-        let issues = await operation.validate({ username })
+        let issues = await updateUsernameOperation.validate({
+          username: usernameInput,
+        })
         if (!issues || !issues.username || issues.username[0] !== 'invalid') {
           let isUsernameAvailable = backend.functions.httpsCallable(
             'api-isUsernameAvailable',
           )
-          isUsernameAvailable({ username })
+          isUsernameAvailable({ username: usernameInput })
             .then(({ data }) => {
               setResult(data)
             })
@@ -101,35 +119,51 @@ function UsernamePicker(props) {
     }
     // We actually only want to update the issue when the user makes a change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [username])
+  }, [usernameInput])
 
   let handleSubmit = event => {
     event.preventDefault()
-    operation.invoke({ username })
+    updateUsernameOperation.invoke({ username: usernameInput })
   }
 
   let handleChange = event => {
-    setUsername(event.target.value)
+    setUsernameInput(event.target.value)
   }
 
-  let addNumber = () => {
+  let handleClickAddNumber = () => {
     let number = Math.round(Math.min(Math.random() * 10, 9))
-    setUsername(username + number)
+    setUsernameInput(usernameInput + number)
+  }
+
+  let handleClickUpgradePlan = () => {
+    if (
+      window.confirm(
+        `I can upgrade you to the ${
+          suggestedPlan.metadata.name
+        } plan for $${suggestedPlan.amount / 100} / ${
+          suggestedPlan.interval
+        }. Okay?`,
+      )
+    ) {
+      upgradeSubscriptionPlanOperation.invoke({ planId: suggestedPlan.id })
+    }
   }
 
   let message = "Don't panic. You can change this later."
   if (hasSubmitted) {
-    if (issue === 'required') {
+    if (available === false || issue === 'username-taken') {
+      message = 'That username is already taken, sorry.'
+    } else if (issue === 'required') {
       message =
         "So you'll actually need a username. It'll appear next to your name when you cast."
     } else if (issue === 'invalid') {
       message =
         'Your username can only contain letters, numbers, and an underscore (_).'
     } else if (issue === 'premium') {
-      message =
-        "That's a great username. But usernames for free and small wigs must contain a number."
-    } else if (issue === 'username-taken') {
-      message = 'That username is already taken, sorry.'
+      if (available === true) {
+        message =
+          "That's a great username. But usernames for free and little wigs must contain a number."
+      }
     } else if (submitIssue) {
       message = submitIssue
     }
@@ -201,7 +235,7 @@ function UsernamePicker(props) {
                 </span>
                 <input
                   onChange={handleChange}
-                  value={username}
+                  value={usernameInput}
                   maxLength="15"
                   css={css`
                     color: ${colors.text.default};
@@ -213,8 +247,12 @@ function UsernamePicker(props) {
                     flex-grow: 1;
                   `}
                 />
-                {available && (
-                  <Icon color={colors.ink.black} glyph="check" size="1rem" />
+                {available !== undefined && (
+                  <Icon
+                    color={colors.ink.black}
+                    glyph={available ? 'check' : 'cross2'}
+                    size="1rem"
+                  />
                 )}
                 {available === undefined && (
                   <Spinner
@@ -228,7 +266,7 @@ function UsernamePicker(props) {
           </div>
           <Message>{message}</Message>
           <Gap size="2rem" />
-          {hasSubmitted && issue === 'premium' && (
+          {hasSubmitted && issue === 'premium' && available === true && (
             <div
               css={css`
                 margin-top: -1rem;
@@ -237,21 +275,31 @@ function UsernamePicker(props) {
                 justify-content: space-around;
               `}>
               {user.hasActiveSubscription ? (
-                <Button size="small">Upgrade my wig</Button>
+                <Button
+                  size="small"
+                  busy={upgradeSubscriptionPlanOperation.busy}
+                  disabled={upgradeSubscriptionPlanOperation.busy}
+                  onClick={handleClickUpgradePlan}>
+                  Upgrade my wig
+                </Button>
               ) : (
                 <ButtonLink href="/setup/plan" size="small">
                   Get a wig
                 </ButtonLink>
               )}
-              <Button outline size="small" onClick={addNumber}>
+              <Button outline size="small" onClick={handleClickAddNumber}>
                 Add a number
               </Button>
             </div>
           )}
           <Button
             type="submit"
-            busy={operation.busy}
-            disabled={(hasSubmitted && !!validationIssue) || operation.busy}
+            busy={updateUsernameOperation.busy}
+            disabled={
+              available === false ||
+              (hasSubmitted && !!validationIssue) ||
+              updateUsernameOperation.busy
+            }
             outline
             css={css`
               margin: 0 auto;
@@ -266,18 +314,31 @@ function UsernamePicker(props) {
 
 export default wrapRouteWithSetupLayout(
   2,
-  map(({ context }) => {
-    let { currentUser } = context
+  map(async ({ context }) => {
+    let { backend, currentUser } = context
 
     if (currentUser === undefined) {
       return lazy(() => import('../loading'))
+    } else if (!currentUser) {
+      return redirect('/login')
     } else if (currentUser.username) {
       return redirect('/setup/profile')
     }
 
+    let suggestedPlan
+    if (
+      currentUser.hasActiveSubscription &&
+      !currentUser.stripeSubscription.plan.metadata.premiumUsername
+    ) {
+      let getUsernameUpgradePlan = backend.functions.httpsCallable(
+        'api-getUsernameUpgradePlan',
+      )
+      suggestedPlan = (await getUsernameUpgradePlan()).data
+    }
+
     return route({
       title: 'Pick your username.',
-      view: <UsernamePicker />,
+      view: <UsernamePicker suggestedPlan={suggestedPlan} />,
     })
   }),
 )

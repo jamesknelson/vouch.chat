@@ -21,11 +21,6 @@ export default async function payAndSubscribe(
   [currentUser, backend],
 ) {
   try {
-    await backend.db
-      .collection('users')
-      .doc(currentUser.uid)
-      .set({ hasChosenPlan: true }, { merge: true })
-
     const { token, error } = await stripe.createToken({
       type: 'card',
       ...billing,

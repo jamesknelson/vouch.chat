@@ -48,7 +48,7 @@ function Payment({ plan }) {
     },
     onSettled: async issue => {
       if (!issue) {
-        await navigation.navigate('/setup/username?thankyou')
+        await navigation.getRoute()
       }
     },
   })
@@ -101,14 +101,6 @@ export default wrapRouteWithSetupLayout(
     if (!plan) {
       let response = await getPlan(params.plan)
       plan = response.data
-      // planPromise = Promise.resolve({
-      //   data: {
-      //     currency: 'usd',
-      //     amount: 1000,
-      //     active: true,
-      //     id: 'big-monthly',
-      //   },
-      // })
     }
 
     if (context.currentUser === undefined) {
@@ -122,7 +114,11 @@ export default wrapRouteWithSetupLayout(
       return redirect(`/join?plan=${params.plan}`)
     }
     if (context.currentUser.hasActiveSubscription) {
-      return redirect(`/settings/billing?plan=${params.plan}`)
+      return redirect(
+        context.currentUser.username
+          ? `/settings/billing?plan=${params.plan}`
+          : '/setup/username',
+      )
     }
 
     if (!plan.active) {
@@ -135,7 +131,9 @@ export default wrapRouteWithSetupLayout(
 
     return route({
       title: 'Setup your account',
-      state: { plan },
+      state: {
+        plan,
+      },
       view: <Payment plan={plan} />,
     })
   }),

@@ -4,6 +4,7 @@ import { mount, lazy, route } from 'navi'
 export default mount({
   '/plan': lazy(() => import('./plan')),
   '/payment': lazy(() => import('./payment')),
+  '/verify': lazy(() => import('./verifyEmail')),
   '/username': lazy(() => import('./username')),
   '/profile': lazy(() => import('./profile')),
   '/free-cast': route({

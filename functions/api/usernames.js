@@ -1,6 +1,6 @@
 const admin = require('firebase-admin')
 const functions = require('firebase-functions')
-const validateUsernameAvailability = require('./validateUsernameAvailability')
+const isReservedUsername = require('../util/isReservedUsername')
 
 const db = admin.firestore()
 
@@ -18,7 +18,7 @@ const isUsernameAvailable = functions.https.onCall(
       return true
     }
 
-    if (!validateUsernameAvailability(username)) {
+    if (!isReservedUsername(username)) {
       return false
     }
 
@@ -32,7 +32,7 @@ const isUsernameAvailable = functions.https.onCall(
   },
 )
 
-const setUsername = functions.https.onCall(async ({ username }, context) => {
+const updateUsername = functions.https.onCall(async ({ username }, context) => {
   let uid = context.auth.uid
 
   username = username.trim().toLowerCase()
@@ -43,8 +43,8 @@ const setUsername = functions.https.onCall(async ({ username }, context) => {
     return { status: 'error', code: 400 }
   }
 
-  if (!validateUsernameAvailability(username)) {
-    return { status: 'error', code: 'username-unavailable' }
+  if (!isReservedUsername(username)) {
+    return { status: 'error', code: 'username-taken' }
   }
 
   return db.runTransaction(async tx => {
@@ -54,11 +54,27 @@ const setUsername = functions.https.onCall(async ({ username }, context) => {
     let userSnapshot = await tx.get(userRef)
     let user = userSnapshot.data()
 
-    if (!user.premiumUsername && !/\d/.test(username)) {
+    if (
+      (!user.stripeSubscription ||
+        !user.stripeSubscription.plan.metadata.premiumUsername) &&
+      !/\d/.test(username)
+    ) {
       return { status: 'error', code: 'premium-username-requires-upgrade' }
     }
     if (user.username === username) {
       return { status: 'success' }
+    }
+
+    // Don't allow password-based accounts to take a username until they've
+    // verified their email address or made a payment
+    let authUser = await admin.auth().getUser(uid)
+    let providerId = authUser.providerData[0].providerId
+    if (
+      providerId === 'password' &&
+      !authUser.emailVerified &&
+      !(user.stripeSubscription && user.stripeSubscription.status === 'active')
+    ) {
+      return { status: 'error', code: 'verification-required' }
     }
 
     let usernameQuery = users.where('username', '==', username).limit(1)
@@ -75,5 +91,5 @@ const setUsername = functions.https.onCall(async ({ username }, context) => {
 
 module.exports = {
   isUsernameAvailable,
-  setUsername,
+  updateUsername,
 }

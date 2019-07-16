@@ -18,7 +18,7 @@ export default async function chooseFreePlan(params, [currentUser, backend]) {
     await backend.db
       .collection('users')
       .doc(currentUser.uid)
-      .set({ hasChosenPlan: true }, { merge: true })
+      .update({ hasChosenPlan: true })
   } catch (error) {
     return error.message || 'Something went wrong'
   }
