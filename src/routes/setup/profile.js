@@ -2,7 +2,6 @@ import { map, route } from 'navi'
 import React from 'react'
 import styled from 'styled-components/macro'
 
-import Card from 'components/card'
 import loading from 'routes/loading'
 import { colors } from 'theme'
 import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
@@ -35,12 +34,10 @@ const Description = styled.p`
 
 function Profile({ plan }) {
   return (
-    <Card radius="small">
-      <InnerClamp>
-        <Title>Profile</Title>
-        <Description>Set it up.</Description>
-      </InnerClamp>
-    </Card>
+    <InnerClamp>
+      <Title>Profile</Title>
+      <Description>Set it up.</Description>
+    </InnerClamp>
   )
 }
 

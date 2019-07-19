@@ -54,21 +54,19 @@ function Payment({ plan }) {
   })
 
   return (
-    <Card radius="small">
-      <InnerClamp>
-        <Title>Great choice!</Title>
-        <Description>Now show us the money.</Description>
-        <CardForm onSubmit={operation.invoke} validate={operation.validate}>
-          <FormSubmitButton
-            css={css`
-              margin-top: 1.5rem;
-              width: 100%;
-            `}>
-            Pay <Currency amount={plan.amount} currency={plan.currency} />
-          </FormSubmitButton>
-        </CardForm>
-      </InnerClamp>
-    </Card>
+    <InnerClamp>
+      <Title>Great choice!</Title>
+      <Description>Now show us the money.</Description>
+      <CardForm onSubmit={operation.invoke} validate={operation.validate}>
+        <FormSubmitButton
+          css={css`
+            margin-top: 1.5rem;
+            width: 100%;
+          `}>
+          Pay <Currency amount={plan.amount} currency={plan.currency} />
+        </FormSubmitButton>
+      </CardForm>
+    </InnerClamp>
   )
 }
 

@@ -16,5 +16,8 @@
         "function": "renderer"
       }
     ]
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }

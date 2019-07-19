@@ -218,7 +218,6 @@ export default compose(
   })),
   map(({ params, query }) => {
     if (params.username && !query.username) {
-      console.log(params.username[0])
       if (params.username[0] !== '@') {
         return mount({})
       }

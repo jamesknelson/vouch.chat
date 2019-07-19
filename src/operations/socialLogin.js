@@ -9,25 +9,8 @@ socialLogin.useDependencies = function useDependencies() {
 export default async function socialLogin({ providerName }, backend) {
   try {
     let provider = new firebase.auth[providerName]()
-    let userCredential = await backend.auth.signInWithPopup(provider)
-    let firebaseUser = userCredential.user
-    let dbUser = {
-      displayName:
-        firebaseUser.displayName === null
-          ? undefined
-          : firebaseUser.displayName,
-      photoURL: firebaseUser.photoURL,
-    }
-
-    if (userCredential.additionalUserInfo.isNewUser) {
-      await backend.db
-        .collection('members')
-        .doc(firebaseUser.uid)
-        .set(dbUser, { merge: true })
-    }
-
-    await backend.currentUser.getCurrentValue()
-    await backend.deviceConfig.previousLoginProvider.set(providerName)
+    provider.addScope('email')
+    await backend.auth.signInWithRedirect(provider)
   } catch (error) {
     return normalizeIssues(error.message || 'Something went wrong')
   }

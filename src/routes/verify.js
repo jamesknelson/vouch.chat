@@ -4,10 +4,10 @@ import { useNavigation } from 'react-navi'
 import { css } from 'styled-components/macro'
 
 import { FormSubmitButton, StyledLink } from 'components/button'
-import LayoutPageCard, {
+import SmallCardLayout, {
   Instructions,
   Issue,
-} from 'components/layout/layoutPageCard'
+} from 'components/smallCardLayout'
 import { FormInputField } from 'components/field'
 import Form, { FormMessage } from 'controls/form'
 import useOperation from 'hooks/useOperation'
@@ -30,17 +30,17 @@ export const ResetPassword = props => {
 
   if (!props.email) {
     return (
-      <LayoutPageCard title="Oops">
+      <SmallCardLayout title="Oops">
         <Instructions>
           This account recovery link has expired. Please get a new link at the{' '}
           <StyledLink href="/recover">recover account</StyledLink> page.
         </Instructions>
-      </LayoutPageCard>
+      </SmallCardLayout>
     )
   }
 
   return (
-    <LayoutPageCard title="One more step...">
+    <SmallCardLayout title="One more step...">
       <Instructions>Please set a new password below.</Instructions>
       <Form validate={operation.validate} onSubmit={operation.invoke}>
         <FormInputField
@@ -66,7 +66,7 @@ export const ResetPassword = props => {
           Change Password
         </FormSubmitButton>
       </Form>
-    </LayoutPageCard>
+    </SmallCardLayout>
   )
 }
 
@@ -83,9 +83,9 @@ function ReloadAfterVerification({ backend }) {
 
   if (verified === false) {
     return (
-      <LayoutPageCard title="Oops">
+      <SmallCardLayout title="Oops">
         <Instructions>Your account couldn't be verified.</Instructions>
-      </LayoutPageCard>
+      </SmallCardLayout>
     )
   }
 

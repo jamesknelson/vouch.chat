@@ -6,7 +6,7 @@ import {
   UnstyledPopupTrigger,
   UnstyledPopup,
 } from 'controls/unstyledPopup'
-import useTrigger from 'hooks/useTrigger'
+import useTrigger from 'popup-trigger/hook.cjs'
 import { PopupArrow, PopupBox } from './styles'
 
 export { UnstyledPopupTrigger as PopupTrigger }

@@ -7631,10 +7631,10 @@ popper.js@^1.14.4, popper.js@^1.14.7:
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
   integrity sha512-w010cY1oCUmI+9KwwlWki+r5jxKfTFDVoadl7MSrIujHU5MJ5OR6HTDj6Xo8aoR/QsA56x8jKjA59qGH4ELtrA==
 
-popup-trigger@0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/popup-trigger/-/popup-trigger-0.2.1.tgz#c109039f2dae641b0fab992e663d093238d4de96"
-  integrity sha512-apLd1gxD937NxAFvpMUF0+fqWWbwgHOK2TMJzEztzpcbPtkIUP8kyIyV1V2fbryCh3t/WCVxI/6yLJs532S9aw==
+popup-trigger@0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/popup-trigger/-/popup-trigger-0.2.2.tgz#ba801135f8cfa8efc60d53b7c270f39d88880a03"
+  integrity sha512-uV02H+FP0St7FKcA8hD5cTtHW5Nyxzklqsj8tGNUAKZyBQBGMW6MoEWuRU1sEQ0Hba/5bUiYCylVZo5GqKNiMA==
 
 portfinder@^1.0.9:
   version "1.0.20"

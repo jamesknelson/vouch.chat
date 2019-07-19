@@ -10,13 +10,13 @@ import Button, {
   StyledLink,
 } from 'components/button'
 import { ControlGroup, FormInputControl } from 'components/control'
-import LayoutPageCard, {
+import SmallCardLayout, {
   Greeting,
   Instructions,
   Issue,
   RelatedLink,
   RelatedLinkGroup,
-} from 'components/layout/layoutPageCard'
+} from 'components/smallCardLayout'
 import Divider from 'components/divider'
 import AuthLink from 'controls/authLink'
 import { Form, FormMessage } from 'controls/form'
@@ -63,23 +63,21 @@ function Login(props) {
 
   let facebookLoginOperation = useSocialLoginOperation('FacebookAuthProvider')
   let googleLoginOperation = useSocialLoginOperation('GoogleAuthProvider')
-  let twitterLoginOperation = useSocialLoginOperation('TwitterAuthProvider')
+  // let twitterLoginOperation = useSocialLoginOperation('TwitterAuthProvider')
 
   let login = operation => {
     setPreviousLoginProvider(operation.providerName)
     facebookLoginOperation.clearSettled()
     googleLoginOperation.clearSettled()
-    twitterLoginOperation.clearSettled()
+    // twitterLoginOperation.clearSettled()
     operation.invoke()
   }
 
-  let disabled =
-    facebookLoginOperation.busy ||
-    googleLoginOperation.busy ||
-    twitterLoginOperation.busy
+  let disabled = facebookLoginOperation.busy || googleLoginOperation.busy // ||
+  // twitterLoginOperation.busy
 
   return (
-    <LayoutPageCard title="Sign in">
+    <SmallCardLayout title="Sign in">
       <Greeting>
         {props.required !== undefined
           ? "You'll need to login to access that feature."
@@ -124,7 +122,7 @@ function Login(props) {
         onClick={() => login(googleLoginOperation)}>
         Sign in with Google
       </Button>
-      <Button
+      {/* <Button
         css={buttonStyles}
         glyph="twitter"
         color="#00ACED"
@@ -136,15 +134,13 @@ function Login(props) {
         busy={twitterLoginOperation.busy}
         onClick={() => login(twitterLoginOperation)}>
         Sign in with Twitter
-      </Button>
+      </Button> */}
       <Divider />
       <Instructions>
-        Please sign in only if you agree to our marvellous{' '}
-        <StyledLink href="/pages/privacy">Privacy Policy</StyledLink>, your{' '}
-        <StyledLink href="/pages/conduct">Code of Conduct</StyledLink>, and the{' '}
-        <StyledLink href="/pages/privacy">Terms of Service</StyledLink>.
+        Please sign in only if you agree to our policies{' '}
+        <StyledLink href="/pages/policies">Policies and Terms</StyledLink>..
       </Instructions>
-    </LayoutPageCard>
+    </SmallCardLayout>
   )
 }
 
@@ -153,7 +149,7 @@ function EmailLogin(props) {
   let emailLoginDependencies = emailLogin.useDependencies()
 
   return (
-    <LayoutPageCard title="Sign in">
+    <SmallCardLayout title="Sign in">
       <Form
         onSubmit={async value => {
           let error = await emailLogin(value, emailLoginDependencies)
@@ -197,12 +193,10 @@ function EmailLogin(props) {
       </RelatedLinkGroup>
       <Divider />
       <Instructions>
-        Please sign in only if you agree to our marvellous{' '}
-        <StyledLink href="/pages/privacy">Privacy Policy</StyledLink>, your{' '}
-        <StyledLink href="/pages/conduct">Code of Conduct</StyledLink>, and the{' '}
-        <StyledLink href="/pages/privacy">Terms of Service</StyledLink>.
+        Please sign in only if you agree to our short{' '}
+        <StyledLink href="/pages/policies">Policies and Terms</StyledLink>.
       </Instructions>
-    </LayoutPageCard>
+    </SmallCardLayout>
   )
 }
 

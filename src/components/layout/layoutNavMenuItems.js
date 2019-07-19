@@ -58,9 +58,21 @@ const MenuHeader = ({ disabled, displayName, username, photoURL }) => {
 export default function LayoutNavMenuItems() {
   let currentUser = useCurrentUser()
 
-  if (currentUser === undefined) {
-    return null
-  }
+  let authAction = currentUser ? (
+    <MenuLink href="/logout">Logout</MenuLink>
+  ) : (
+    <MenuLink href={'/logout?redirectTo=' + encodeURIComponent('/login')}>
+      Join or Sign In
+    </MenuLink>
+  )
+
+  let commonActions = (
+    <>
+      <MenuLink href="/pages/policies">Policies and Terms</MenuLink>
+      <MenuDivider />
+      {authAction}
+    </>
+  )
 
   let requiresOnboarding = currentUser && !currentUser.username
 
@@ -75,12 +87,9 @@ export default function LayoutNavMenuItems() {
       <MenuDivider />
       <MenuLink href="/settings">Settings</MenuLink>
       <MenuDivider />
-      <MenuLink href="/logout">Logout</MenuLink>
+      {commonActions}
     </>
   ) : (
-    <>
-      <MenuLink href="/login">Sign In </MenuLink>
-      <MenuLink href="/join">Join</MenuLink>
-    </>
+    commonActions
   )
 }

@@ -10,13 +10,13 @@ import DeviceStorage from './deviceStorage'
 // Given that multiple pages can be rendered simultaneously, we'll need to
 // give each Firebase app instance a unique id so that Firebase doesn't try
 // to share resources between them.
-let nextStoreId = 1
+global.nextStoreId = 1
 
 export default class Backend {
-  constructor({ deviceStorageOptions = undefined } = {}) {
+  constructor({ deviceStorageOptions = undefined, ssr = false } = {}) {
     this.firebaseApp = firebase.initializeApp(
       config.firebase,
-      String('app' + nextStoreId++),
+      String('app' + global.nextStoreId++),
     )
     this.deviceStorage = new DeviceStorage(deviceStorageOptions)
     this.auth = this.firebaseApp.auth()
@@ -42,6 +42,38 @@ export default class Backend {
       this.functions.useFunctionsEmulator(
         process.env.REACT_APP_FUNCTIONS_URL || 'http://localhost:5000',
       )
+    }
+
+    // This handles the parameters that are passed back to the app after doing
+    // a social login, and creates a new user record if required.
+    if (!ssr) {
+      this.auth.getRedirectResult().then(async userCredential => {
+        if (
+          userCredential.credential &&
+          userCredential.credential.providerId &&
+          userCredential.additionalUserInfo.isNewUser
+        ) {
+          let firebaseUser = userCredential.user
+          let dbUser = {
+            displayName:
+              firebaseUser.displayName === null
+                ? undefined
+                : firebaseUser.displayName,
+            photoURL: firebaseUser.photoURL,
+          }
+
+          if (userCredential.additionalUserInfo.isNewUser) {
+            await this.db
+              .collection('members')
+              .doc(firebaseUser.uid)
+              .set(dbUser, { merge: true })
+          }
+
+          await this.deviceConfig.previousLoginProvider.set(
+            userCredential.credential.providerId,
+          )
+        }
+      })
     }
   }
 

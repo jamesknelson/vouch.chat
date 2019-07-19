@@ -17,6 +17,7 @@ const Layout = props => {
     indexPathname = null,
     headerActions = null,
     headerTitle = null,
+    withoutFlipperSpinner = false,
     showHistoryBack = false,
     showIndexOnPhone = false,
   } = props
@@ -71,10 +72,15 @@ const Layout = props => {
 
   return (
     <LayoutContext.Provider value={context}>
-      <PhoneLayout indexPathname={indexPathname} minimal={minimal}>
+      <PhoneLayout
+        indexPathname={indexPathname}
+        minimal={minimal}
+        withoutFlipperSpinner={withoutFlipperSpinner}>
         {props.children}
       </PhoneLayout>
-      <TabletPlusLayout>{props.children}</TabletPlusLayout>
+      <TabletPlusLayout withoutFlipperSpinner={withoutFlipperSpinner}>
+        {props.children}
+      </TabletPlusLayout>
       {authFooterTransitions.map(
         ({ item, props: style, key }) =>
           item && (

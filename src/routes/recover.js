@@ -3,11 +3,11 @@ import React from 'react'
 import { useNavigation } from 'react-navi'
 
 import { FormSubmitButton, LoginButton } from 'components/button'
-import LayoutPageCard, {
+import SmallCardLayout, {
   Instructions,
   RelatedLinkGroup,
   RelatedLink,
-} from 'components/layout/layoutPageCard'
+} from 'components/smallCardLayout'
 import { FormInputField } from 'components/field'
 import AuthLink from 'controls/authLink'
 import { Form } from 'controls/form'
@@ -20,7 +20,7 @@ function Recover(props) {
   let operation = useOperation(sendPasswordResetEmail)
 
   return (
-    <LayoutPageCard title="Recover your account">
+    <SmallCardLayout title="Recover your account">
       <Instructions>
         Can't login to your account? Just enter your email to reset your
         password.
@@ -49,18 +49,18 @@ function Recover(props) {
           Sign in
         </RelatedLink>
       </RelatedLinkGroup>
-    </LayoutPageCard>
+    </SmallCardLayout>
   )
 }
 
 export const ForgotPasswordSent = () => {
   return (
-    <LayoutPageCard title="One more step.">
+    <SmallCardLayout title="One more step.">
       <Instructions>
         I've just sent you an email. Follow the link in the email to reset your
         password.
       </Instructions>
-    </LayoutPageCard>
+    </SmallCardLayout>
   )
 }
 

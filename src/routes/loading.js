@@ -22,7 +22,7 @@ export function Loading() {
       `}>
       <Spinner
         backgroundColor={colors.structure.wash}
-        color={colors.structure.border}
+        color={colors.ink.light}
       />
     </div>
   )

@@ -3,13 +3,13 @@ import React from 'react'
 import { useNavigation } from 'react-navi'
 
 import { FormSubmitButton, LoginButton, StyledLink } from 'components/button'
-import LayoutPageCard, {
+import SmallCardLayout, {
   Greeting,
   Instructions,
   Issue,
   RelatedLinkGroup,
   RelatedLink,
-} from 'components/layout/layoutPageCard'
+} from 'components/smallCardLayout'
 import { ControlGroup, FormInputControl } from 'components/control'
 import Divider from 'components/divider'
 import { Form, FormMessage } from 'controls/form'
@@ -29,7 +29,7 @@ function Join() {
   })
 
   return (
-    <LayoutPageCard title="Join in">
+    <SmallCardLayout title="Join in">
       <Greeting>Every journey starts with a single step.</Greeting>
       <Form onSubmit={operation.invoke} validate={operation.validate}>
         <ControlGroup>
@@ -64,11 +64,9 @@ function Join() {
       <Divider />
       <Instructions>
         Please only join if you agree to our marvellous{' '}
-        <StyledLink href="/pages/privacy">Privacy Policy</StyledLink>, your{' '}
-        <StyledLink href="/pages/conduct">Code of Conduct</StyledLink>, and the{' '}
-        <StyledLink href="/pages/privacy">Terms of Service</StyledLink>.
+        <StyledLink href="/pages/policies">Policies and Terms</StyledLink>..
       </Instructions>
-    </LayoutPageCard>
+    </SmallCardLayout>
   )
 }
 

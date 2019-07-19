@@ -32,7 +32,8 @@ function App({ navigationContext = {} }) {
             headerActions={headerActions}
             headerTitle={headerTitle}
             showHistoryBack={showHistoryBack}
-            showIndexOnPhone={showIndexOnPhone}>
+            showIndexOnPhone={showIndexOnPhone}
+            withoutFlipperSpinner={currentRoute.data.loading}>
             <NotFoundBoundary render={renderNotFound}>
               <View />
             </NotFoundBoundary>

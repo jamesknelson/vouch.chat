@@ -5,7 +5,7 @@ import { phoneOnly } from 'components/media'
 import { Menu } from 'components/menu'
 import Sidebar from 'components/sidebar'
 import useLastScrollDirection from 'hooks/useLastScrollDirection'
-import useTrigger from 'hooks/useTrigger'
+import useTrigger from 'popup-trigger/hook.cjs'
 import { colors, dimensions, easings, media, shadows } from 'theme'
 import LayoutContext from './layoutContext'
 import { LayoutHeaderContent } from './layoutHeader'
@@ -138,7 +138,13 @@ const PhoneHeaderOverlay = ({ hide, indexPathname, minimal }) => {
   )
 }
 
-function PhoneLayoutContent({ children, indexPathname, minimal, ...rest }) {
+function PhoneLayoutContent({
+  children,
+  indexPathname,
+  minimal,
+  withoutFlipperSpinner,
+  ...rest
+}) {
   let lastScrollDirection = useLastScrollDirection()
 
   let hideTitle =
@@ -153,7 +159,7 @@ function PhoneLayoutContent({ children, indexPathname, minimal, ...rest }) {
       />
       <StyledPhoneNavbar leaveTitleSpace={!hideTitle} hide={minimal}>
         <NavItems />
-        <ProfileFlipper sizeRem={2} />
+        <ProfileFlipper sizeRem={2} withoutSpinner={withoutFlipperSpinner} />
       </StyledPhoneNavbar>
       <StyledMain minimal={minimal}>{children}</StyledMain>
     </PhoneWrapper>

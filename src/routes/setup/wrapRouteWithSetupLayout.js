@@ -1,13 +1,12 @@
 import { rgba } from 'polished'
 import { compose, withData, withView } from 'navi'
 import React from 'react'
-import { View, useLinkProps } from 'react-navi'
+import { View, useLinkProps, useCurrentRoute } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 
 import { RegisterButton } from 'components/button'
-import { LayoutHeaderContent } from 'components/layout'
+import LargeCardLayout from 'components/largeCardLayout'
 import ProfileFlipper from 'components/layout/layoutProfileFlipper'
-import { TabletPlus } from 'components/media'
 import Tooltip from 'components/tooltip'
 import { useCurrentUser } from 'context'
 import { colors } from 'theme'
@@ -123,29 +122,20 @@ function SetupLayout({ step }) {
   let actions = user ? onboardingIndicator : <RegisterButton />
 
   return (
-    <div
-      css={css`
-        padding: 0 1rem;
-      `}>
-      <TabletPlus>
-        <LayoutHeaderContent actions={actions} />
-      </TabletPlus>
-      {/* <PhoneOnly
-        css={css`
-          height: 2rem;
-          width: 160px;
-          margin: 1rem auto 0;
-        `}>
-        {onboardingIndicator}
-      </PhoneOnly> */}
-      <div
-        css={css`
-          margin: 0 auto 2rem;
-          max-width: 800px;
-        `}>
-        <View />
-      </div>
-    </div>
+    <LargeCardLayout actions={actions}>
+      <View />
+    </LargeCardLayout>
+  )
+}
+
+function HeaderProfileFlipper() {
+  let route = useCurrentRoute()
+  return (
+    <ProfileFlipper
+      style={{ marginRight: '1rem' }}
+      backgroundColor={colors.structure.wash}
+      withoutSpinner={!!route.data.loading}
+    />
   )
 }
 
@@ -154,9 +144,7 @@ export default function wrapRouteWithSetupLayout(step, route) {
     withData({
       minimalLayout: true,
       layoutHeaderTitle: null,
-      layoutHeaderActions: (
-        <ProfileFlipper style={{ marginRight: '1rem' }} withoutSpinner />
-      ),
+      layoutHeaderActions: <HeaderProfileFlipper />,
     }),
     withView(<SetupLayout step={step} />),
     route,

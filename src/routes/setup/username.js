@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 
 import Button, { ButtonLink } from 'components/button'
-import Card from 'components/card'
 import Icon from 'components/icon'
 import { Gap } from 'components/sections'
 import { useCurrentUser, useBackend } from 'context'
@@ -170,145 +169,144 @@ function UsernamePicker({ suggestedPlan }) {
   }
 
   return (
-    <Card radius="small">
-      <InnerClamp>
-        <Title>
-          {user && user.hasActiveSubscription ? (
-            <>
-              We <Icon glyph="heart" size="2rem" /> You
-            </>
-          ) : (
-            "You're on Vouch!"
-          )}
-        </Title>
-        <Description>
-          Thanks for joining us! By the way, I didn't catch your username...
-        </Description>
-        <form onSubmit={handleSubmit}>
-          <div
+    <InnerClamp>
+      <Title>
+        {user && user.hasActiveSubscription ? (
+          <>
+            We <Icon glyph="heart" size="2rem" /> You
+          </>
+        ) : (
+          "You're on Vouch!"
+        )}
+      </Title>
+      <Description>
+        Thanks for joining us! By the way, I didn't catch your username...
+      </Description>
+      <form onSubmit={handleSubmit}>
+        <div
+          css={css`
+            background-color: ${colors.ink.black};
+            color: ${colors.ink.light};
+            padding: 1rem 1rem 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+          `}>
+          <h2
             css={css`
-              background-color: ${colors.ink.black};
-              color: ${colors.ink.light};
-              padding: 1rem 1rem 1rem;
-              border-radius: 0.5rem;
-              text-align: center;
+              font-size: 2rem;
+              letter-spacing: 3px;
+              text-transform: uppercase;
+              margin-bottom: 1rem;
             `}>
-            <h2
+            Hello
+          </h2>
+          <label
+            css={css`
+              background-color: ${colors.control.bg.default};
+              border-radius: 0.25rem;
+              display: block;
+              padding: 0 0.5rem 0.5rem;
+            `}>
+            <p
               css={css`
-                font-size: 2rem;
-                letter-spacing: 3px;
-                text-transform: uppercase;
-                margin-bottom: 1rem;
+                color: ${colors.ink.black};
+                font-weight: 600;
+                margin: 0.25rem 0 0.5rem;
               `}>
-              Hello
-            </h2>
-            <label
-              css={css`
-                background-color: ${colors.control.bg.default};
-                border-radius: 0.25rem;
-                display: block;
-                padding: 0 0.5rem 0.5rem;
-              `}>
-              <p
-                css={css`
-                  color: ${colors.ink.black};
-                  font-weight: 600;
-                  margin: 0.25rem 0 0.5rem;
-                `}>
-                my username is
-              </p>
+              my username is
+            </p>
 
-              <div
-                css={css`
-                  width: 100%;
-                  align-items: center;
-                  display: flex;
-                  padding: 0.5rem 0.5rem 1rem;
-                `}>
-                <span
-                  css={css`
-                    color: ${colors.text.default};
-                    font-size: 1.25rem;
-                    line-height: 2rem;
-                  `}>
-                  @
-                </span>
-                <input
-                  onChange={handleChange}
-                  value={usernameInput}
-                  maxLength="15"
-                  css={css`
-                    color: ${colors.text.default};
-                    background-color: transparent;
-                    border-width: 0;
-                    font-weight: 600;
-                    font-size: 1.25rem;
-                    line-height: 2rem;
-                    flex-grow: 1;
-                  `}
-                />
-                {available !== undefined && (
-                  <Icon
-                    color={colors.ink.black}
-                    glyph={available ? 'check' : 'cross2'}
-                    size="1rem"
-                  />
-                )}
-                {available === undefined && (
-                  <Spinner
-                    size="1rem"
-                    color={colors.ink.light}
-                    backgroundColor={colors.control.bg.default}
-                  />
-                )}
-              </div>
-            </label>
-          </div>
-          <Message>{message}</Message>
-          <Gap size="2rem" />
-          {hasSubmitted && issue === 'premium' && available === true && (
             <div
               css={css`
-                margin-top: -1rem;
-                margin-bottom: 1.5rem;
+                width: 100%;
+                align-items: center;
                 display: flex;
-                justify-content: space-around;
+                padding: 0.5rem 0.5rem 1rem;
               `}>
-              {user.hasActiveSubscription ? (
-                <Button
-                  size="small"
-                  busy={upgradeSubscriptionPlanOperation.busy}
-                  disabled={upgradeSubscriptionPlanOperation.busy}
-                  onClick={handleClickUpgradePlan}>
-                  Upgrade my wig
-                </Button>
-              ) : (
-                <ButtonLink href="/wigs" size="small">
-                  Get a wig
-                </ButtonLink>
+              <span
+                css={css`
+                  color: ${colors.text.default};
+                  font-size: 1.25rem;
+                  line-height: 2rem;
+                `}>
+                @
+              </span>
+              <input
+                onChange={handleChange}
+                value={usernameInput}
+                maxLength="15"
+                css={css`
+                  color: ${colors.text.default};
+                  background-color: transparent;
+                  border-width: 0;
+                  font-weight: 600;
+                  font-size: 1.25rem;
+                  line-height: 2rem;
+                  flex-grow: 1;
+                  width: 0;
+                `}
+              />
+              {available !== undefined && (
+                <Icon
+                  color={colors.ink.black}
+                  glyph={available ? 'check' : 'cross2'}
+                  size="1rem"
+                />
               )}
-              <Button outline size="small" onClick={handleClickAddNumber}>
-                Add a number
-              </Button>
+              {available === undefined && (
+                <Spinner
+                  size="1rem"
+                  color={colors.ink.light}
+                  backgroundColor={colors.control.bg.default}
+                />
+              )}
             </div>
-          )}
-          <Button
-            type="submit"
-            busy={updateUsernameOperation.busy}
-            disabled={
-              available === false ||
-              (hasSubmitted && !!validationIssue) ||
-              updateUsernameOperation.busy
-            }
-            outline
+          </label>
+        </div>
+        <Message>{message}</Message>
+        <Gap size="2rem" />
+        {hasSubmitted && issue === 'premium' && available === true && (
+          <div
             css={css`
-              margin: 0 auto;
+              margin-top: -1rem;
+              margin-bottom: 1.5rem;
+              display: flex;
+              justify-content: space-around;
             `}>
-            Come on in
-          </Button>
-        </form>
-      </InnerClamp>
-    </Card>
+            {user.hasActiveSubscription ? (
+              <Button
+                size="small"
+                busy={upgradeSubscriptionPlanOperation.busy}
+                disabled={upgradeSubscriptionPlanOperation.busy}
+                onClick={handleClickUpgradePlan}>
+                Upgrade my wig
+              </Button>
+            ) : (
+              <ButtonLink href="/wigs" size="small">
+                Get a wig
+              </ButtonLink>
+            )}
+            <Button outline size="small" onClick={handleClickAddNumber}>
+              Add a number
+            </Button>
+          </div>
+        )}
+        <Button
+          type="submit"
+          busy={updateUsernameOperation.busy}
+          disabled={
+            available === false ||
+            (hasSubmitted && !!validationIssue) ||
+            updateUsernameOperation.busy
+          }
+          outline
+          css={css`
+            margin: 0 auto;
+          `}>
+          Come on in
+        </Button>
+      </form>
+    </InnerClamp>
   )
 }
 

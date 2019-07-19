@@ -17,7 +17,7 @@ const renderer = async (request, response) => {
   let [header, footer] = template.split('<div id="root">%RENDERED_CONTENT%')
 
   try {
-    backend = new Backend()
+    backend = new Backend({ ssr: true })
     navigation = createMemoryNavigation({
       context: {
         backend,
@@ -29,9 +29,7 @@ const renderer = async (request, response) => {
     })
     sheet = new ServerStyleSheet()
 
-    let route = await navigation.getRoute()
-
-    console.log(route.chunks.map(chunk => chunk.type).join(', '))
+    await navigation.getRoute()
 
     // The index.html file is a template, which will have environment variables
     // and bundled scripts and stylesheets injected during the build step, and
@@ -63,7 +61,7 @@ const renderer = async (request, response) => {
 
     // Extract the navigation state into a script tag to bootstrap the browser Navigation.
     let state = `<script>window.__NAVI_STATE__=${JSON.stringify(
-      navigation.extractState(),
+      navigation.extractState() || {},
     ).replace(/</g, '\\u003c')};</script>`
 
     let styleTags = sheet.getStyleTags()

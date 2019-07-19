@@ -62,7 +62,7 @@ export const Title = styled.h1`
   text-align: center;
 `
 
-export const LayoutPageCard = ({
+export const SmallCardLayout = ({
   verticalAlign = 'center',
   children,
   size = 'small',
@@ -132,4 +132,4 @@ export const LayoutPageCard = ({
   </div>
 )
 
-export default LayoutPageCard
+export default SmallCardLayout

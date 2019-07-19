@@ -3,7 +3,6 @@ import React from 'react'
 import styled, { css } from 'styled-components/macro'
 
 import Button, { ButtonLink } from 'components/button'
-import Card from 'components/card'
 import Icon from 'components/icon'
 import useOperation from 'hooks/useOperation'
 import chooseFreePlan from 'operations/chooseFreePlan'
@@ -197,7 +196,7 @@ function Plans(props) {
   })
 
   return (
-    <Card radius="small">
+    <>
       <Title>
         <Icon glyph="stamp" size="4rem" color={colors.ink.mid} />
         <br />
@@ -306,7 +305,7 @@ function Plans(props) {
           </ButtonLink>
         )}
       </div>
-    </Card>
+    </>
   )
 }
 

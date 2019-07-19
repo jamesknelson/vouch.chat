@@ -1,10 +1,12 @@
 import React from 'react'
 
-import LayoutPageCard, { Greeting } from 'components/layout/layoutPageCard'
+import SmallCardLayout, {
+  Greeting,
+} from 'components/smallCardLayout/smallCardLayout'
 
 export default function NotFound() {
   return (
-    <LayoutPageCard title="404">
+    <SmallCardLayout title="404">
       <Greeting>
         The requested page
         <br />
@@ -12,6 +14,6 @@ export default function NotFound() {
         <br />
         Like old Harold Holt
       </Greeting>
-    </LayoutPageCard>
+    </SmallCardLayout>
   )
 }

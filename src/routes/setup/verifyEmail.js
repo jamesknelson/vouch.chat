@@ -2,7 +2,6 @@ import { lazy, map, redirect, route } from 'navi'
 import React from 'react'
 import styled, { css } from 'styled-components/macro'
 
-import Card from 'components/card'
 import { colors } from 'theme'
 import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
 import { StyledLink } from 'components/button'
@@ -32,43 +31,42 @@ const Description = styled.p`
   line-height: 1.6rem;
   margin: 1.5rem 0 1rem;
   text-align: center;
-
-  strong {
-    display: block;
-    font-size: 1rem;
-    font-weight: 700;
-    margin: 0.5rem 0;
-  }
 `
 
 function VerifyEmail() {
   let currentUser = useCurrentUser()
 
   return (
-    <Card radius="small">
-      <InnerClamp>
-        <Title>It's verification time.</Title>
-        <Description>
-          You should have received a verification email at:{' '}
-          <strong>{currentUser.email}</strong>
-          Please click the link inside the email to continue.
-        </Description>
-        <p
+    <InnerClamp>
+      <Title>It's verification time.</Title>
+      <Description>
+        You should have received a verification email at:{' '}
+        <strong
           css={css`
-            color: ${colors.text.secondary};
-            font-size: 0.9rem;
-            font-style: italic;
-            font-weight: 300;
-            line-height: 1.4rem;
-            margin: 1.5rem 0 1rem;
-            text-align: center;
+            display: block;
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
           `}>
-          Need to change your email? <br />
-          You can do so in your{' '}
-          <StyledLink href="/settings/account">account settings</StyledLink>.
-        </p>
-      </InnerClamp>
-    </Card>
+          {currentUser.email}
+        </strong>
+        Please click the link inside the email to continue.
+      </Description>
+      <p
+        css={css`
+          color: ${colors.text.secondary};
+          font-size: 0.9rem;
+          font-style: italic;
+          font-weight: 300;
+          line-height: 1.4rem;
+          margin: 1.5rem 0 1rem;
+          text-align: center;
+        `}>
+        Need to change your email? <br />
+        You can do so in your{' '}
+        <StyledLink href="/settings/account">account settings</StyledLink>.
+      </p>
+    </InnerClamp>
   )
 }
 

@@ -55,11 +55,11 @@ async function main() {
     document.getElementById('root'),
   )
 
+  updateContext({ ssr: false })
+
   let currentUser = await backend.currentUser.getCurrentValue()
   if (currentUser !== undefined) {
-    updateContext({ currentUser, ssr: false })
-  } else {
-    updateContext({ ssr: false })
+    updateContext({ currentUser })
   }
   backend.currentUser.subscribe(currentUser => {
     updateContext({ currentUser })

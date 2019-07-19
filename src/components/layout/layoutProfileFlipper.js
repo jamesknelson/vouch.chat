@@ -66,6 +66,7 @@ const ProfileFlipper = React.forwardRef(
       className,
       style,
       withoutSpinner = false,
+      backgroundColor = colors.structure.bg,
     },
     ref,
   ) => {
@@ -125,7 +126,7 @@ const ProfileFlipper = React.forwardRef(
         {!withoutSpinner && (
           <Spinner
             active={isLoading}
-            backgroundColor={colors.structure.bg}
+            backgroundColor={backgroundColor}
             color={colors.ink.black}
             css={css`
               position: absolute;
@@ -142,7 +143,7 @@ const ProfileFlipper = React.forwardRef(
               transform={interpolate(
                 [transitionProps.angle, flickProps.angle],
                 (transitionAngle, flickAngle) =>
-                  `rotateY(${transitionAngle + flickAngle}rad)`,
+                  `rotateY(${transitionAngle + flickAngle}rad) scaleX(-1)`,
               )}
               side={interpolate(
                 [transitionProps.angle, flickProps.angle],

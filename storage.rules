@@ -1,0 +1,17 @@
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Keep everything locked down by default
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // Users can write their own profile photo
+    match /images/user/{username}/photo.png {
+      allow read: if true
+      allow write: if
+        request.auth.uid === userId &&
+        request.resource.size < 5 * 1024 * 1024 &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.username;
+    }
+  }
+}

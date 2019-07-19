@@ -63,13 +63,13 @@ const PopupMoreMenu = ({ children }) => {
   )
 }
 
-function TabletPlusLayoutContent({ children, ...rest }) {
+function TabletPlusLayoutContent({ children, withoutFlipperSpinner, ...rest }) {
   return (
     <TabletPlusWrapper {...rest}>
       <StyledTabletPlusNavbar>
         <NavbarCorner>
           <Tooltip content="Profile" placement="right">
-            <ProfileFlipper />
+            <ProfileFlipper withoutSpinner={withoutFlipperSpinner} />
           </Tooltip>
         </NavbarCorner>
         <NavItems />
