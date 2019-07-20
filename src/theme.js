@@ -64,9 +64,9 @@ export const colors = {
 export const dimensions = {
   base: '16px',
   bar: '4rem',
-  smallCenteredCardMaxWidth: '24rem',
-  largeCenteredCardMaxWidth: '48rem',
   defaultMaxFieldWidth: '26rem',
+  largeCardWidth: '48rem',
+  smallCardWidth: '24rem',
 }
 
 export const easings = {

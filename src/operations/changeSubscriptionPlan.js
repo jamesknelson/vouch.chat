@@ -1,16 +1,16 @@
 import { useBackend } from 'context'
 import { normalizeIssues } from 'utils/Issues'
 
-upgradeSubscriptionPlan.useDependencies = function useDependencies() {
+changeSubscriptionPlan.useDependencies = function useDependencies() {
   return useBackend()
 }
 
-export default async function upgradeSubscriptionPlan({ planId }, backend) {
+export default async function changeSubscriptionPlan({ planId }, backend) {
   try {
-    let upgradeSubscriptionPlan = backend.functions.httpsCallable(
-      'api-upgradeSubscriptionPlan',
+    let changeSubscriptionPlan = backend.functions.httpsCallable(
+      'api-changeSubscriptionPlan',
     )
-    let { data } = await upgradeSubscriptionPlan({
+    let { data } = await changeSubscriptionPlan({
       planId,
     })
 

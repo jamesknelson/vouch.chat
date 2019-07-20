@@ -7,7 +7,7 @@ const topUp = require('../util/topUp')
 const db = admin.firestore()
 const members = db.collection('members')
 
-exports.upgradeSubscriptionPlan = functions.https.onCall(
+exports.changeSubscriptionPlan = functions.https.onCall(
   async ({ planId }, context) => {
     let uid = context.auth.uid
     let accountRef = members
@@ -15,7 +15,7 @@ exports.upgradeSubscriptionPlan = functions.https.onCall(
       .collection('private')
       .doc('account')
     let accountSnapshot = await accountRef.get()
-    let account = await accountSnapshot.data()
+    let account = accountSnapshot.data()
     let { subscription } = account
 
     try {
@@ -34,6 +34,7 @@ exports.upgradeSubscriptionPlan = functions.https.onCall(
         status: 'success',
       }
     } catch (error) {
+      console.error(error)
       return { status: 'error', error }
     }
   },

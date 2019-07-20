@@ -45,9 +45,11 @@ exports.createCustomerAndSubscription = functions.https.onCall(
     }
 
     // Try setting up payment source for customer
+    let stripeCustomer
     try {
       if (!stripeCustomerId) {
-        let stripeCustomer = await stripe.customers.create({
+        stripeCustomer = await stripe.customers.create({
+          expand: ['default_source'],
           preferred_locales: [data.language],
           source: data.token,
           email: email,
@@ -68,7 +70,8 @@ exports.createCustomerAndSubscription = functions.https.onCall(
           { merge: true },
         )
       } else {
-        await stripe.customers.update(stripeCustomerId, {
+        stripeCustomer = await stripe.customers.update(stripeCustomerId, {
+          expand: ['default_source'],
           preferred_locales: [data.language],
           source: data.token,
           tax_exempt: data.country !== 'JP' ? 'exempt' : 'none',
@@ -127,6 +130,7 @@ exports.createCustomerAndSubscription = functions.https.onCall(
           )
 
           return await renderSubscriptionPaymentAttempt(
+            stripeCustomer,
             await stripe.subscriptions.retrieve(stripeSubscriptionId),
             invoice,
             accountRef,
@@ -141,7 +145,7 @@ exports.createCustomerAndSubscription = functions.https.onCall(
     // Create a new subscription, and return the payment status.
     try {
       let stripeSubscription = await stripe.subscriptions.create({
-        expand: ['latest_invoice.payment_intent'],
+        expand: ['latest_invoice.payment_intent', 'plan'],
         customer: stripeCustomerId,
         items: [
           {
@@ -151,6 +155,7 @@ exports.createCustomerAndSubscription = functions.https.onCall(
       })
 
       return await renderSubscriptionPaymentAttempt(
+        stripeCustomer,
         stripeSubscription,
         stripeSubscription.latest_invoice,
         accountRef,
@@ -163,6 +168,7 @@ exports.createCustomerAndSubscription = functions.https.onCall(
 )
 
 async function renderSubscriptionPaymentAttempt(
+  stripeCustomer,
   stripeSubscription,
   stripeInvoice,
   accountRef,
@@ -191,6 +197,7 @@ async function renderSubscriptionPaymentAttempt(
       // to indicate that the user wants to use the free plan.
       hasChosenPlan: true,
       subscription,
+      card: pickers.card(stripeCustomer.default_source),
     },
     { merge: true },
   )

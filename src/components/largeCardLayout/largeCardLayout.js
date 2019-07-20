@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components/macro'
 import Card from 'components/card'
 import { LayoutHeaderContent } from 'components/layout'
 import { TabletPlus } from 'components/media'
-import { colors } from 'theme'
+import { colors, dimensions } from 'theme'
 
 export const Title = styled.h1`
   color: ${colors.text.default};
@@ -42,7 +42,7 @@ export const LargeCardLayout = ({
       <div
         css={css`
           margin: 0 auto 2rem;
-          max-width: 800px;
+          max-width: ${dimensions.largeCardWidth};
         `}>
         <Card
           radius="small"

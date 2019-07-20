@@ -2,9 +2,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 
 import { colors, dimensions, media, shadows } from 'theme'
-
-const addUnitsIfRequired = value =>
-  typeof value === 'number' ? value + 'rem' : value
+import addDefaultRemUnits from 'utils/addDefaultRemUnits'
 
 export const SectionSubHeading = styled.h4`
   color: ${colors.text.subHeading};
@@ -62,13 +60,13 @@ export const Section = ({ children, ...rest }) => (
 )
 
 export const Gap = styled.div`
-  height: ${props => addUnitsIfRequired(props.size) || '1rem'};
+  height: ${props => addDefaultRemUnits(props.size) || '1rem'};
   width: 100%;
 `
 
 export const Gutter = styled.div`
   padding: ${props =>
-    `${addUnitsIfRequired(props.vertical || 0)} ${addUnitsIfRequired(
+    `${addDefaultRemUnits(props.vertical || 0)} ${addDefaultRemUnits(
       props.horizontal || 1,
     )}`};
 `

@@ -21,10 +21,8 @@ import emailRegister from 'operations/emailRegister'
 function Join() {
   let navigation = useNavigation()
   let operation = useOperation(emailRegister, {
-    onSettled: async issue => {
-      if (!issue) {
-        await navigation.getRoute()
-      }
+    onSuccess: async () => {
+      await navigation.getRoute()
     },
   })
 

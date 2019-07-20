@@ -46,10 +46,8 @@ function Payment({ plan }) {
       planId: plan.id,
       language: 'en',
     },
-    onSettled: async issue => {
-      if (!issue) {
-        await navigation.getRoute()
-      }
+    onSuccess: async () => {
+      await navigation.getRoute()
     },
   })
 

@@ -28,10 +28,10 @@ function AccountDetails() {
 
   let emailVariant
   let emailMessage
-  if (sendVerification.lastValue) {
+  if (sendVerification.error) {
     emailMessage = 'Your verification email could not be sent.'
     emailVariant = 'warning'
-  } else if (sendVerification.lastStatus === 'value') {
+  } else if (sendVerification.status === 'success') {
     emailMessage = 'Verification email sent. Please check your inbox.'
   } else if (!user.emailVerified) {
     emailMessage = (
@@ -71,7 +71,8 @@ function AccountDetails() {
                   initialValue={user.username}
                   name="username"
                   hint={`https://vouch.chat/${state.values.username ||
-                    user.username}`}
+                    user.username ||
+                    'your_username'}`}
                 />
               )}
             </FormSpy>

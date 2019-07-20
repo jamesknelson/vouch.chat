@@ -8,7 +8,7 @@ import { Gap } from 'components/sections'
 import { useCurrentUser, useBackend } from 'context'
 import useOperation from 'hooks/useOperation'
 import updateUsername from 'operations/updateUsername'
-import upgradeSubscriptionPlan from 'operations/upgradeSubscriptionPlan'
+import changeSubscriptionPlan from 'operations/changeSubscriptionPlan'
 import { colors } from 'theme'
 
 import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
@@ -56,7 +56,7 @@ function UsernamePicker({ suggestedPlan }) {
   let backend = useBackend()
   let user = useCurrentUser()
   let updateUsernameOperation = useOperation(updateUsername)
-  let upgradeSubscriptionPlanOperation = useOperation(upgradeSubscriptionPlan)
+  let upgradeSubscriptionPlanOperation = useOperation(changeSubscriptionPlan)
   let hasSubmitted =
     !!updateUsernameOperation.lastValue || updateUsernameOperation.busy
   let submitIssue =

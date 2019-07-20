@@ -119,10 +119,9 @@ const OnboardingFlowIndicator = ({ step, user }) => {
 function SetupLayout({ step }) {
   let user = useCurrentUser()
   let onboardingIndicator = <OnboardingFlowIndicator step={step} user={user} />
-  let actions = user ? onboardingIndicator : <RegisterButton />
 
   return (
-    <LargeCardLayout actions={actions}>
+    <LargeCardLayout actions={onboardingIndicator}>
       <View />
     </LargeCardLayout>
   )

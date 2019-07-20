@@ -21,10 +21,8 @@ export const ResetPassword = props => {
       email: props.email,
       code: props.code,
     },
-    onSettled: async error => {
-      if (!error) {
-        await navigation.navigate('/')
-      }
+    onSuccess: async () => {
+      await navigation.navigate('/')
     },
   })
 

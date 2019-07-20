@@ -11,9 +11,13 @@ admin.initializeApp({
 exports.renderer = functions.https.onRequest(renderer)
 
 exports.api = {
+  ...require('./api/cancelSubscription'),
+  ...require('./api/changeSubscriptionPlan'),
   ...require('./api/createFreeAccount'),
   ...require('./api/payAndSubscribe'),
   ...require('./api/plans'),
-  ...require('./api/upgradeSubscriptionPlan'),
+  ...require('./api/removeBillingCard'),
+  ...require('./api/restartSubscription'),
+  ...require('./api/updateBillingCard'),
   ...require('./api/usernames'),
 }

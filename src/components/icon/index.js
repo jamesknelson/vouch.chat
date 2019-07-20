@@ -1,10 +1,14 @@
 import React from 'react'
 import { css } from 'styled-components/macro'
 
+import addDefaultRemUnits from 'utils/addDefaultRemUnits'
+
 const DEFAULT_ICON_SIZE = '2rem'
 
 const Icon = React.forwardRef(
   ({ glyph, label, size = DEFAULT_ICON_SIZE, color, ...props }, ref) => {
+    size = addDefaultRemUnits(size)
+
     return (
       <span
         {...props}

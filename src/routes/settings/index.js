@@ -30,6 +30,12 @@ function Settings(props) {
             <Gap size={1} />
             <Section>
               <List>
+                <ListItemLink href="/settings/profile">
+                  <ListItemText
+                    title="Profile"
+                    description="Name, photo & bio."
+                  />
+                </ListItemLink>
                 <ListItemLink href="/settings/account">
                   <ListItemText
                     title="Account Details"
@@ -45,7 +51,7 @@ function Settings(props) {
                 <ListItemLink href="/settings/billing">
                   <ListItemText
                     title="Billing"
-                    description="Plan, billing card & history."
+                    description="Your subscription & billing card."
                   />
                 </ListItemLink>
               </List>
@@ -73,11 +79,12 @@ export default authenticated(
           },
           title: 'Settings',
         }),
-        [mediaQueries.tabletPlus]: redirect('./account'),
+        [mediaQueries.tabletPlus]: redirect('./profile'),
       }),
       '/account': lazy(() => import('./accountDetails')),
       '/billing': lazy(() => import('./billing')),
       '/password': lazy(() => import('./password')),
+      '/profile': lazy(() => import('./profile')),
     }),
   ),
 )

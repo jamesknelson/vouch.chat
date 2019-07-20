@@ -1529,10 +1529,30 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.9.tgz#2e8d678039d27943ce53a1913386133227fd9066"
   integrity sha512-NelG/dSahlXYtSoVPErrp06tYFrvzj8XLWmKA+X8x0W//4MqbUyZu++giUG/v0bjAT6/Qxa8IjodrfdACyb0Fg==
 
+"@types/prop-types@*":
+  version "15.7.1"
+  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
+  integrity sha512-CFzn9idOEpHrgdw8JsoTkaDDyRWk1jrzIV8djzcgpq0y9tG4B4lFT+Nxh52DVpDXV+n4+NPNv7M1Dj5uMp6XFg==
+
 "@types/q@^1.5.1":
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
+
+"@types/react-helmet@^5.0.8":
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/@types/react-helmet/-/react-helmet-5.0.8.tgz#f080eea6652e44f60b4574463d238f268d81d9af"
+  integrity sha512-ZTr12eDAYI0yUiMx1K82EHqRYa8J1BOOLus+0gL+AkksUiIPwLE0wLiXa9FNqD8r9GXAi+yRPZImkRh1JNlTkQ==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*":
+  version "16.8.23"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.23.tgz#ec6be3ceed6353a20948169b6cb4c97b65b97ad2"
+  integrity sha512-abkEOIeljniUN9qB5onp++g0EY38h7atnDHxwKUFz1r3VH1+yG1OKi2sNPTyObL40goBmfKFpdii2lEzwLX1cA==
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
 
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
@@ -3381,6 +3401,11 @@ cssstyle@^1.0.0, cssstyle@^1.1.1:
   integrity sha512-43wY3kl1CVQSvL7wUY1qXkxVGkStjpkDmVjiIKX8R97uhajy8Bybay78uOtqvh7Q5GK75dNPfW0geWjE6qQQow==
   dependencies:
     cssom "0.3.x"
+
+csstype@^2.2.0:
+  version "2.6.6"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.6.tgz#c34f8226a94bbb10c32cc0d714afdf942291fc41"
+  integrity sha512-RpFbQGUE74iyPgvr46U9t1xoQBM8T4BL8SxrN66Le2xYAPSaDJJKeztV3awugusb3g3G9iL8StmkBBXhcbbXhg==
 
 cyclist@~0.2.2:
   version "0.2.2"
@@ -6856,10 +6881,10 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-navi@^0.13.0-alpha.0:
-  version "0.13.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/navi/-/navi-0.13.0-alpha.0.tgz#5094466b0000417e76d51ef43cc1f725528fef94"
-  integrity sha512-Am9Ox/gYEUUtTyVqm0/zJacSVmChfN2VGOfMANPa7auY/Ee9H1Hy4tiIL5SK25kLx5ErClFFq65NILF7fmDumg==
+navi@^0.13.3:
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/navi/-/navi-0.13.3.tgz#7ff88271db440d59e20c0c8b160cb92c3e728727"
+  integrity sha512-Y47QvZsaME1zX2kv/jEs8q67Te0hTOrWHIfOewvGFNQ/P/roRRWMnUF4BiwAqcH9XKernsGLTlLnREdBL2XRXg==
   dependencies:
     history "^4.9.0"
 
@@ -8642,17 +8667,18 @@ react-is@^16.6.0, react-is@^16.8.1, react-is@^16.8.4:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
 
-react-navi-helmet-async@^0.13.0-beta.4:
-  version "0.13.0-beta.4"
-  resolved "https://registry.yarnpkg.com/react-navi-helmet-async/-/react-navi-helmet-async-0.13.0-beta.4.tgz#0c5b77c3390c9d0007918396fe57c428aed9b55b"
-  integrity sha512-QFRoX2CB+zfgYKAabXwiqA0fTYxKnRA9TrS/KiKHiCNG61MtXVs9fRNSFdZg8G7Aiq714T8jDck41pAU/dRZhA==
+react-navi-helmet-async@^0.13.3:
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/react-navi-helmet-async/-/react-navi-helmet-async-0.13.3.tgz#a1a61a04acb20e76443212a8e9ed4478ebdfa26a"
+  integrity sha512-AFUwQqmZWzFGzFfz7dCKfHAF1mrjt7Z30E+kUTmmbj7iXl67gmWtfshBG7EuCFuTJ04iCbsraGhbWoZvGtBxzA==
   dependencies:
+    "@types/react-helmet" "^5.0.8"
     react-helmet-async "^1.0.2"
 
-react-navi@^0.13.0-beta.4:
-  version "0.13.0-beta.4"
-  resolved "https://registry.yarnpkg.com/react-navi/-/react-navi-0.13.0-beta.4.tgz#6e08ff469a6ae514943ffa6310abc14a74de622c"
-  integrity sha512-99L156i3RcohuRff8tGHp091C4tBUzqNUkg+q449qB0Hu7AuqWVkhHu71wN6eKymGUtDl/zmGxEys9U88hRULw==
+react-navi@^0.13.3:
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/react-navi/-/react-navi-0.13.3.tgz#f8dbf478173b5995ab271b587b639562084d0b87"
+  integrity sha512-QyagKZtT7XE8bILSp/WsaqESEPv7a2MM3JmrMQDNYux84y4UPdSabR4yagR1sOW3UCAqkjd2WQt8GMdrfWdWnA==
   dependencies:
     "@types/history" "^4.6.2"
 

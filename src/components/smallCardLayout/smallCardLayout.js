@@ -65,7 +65,6 @@ export const Title = styled.h1`
 export const SmallCardLayout = ({
   verticalAlign = 'center',
   children,
-  size = 'small',
   title,
   ...props
 }) => (
@@ -75,15 +74,11 @@ export const SmallCardLayout = ({
       align-items: center;
       flex-direction: column;
       margin: 0 auto;
-      padding: 0 ${size === 'small' ? '1rem' : '0'};
+      padding: 0 1rem;
       width: 100%;
     `}>
     <TabletPlus
       css={css`
-        ${size === 'large' &&
-          css`
-            padding-left: 1rem;
-          `}
         width: 100%;
       `}>
       <LayoutHeaderContent />
@@ -95,10 +90,7 @@ export const SmallCardLayout = ({
         display: flex;
         flex-direction: column;
         flex-grow: 1;
-        ${size === 'small' &&
-          css`
-            max-width: ${dimensions.smallCenteredCardMaxWidth};
-          `};
+        max-width: ${dimensions.smallCardWidth};
         width: 100%;
         justify-content: ${verticalAlign === 'top' ? 'flex-start' : 'center'};
         position: relative;
@@ -106,13 +98,12 @@ export const SmallCardLayout = ({
         ${media.tabletPlus`
           padding-bottom: 2rem;
         `}
-        ${size === 'small' && media.phoneOnly`
+        ${media.phoneOnly`
           margin-top: 0.5rem;
         `}
       `}>
       <Card
-        radius={size === 'small' ? 'medium' : 0}
-        borders={size === 'small' ? true : [true, false]}
+        radius="medium"
         css={css`
           font-size: 90%;
           padding: 2rem 1.5rem;

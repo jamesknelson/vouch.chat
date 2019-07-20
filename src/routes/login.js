@@ -33,19 +33,14 @@ function useSocialLoginOperation(providerName) {
   // If nothing goes wrong, wait for navigation to complete before removing
   // the busy indicator.
   let navigation = useNavigation()
-  let onSettled = useCallback(
-    async issue => {
-      if (!issue) {
-        await navigation.getRoute()
-      }
-    },
-    [navigation],
-  )
+  let onSuccess = useCallback(async () => {
+    await navigation.getRoute()
+  }, [navigation])
   let operation = useOperation(socialLogin, {
     defaultProps: {
       providerName,
     },
-    onSettled,
+    onSuccess,
   })
   operation.providerName = providerName
   return operation
@@ -104,9 +99,9 @@ function Login(props) {
         onClick={() => login(facebookLoginOperation)}>
         Sign in with Facebook
       </Button>
-      {facebookLoginOperation.value && (
+      {facebookLoginOperation.lastError && (
         <Issue style={{ textAlign: 'center' }}>
-          {Object.values(facebookLoginOperation.value)[0]}
+          {Object.values(facebookLoginOperation.error)[0]}
         </Issue>
       )}
       <Button
