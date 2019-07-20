@@ -13,20 +13,6 @@ import { NavItem, NavItems } from './layoutNavItems'
 import LayoutNavMenuItems from './layoutNavMenuItems'
 import ProfileFlipper from './layoutProfileFlipper'
 
-const PhoneWrapper = styled.div`
-  min-height: 100%;
-`
-
-const StyledMain = styled.main`
-  min-height: 100%;
-
-  ${props =>
-    !props.minimal &&
-    css`
-      padding-top: calc(${dimensions.bar} * 7 / 4);
-    `}
-`
-
 const SidebarMoreMenu = ({ children, side }) => {
   let trigger = useTrigger({
     triggerOnSelect: true,
@@ -96,7 +82,7 @@ const StyledPhoneNavbar = styled.nav`
   `}
 `
 
-const PhoneHeaderOverlay = ({ hide, indexPathname, minimal }) => {
+const PhoneHeaderOverlay = ({ className, hide, indexPathname, minimal }) => {
   let { showHistoryBack, showIndexOnPhone } = useContext(LayoutContext)
 
   let lhs =
@@ -128,7 +114,10 @@ const PhoneHeaderOverlay = ({ hide, indexPathname, minimal }) => {
     )
 
   return (
-    <StyledPhoneHeaderOverlay hide={hide} minimal={minimal}>
+    <StyledPhoneHeaderOverlay
+      className={className}
+      hide={hide}
+      minimal={minimal}>
       <LayoutHeaderContent
         left={lhs}
         showBack={showHistoryBack}
@@ -138,12 +127,12 @@ const PhoneHeaderOverlay = ({ hide, indexPathname, minimal }) => {
   )
 }
 
-function PhoneLayoutContent({
+function PhoneLayoutHeaderContent({
   children,
+  className,
   indexPathname,
   minimal,
   withoutFlipperSpinner,
-  ...rest
 }) {
   let lastScrollDirection = useLastScrollDirection()
 
@@ -151,21 +140,24 @@ function PhoneLayoutContent({
     !minimal && lastScrollDirection && lastScrollDirection === 'down'
 
   return (
-    <PhoneWrapper {...rest}>
+    <>
       <PhoneHeaderOverlay
+        className={className}
         hide={hideTitle}
         indexPathname={indexPathname}
         minimal={minimal}
       />
-      <StyledPhoneNavbar leaveTitleSpace={!hideTitle} hide={minimal}>
+      <StyledPhoneNavbar
+        className={className}
+        leaveTitleSpace={!hideTitle}
+        hide={minimal}>
         <NavItems />
         <ProfileFlipper sizeRem={2} withoutSpinner={withoutFlipperSpinner} />
       </StyledPhoneNavbar>
-      <StyledMain minimal={minimal}>{children}</StyledMain>
-    </PhoneWrapper>
+    </>
   )
 }
 
-const PhoneLayout = phoneOnly(PhoneLayoutContent)
+const PhoneLayoutHeader = phoneOnly(PhoneLayoutHeaderContent)
 
-export default PhoneLayout
+export default PhoneLayoutHeader
