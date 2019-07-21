@@ -28,37 +28,30 @@ exports.restartSubscription = functions.https.onCall(
     let stripeSubscription = await stripe.subscriptions.retrieve(
       subscription.stripeId,
     )
-    if (
-      stripeSubscription.cancel_at_period_end &&
-      stripeSubscription.status === 'active'
-    ) {
+    if (stripeSubscription.status !== 'active') {
+      return {
+        status: 'error',
+        code: 'no-subscription-to-restart',
+      }
+    }
+    if (!stripeSubscription.cancel_at_period_end) {
       return {
         status: 'error',
         code: 'already-active',
       }
     }
-    subscription = pickers.subscription(stripeSubscription)
 
-    try {
-      if (subscription.status === 'active') {
-        let stripeSubscription = await stripe.subscriptions.update(
-          subscription.stripeId,
-          {
-            cancel_at_period_end: false,
-          },
-        )
-        await accountRef.update({
-          subscription: pickers.subscription(stripeSubscription),
-        })
-        return {
-          status: 'success',
-        }
-      } else {
-        // TODO: create a new subscription
-      }
-    } catch (error) {
-      console.error(error)
-      return { status: 'error', error }
+    stripeSubscription = await stripe.subscriptions.update(
+      subscription.stripeId,
+      {
+        cancel_at_period_end: false,
+      },
+    )
+    await accountRef.update({
+      subscription: pickers.subscription(stripeSubscription),
+    })
+    return {
+      status: 'success',
     }
   },
 )

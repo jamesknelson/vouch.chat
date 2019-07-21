@@ -66,7 +66,10 @@ function Modal({
   ...rest
 }) {
   let backdropRef = useRef()
-  let transitions = useTransition(open, null, {
+
+  // Pass the children in, as it's common for a modal's children to change
+  // immediately after the modal is closed.
+  let transitions = useTransition({ children, open }, String(!!open), {
     config: {
       tension: 400,
     },
@@ -126,8 +129,8 @@ function Modal({
 
   return createPortal(
     transitions.map(
-      ({ item, props, key }) =>
-        item && (
+      ({ item: { children, open }, props, key }) =>
+        open && (
           <StyledAnimatedModalBackdrop
             key={key}
             style={{ opacity: props.opacity }}>

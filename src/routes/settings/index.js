@@ -20,7 +20,11 @@ function Settings(props) {
   return (
     <LayoutTwinColumns
       maxLeftColumnWidth="280px"
-      transitionKey={!route.data.loading && route.url.href}
+      transitionKey={
+        // Transition on just the pathname, so that screens can do
+        // internal navigation with query params
+        !route.data.loading && route.url.pathname
+      }
       visibleColumnOnPhone={view ? 'right' : 'left'}
       rightBackgroundOnTabletPlus={!!view && !route.data.loading}
       left={

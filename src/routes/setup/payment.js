@@ -95,7 +95,7 @@ export default wrapRouteWithSetupLayout(
 
     let plan = state.plan
     if (!plan) {
-      let response = await getPlan(params.plan)
+      let response = await getPlan(params.planId)
       plan = response.data
     }
 
@@ -107,14 +107,10 @@ export default wrapRouteWithSetupLayout(
     }
 
     if (!context.currentUser) {
-      return redirect(`/join?plan=${params.plan}`)
+      return redirect(`/join?planId=${params.planId}`)
     }
     if (context.currentUser.hasActiveSubscription) {
-      return redirect(
-        context.currentUser.username
-          ? `/settings/billing?plan=${params.plan}`
-          : '/setup/username',
-      )
+      return redirect(`/settings/billing?planId=${params.planId}`)
     }
 
     if (!plan.active) {

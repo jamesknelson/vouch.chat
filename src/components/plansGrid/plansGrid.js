@@ -11,6 +11,7 @@ import bigWig from './big-wig.svg'
 
 const Plan = ({
   planId,
+  isCurrentPlan,
   points,
   description,
   image,
@@ -18,6 +19,7 @@ const Plan = ({
   name,
   nameSize,
   nameWeight,
+  selectPathname,
 }) => (
   <div
     css={css`
@@ -119,7 +121,8 @@ const Plan = ({
       ))}
     </ul>
     <ButtonLink
-      href={'../setup/payment?plan=' + planId}
+      disabled={isCurrentPlan}
+      href={{ pathname: selectPathname, query: { planId } }}
       css={css`
         margin: 1.5rem auto 0.5rem;
 
@@ -127,7 +130,7 @@ const Plan = ({
           max-width: 150px;
         `}
       `}>
-      Pick
+      {isCurrentPlan ? 'Your Wig' : 'Pick'}
     </ButtonLink>
   </div>
 )
@@ -144,7 +147,7 @@ const PhonePlanDivider = styled.hr`
   `}
 `
 
-export default function Plans({ plans, ...rest }) {
+export default function Plans({ currentPlan, plans, selectPathname, ...rest }) {
   let { littleMonthly, balancedMonthly, bigMonthly } = plans
 
   let littlePlan = littleMonthly
@@ -164,6 +167,8 @@ export default function Plans({ plans, ...rest }) {
       <PhonePlanDivider />
       <Plan
         planId={bigPlan.id}
+        isCurrentPlan={currentPlan && currentPlan.id === bigPlan.id}
+        selectPathname={selectPathname}
         name="Big Wig"
         description="For the maximum possible exposure"
         nameSize="1.4rem"
@@ -178,6 +183,8 @@ export default function Plans({ plans, ...rest }) {
       <PhonePlanDivider />
       <Plan
         planId={balancedPlan.id}
+        isCurrentPlan={currentPlan && currentPlan.id === balancedPlan.id}
+        selectPathname={selectPathname}
         name="Balanced Wig"
         description="Gives you the most vouch for your cash"
         nameSize="1.3rem"
@@ -192,6 +199,8 @@ export default function Plans({ plans, ...rest }) {
       <PhonePlanDivider />
       <Plan
         planId={littlePlan.id}
+        isCurrentPlan={currentPlan && currentPlan.id === littlePlan.id}
+        selectPathname={selectPathname}
         name="Little Wig"
         description="Everything you need to get started"
         nameSize="1.2rem"

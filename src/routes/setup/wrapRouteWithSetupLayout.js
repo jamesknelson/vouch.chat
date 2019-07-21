@@ -4,7 +4,6 @@ import React from 'react'
 import { View, useLinkProps, useCurrentRoute } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 
-import { RegisterButton } from 'components/button'
 import LargeCardLayout from 'components/largeCardLayout'
 import ProfileFlipper from 'components/layout/layoutProfileFlipper'
 import Tooltip from 'components/tooltip'
@@ -118,6 +117,12 @@ const OnboardingFlowIndicator = ({ step, user }) => {
 
 function SetupLayout({ step }) {
   let user = useCurrentUser()
+  let route = useCurrentRoute()
+
+  if (route.data.loading) {
+    return <View />
+  }
+
   let onboardingIndicator = <OnboardingFlowIndicator step={step} user={user} />
 
   return (

@@ -1,44 +1,35 @@
 import { route } from 'navi'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
+import { useNavigation } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 
-import Button, { FormSubmitButton } from 'components/button'
-import CardForm from 'components/cardForm'
+import Button from 'components/button'
 import Currency from 'components/currency'
 import { LayoutHeaderSection } from 'components/layout'
-import Modal, { ModalGutter } from 'components/modal'
-import PlansGrid from 'components/plansGrid'
-import { Gutter, Section, SectionSubHeading, Gap } from 'components/sections'
-import { useBackend } from 'context'
+import { Gutter, Section, SectionSubHeading } from 'components/sections'
 import useLatestSnapshot from 'hooks/useLatestSnapshot'
-import useOperation from 'hooks/useOperation'
 import useToggle from 'hooks/useToggle'
-import cancelSubscription from 'operations/cancelSubscription'
-import changeSubscriptionPlan from 'operations/changeSubscriptionPlan'
-import payAndSubscribe from 'operations/payAndSubscribe'
-import updateBillingCard from 'operations/updateBillingCard'
-import removeBillingCard from 'operations/removeBillingCard'
-import restartSubscription from 'operations/restartSubscription'
-import { colors, dimensions } from 'theme'
-import { Spinner } from 'components/loading'
+import { colors } from 'theme'
+import formatDate from 'utils/formatDate'
+import BillingCancelSubscriptionModal from './billingCancelSubscriptionModal'
+import BillingPlansModal from './billingPlansModal'
+import BillingRemoveCardModal from './billingRemoveCardModal'
+import BillingRestartSubscriptionModal from './billingRestartSubscriptionModal'
+import BillingUpdateCardModal from './billingUpdateCardModal'
 
 const P = styled.p`
-  color: ${props => props.color || colors.text};
+  color: ${colors.text.default};
   font-size: 0.9rem;
   margin: 1rem 0;
 `
 
-function formatDate(date) {
-  return new Date(date * 1000).toLocaleDateString('en', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
-
-function Billing({ accountRef, accountSnapshot }) {
-  accountSnapshot = useLatestSnapshot(accountRef, accountSnapshot)
-
+function Billing(props) {
+  let planId = props.planId
+  let accountSnapshot = useLatestSnapshot(
+    props.accountRef,
+    props.accountSnapshot,
+  )
+  let navigation = useNavigation()
   let account = accountSnapshot.exists && accountSnapshot.data()
   let { card, subscription } = account || { card: null, subscription: null }
   let [isPlansModalOpen, showPlansModal, hidePlansModal] = useToggle()
@@ -59,14 +50,24 @@ function Billing({ accountRef, accountSnapshot }) {
     hideRemoveCardModal,
   ] = useToggle()
 
+  let hasSelectedPlan = !!planId
+  useEffect(() => {
+    if (hasSelectedPlan) {
+      showPlansModal()
+    }
+  }, [hasSelectedPlan, showPlansModal])
+
+  let hidePlansModalAndNavigate = () => {
+    hidePlansModal()
+    if (planId) {
+      // Remove planId from the URL query
+      navigation.navigate({ query: {} })
+    }
+  }
+
   let plan = subscription && subscription.plan
   let formattedDate =
-    subscription &&
-    new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString('en', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })
+    subscription && formatDate(subscription.currentPeriodEnd, 'en')
 
   return (
     <>
@@ -108,12 +109,18 @@ function Billing({ accountRef, accountSnapshot }) {
               ? 'Change Wig'
               : 'See Wigs'}
           </Button>
-          <PlansModal
+          <BillingPlansModal
+            subscriptionWillBeInactive={
+              subscription &&
+              (subscription.cancelAtPeriodEnd ||
+                subscription.status !== 'active')
+            }
             card={card}
             currentPlan={
               subscription && subscription.status === 'active' && plan
             }
-            onClose={hidePlansModal}
+            selectedPlanId={planId}
+            onClose={hidePlansModalAndNavigate}
             open={isPlansModalOpen}
           />
           {subscription &&
@@ -129,8 +136,9 @@ function Billing({ accountRef, accountSnapshot }) {
                   `}>
                   Restart my subscription
                 </Button>
-                <RestartSubscriptionModal
+                <BillingRestartSubscriptionModal
                   hasCard={!!card}
+                  subscription={subscription}
                   open={isRestartSubscriptionModalOpen}
                   onClose={hideRestartSubscriptionModal}
                 />
@@ -147,7 +155,7 @@ function Billing({ accountRef, accountSnapshot }) {
                   `}>
                   Cancel my subscription
                 </Button>
-                <CancelModal
+                <BillingCancelSubscriptionModal
                   currentPeriodEnd={
                     subscription && subscription.currentPeriodEnd
                   }
@@ -157,355 +165,78 @@ function Billing({ accountRef, accountSnapshot }) {
               </>
             ))}
         </Gutter>
-        {/* <Modal
-          open={showSwitchModal}
-          title="Change Wig"
-          onClose={() => {
-            setShowSwitchModal(false)
-          }}>
-          <p>
-            Are you sure you want to change your wig? Your new wig will cost{' '}
-            <Currency amount={plan.amount} currency={plan.currency} /> / month.
-          </p>
-          <Button
-            onClick={switchPlan}
-            css={css`
-              width: 100%;
-            `}>
-            Change Wig
-          </Button>
-        </Modal> */}
       </Section>
-      <SectionSubHeading>Your Card</SectionSubHeading>
-      <Section>
-        <Gutter>
-          {card ? (
-            <ul
-              css={css`
-                padding-left: 1.5rem;
-                margin: 1rem 0;
-              `}>
-              <li>{card.brand}</li>
-              <li>
-                &middot;&middot;&middot;&middot;
-                &middot;&middot;&middot;&middot;
-                &middot;&middot;&middot;&middot; {card.last4}
-              </li>
-              <li>
-                <span>Expiration:</span> {card.expMonth}/{card.expYear}
-              </li>
-            </ul>
-          ) : (
-            <P>You don't have any credit card details saved.</P>
-          )}
-          <Button
-            inline
-            size="small"
-            onClick={showUpdateCardModal}
-            css={css`
-              margin: 0.2rem;
-            `}>
-            {card ? 'Change' : 'Add'} Card
-          </Button>
-          <UpdateBillingCardModal
-            open={isUpdateCardModalOpen}
-            onClose={hideUpdateCardModal}
-          />
-          {card && (
-            <>
+      {account.stripeCustomerId && (
+        <>
+          <SectionSubHeading>Your Card</SectionSubHeading>
+          <Section>
+            <Gutter>
+              {card ? (
+                <ul
+                  css={css`
+                    padding-left: 1.5rem;
+                    margin: 1rem 0;
+                  `}>
+                  <li>{card.brand}</li>
+                  <li>
+                    &middot;&middot;&middot;&middot;
+                    &middot;&middot;&middot;&middot;
+                    &middot;&middot;&middot;&middot; {card.last4}
+                  </li>
+                  <li>
+                    <span>Expiration:</span> {card.expMonth}/{card.expYear}
+                  </li>
+                </ul>
+              ) : (
+                <P>You don't have any credit card details saved.</P>
+              )}
               <Button
                 inline
-                outline
                 size="small"
-                onClick={showRemoveCardModal}
+                onClick={showUpdateCardModal}
                 css={css`
                   margin: 0.2rem;
                 `}>
-                Remove Card
+                {card ? 'Change' : 'Add'} Card
               </Button>
-              <RemoveBillingCardModal
-                canRemove={
-                  !subscription ||
-                  subscription.cancelAtPeriodEnd ||
-                  subscription.status !== 'active'
-                }
-                open={isRemoveCardModalOpen}
-                onClose={hideRemoveCardModal}
+              <BillingUpdateCardModal
+                open={isUpdateCardModalOpen}
+                onClose={hideUpdateCardModal}
               />
-            </>
-          )}
-        </Gutter>
-      </Section>
-    </>
-  )
-}
-
-function PlansModal({ card, currentPlan, open, onClose }) {
-  let backend = useBackend()
-
-  // Fetch the plans
-  let [{ plans, plansStatus }, setPlansState] = useState({
-    plans: undefined,
-    plansStatus: 'loading',
-  })
-  useEffect(() => {
-    let unmounted = false
-    let getPlans = backend.functions.httpsCallable('api-getPlans')
-    getPlans()
-      .then(({ data: plans }) => {
-        if (!unmounted) {
-          setPlansState({ plans, plansStatus: 'ready' })
-        }
-      })
-      .catch(error => {
-        console.error(error)
-        if (!unmounted) {
-          setPlansState({ plans: undefined, plansStatus: 'error' })
-        }
-      })
-    return () => {
-      unmounted = true
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  let operation = useOperation(
-    card ? changeSubscriptionPlan : payAndSubscribe,
-    {
-      onSuccess: onClose,
-    },
-  )
-
-  useEffect(() => {
-    operation.clearSettled()
-    // Only want to clear settled when the modal opens/closes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
-
-  let content
-  if (plansStatus === 'loading') {
-    content = (
-      <div
-        css={css`
-          margin: 4rem auto;
-          height: 4rem;
-          width: 4rem;
-        `}>
-        <Spinner
-          backgroundColor={colors.structure.bg}
-          color={colors.ink.light}
-        />
-      </div>
-    )
-  } else if (plansStatus === 'ready') {
-    content = (
-      <>
-        <Gap size={4} />
-        <PlansGrid plans={plans} />
-      </>
-    )
-  } else {
-    content = (
-      <div
-        css={css`
-          margin: 4rem auto;
-          height: 4rem;
-          width: 4rem;
-        `}>
-        Something went wrong.
-      </div>
-    )
-  }
-
-  return (
-    <Modal
-      align="top"
-      open={open}
-      title={currentPlan ? 'Change Your Wig' : 'Get A Wig'}
-      width={dimensions.largeCardWidth}
-      onClose={operation.busy ? undefined : onClose}>
-      <ModalGutter>{content}</ModalGutter>
-    </Modal>
-  )
-}
-
-function RestartSubscriptionModal({ hasCard, open, onClose }) {
-  let [hasCardAtOpen, setHasCardAtOpen] = useState(hasCard)
-
-  useEffect(() => {
-    setHasCardAtOpen(hasCard)
-    restartSubscriptionOperation.clearSettled()
-    // Only want to clear settled when the modal opens/closes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
-
-  let restartSubscriptionOperation = useOperation(restartSubscription, {
-    onSuccess: onClose,
-  })
-  let updateCardOperation = useOperation(updateBillingCard, {
-    onSuccess: restartSubscriptionOperation.invoke,
-  })
-
-  let content = hasCardAtOpen ? (
-    <>
-      <P>Let's get your wig back.</P>
-      {restartSubscriptionOperation.error && (
-        <P color={colors.text.warning}>
-          {Object.values(restartSubscriptionOperation.error)[0][0]}
-        </P>
+              {card && (
+                <>
+                  <Button
+                    inline
+                    outline
+                    size="small"
+                    onClick={showRemoveCardModal}
+                    css={css`
+                      margin: 0.2rem;
+                    `}>
+                    Remove Card
+                  </Button>
+                  <BillingRemoveCardModal
+                    canRemove={
+                      !subscription ||
+                      subscription.cancelAtPeriodEnd ||
+                      subscription.status !== 'active'
+                    }
+                    open={isRemoveCardModalOpen}
+                    onClose={hideRemoveCardModal}
+                  />
+                </>
+              )}
+            </Gutter>
+          </Section>
+        </>
       )}
-      <Button
-        busy={restartSubscriptionOperation.busy}
-        disabled={restartSubscriptionOperation.busy}
-        onClick={restartSubscriptionOperation.invoke}
-        css={css`
-          width: 100%;
-        `}>
-        Restart my subscription
-      </Button>
     </>
-  ) : (
-    <>
-      <Gap />
-      <CardForm
-        validate={updateCardOperation.validate}
-        onSubmit={updateCardOperation.invoke}>
-        <FormSubmitButton
-          css={css`
-            margin-top: 1.5rem;
-            width: 100%;
-          `}>
-          Restart my subscription
-        </FormSubmitButton>
-      </CardForm>
-    </>
-  )
-
-  return (
-    <Modal
-      open={open}
-      title="Restart Your Subscription"
-      onClose={restartSubscriptionOperation.busy ? undefined : onClose}>
-      <ModalGutter>{content}</ModalGutter>
-    </Modal>
-  )
-}
-
-function RemoveBillingCardModal({ canRemove, open, onClose }) {
-  let operation = useOperation(removeBillingCard, {
-    onSuccess: onClose,
-  })
-
-  useEffect(() => {
-    operation.clearSettled()
-    // Only want to clear settled when the modal opens/closes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
-
-  let content = canRemove ? (
-    <>
-      <P>So you want to remove your card details?</P>
-      {operation.error && (
-        <P color={colors.text.warning}>
-          {Object.values(operation.error)[0][0]}
-        </P>
-      )}
-      <Button
-        busy={operation.busy}
-        disabled={operation.busy}
-        onClick={operation.invoke}
-        css={css`
-          width: 100%;
-        `}>
-        Remove my card details
-      </Button>
-    </>
-  ) : (
-    <>
-      <P>
-        You'll need to cancel your subscription before removing your card
-        details.
-      </P>
-      <Button
-        onClick={onClose}
-        css={css`
-          width: 100%;
-        `}>
-        Okay
-      </Button>
-    </>
-  )
-
-  return (
-    <Modal
-      open={open}
-      title="Remove Card Details"
-      onClose={operation.busy ? undefined : onClose}>
-      <ModalGutter>{content}</ModalGutter>
-    </Modal>
-  )
-}
-
-function UpdateBillingCardModal({ open, onClose }) {
-  let operation = useOperation(updateBillingCard, {
-    onSuccess: onClose,
-  })
-
-  return (
-    <Modal
-      open={open}
-      title="Update Billing Card"
-      onClose={operation.busy ? undefined : onClose}>
-      <ModalGutter
-        css={css`
-          padding-top: 1rem;
-        `}>
-        <CardForm validate={operation.validate} onSubmit={operation.invoke}>
-          <FormSubmitButton
-            css={css`
-              margin-top: 1.5rem;
-              width: 100%;
-            `}>
-            Save
-          </FormSubmitButton>
-        </CardForm>
-      </ModalGutter>
-    </Modal>
-  )
-}
-
-function CancelModal({ currentPeriodEnd, open, onClose }) {
-  let operation = useOperation(cancelSubscription, {
-    onSuccess: onClose,
-  })
-
-  return (
-    <Modal
-      open={open}
-      title="Cancel My Subscription"
-      onClose={operation.busy ? undefined : onClose}>
-      <ModalGutter>
-        <P>
-          If you cancel now, you'll no longer have access from{' '}
-          <strong>{formatDate(currentPeriodEnd)}</strong>.
-        </P>
-        <Button
-          busy={operation.busy}
-          disabled={operation.busy}
-          onClick={operation.invoke}
-          css={css`
-            width: 100%;
-          `}>
-          Okay, please cancel.
-        </Button>
-      </ModalGutter>
-    </Modal>
   )
 }
 
 export default route({
   title: 'Billing',
-  getView: async ({ context }) => {
+  getView: async ({ context, params }) => {
     let { backend, currentUser } = context
     let accountRef = backend.db
       .collection('members')
@@ -514,6 +245,12 @@ export default route({
       .doc('account')
     let accountSnapshot = await accountRef.get()
 
-    return <Billing accountRef={accountRef} accountSnapshot={accountSnapshot} />
+    return (
+      <Billing
+        accountRef={accountRef}
+        accountSnapshot={accountSnapshot}
+        planId={params.planId}
+      />
+    )
   },
 })

@@ -55,7 +55,15 @@ function Plans(props) {
         A wig gives you the power of vouch. <br />
         Pick a wig to add your voice to the conversation.
       </Description>
-      <PlansGrid plans={props.plans} />
+      <PlansGrid
+        currentPlan={
+          currentUser &&
+          currentUser.subscription &&
+          currentUser.subscription.plan
+        }
+        selectPathname="../setup/payment"
+        plans={props.plans}
+      />
 
       <div
         css={css`

@@ -21,10 +21,16 @@ export default async function payAndSubscribe(
   [currentUser, backend],
 ) {
   try {
-    const { token, error } = await stripe.createToken({
-      type: 'card',
-      ...billing,
-    })
+    // If the user already has a stored card, then there's no need to
+    // create a new token.
+    let tokenResult
+    if (stripe) {
+      tokenResult = await stripe.createToken({
+        type: 'card',
+        ...billing,
+      })
+    }
+    let { token, error } = tokenResult || { token: null, error: null }
 
     if (error) {
       return normalizeIssues(error && error.message)
@@ -35,10 +41,10 @@ export default async function payAndSubscribe(
     )
     let { data } = await createCustomerAndSubscription({
       planId,
-      country: billing.address_country,
-      name: billing.name,
+      country: token && billing.address_country,
+      name: token && billing.name,
       language,
-      token: token.id,
+      token: token && token.id,
     })
 
     if (data.status === 'success') {

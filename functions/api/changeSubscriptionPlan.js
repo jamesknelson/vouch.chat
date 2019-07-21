@@ -23,6 +23,7 @@ exports.changeSubscriptionPlan = functions.https.onCall(
         subscription.stripeId,
         {
           expand: ['plan'],
+          cancel_at_period_end: false,
           plan: planId,
         },
       )
