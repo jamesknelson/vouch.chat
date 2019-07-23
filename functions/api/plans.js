@@ -45,13 +45,12 @@ async function fetchPlans() {
     product: stripeConfig.product_id,
     expand: ['data.product'],
   })
-  let results = {}
+  let product = stripePlans[0].product
+  let publicPlanIds = product.metadata.publicPlanIds.split(/\s*,\s*/g)
+  let results = []
   for (let stripePlan of stripePlans) {
-    let entry = Object.entries(stripePlan.product.metadata).find(
-      ([_, id]) => id === stripePlan.id,
-    )
-    if (entry) {
-      results[entry[0]] = pickers.plan(stripePlan)
+    if (publicPlanIds.includes(stripePlan.id)) {
+      results.push(pickers.plan(stripePlan))
     }
   }
   return results

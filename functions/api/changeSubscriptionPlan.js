@@ -30,7 +30,9 @@ exports.changeSubscriptionPlan = functions.https.onCall(
       await accountRef.update({
         subscription: pickers.subscription(stripeSubscription),
       })
-      await topUp(accountRef)
+      await topUp(accountRef, {
+        forPlanChange: true,
+      })
       return {
         status: 'success',
       }

@@ -196,6 +196,10 @@ async function renderSubscriptionPaymentAttempt(
       // This exists separately from stripeSubscription so that it is possible
       // to indicate that the user wants to use the free plan.
       hasChosenPlan: true,
+
+      // Schedule a top up 23 hours from now
+      nextScheduledTopUpAt: Date.now() + 23 * 60 * 60 * 1000,
+
       subscription,
       card: pickers.card(stripeCustomer.default_source),
     },

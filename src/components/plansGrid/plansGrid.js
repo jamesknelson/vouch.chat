@@ -11,6 +11,7 @@ import bigWig from './big-wig.svg'
 
 const Plan = ({
   planId,
+  currentPlanPrice,
   isCurrentPlan,
   points,
   description,
@@ -123,6 +124,7 @@ const Plan = ({
     <ButtonLink
       disabled={isCurrentPlan}
       href={{ pathname: selectPathname, query: { planId } }}
+      outline={currentPlanPrice > monthlyPrice}
       css={css`
         margin: 1.5rem auto 0.5rem;
 
@@ -130,7 +132,13 @@ const Plan = ({
           max-width: 150px;
         `}
       `}>
-      {isCurrentPlan ? 'Your Wig' : 'Pick'}
+      {isCurrentPlan
+        ? 'Your Wig'
+        : typeof currentPlanPrice !== 'number'
+        ? 'Select'
+        : currentPlanPrice < monthlyPrice
+        ? 'Upgrade'
+        : 'Downgrade'}
     </ButtonLink>
   </div>
 )
@@ -148,11 +156,7 @@ const PhonePlanDivider = styled.hr`
 `
 
 export default function Plans({ currentPlan, plans, selectPathname, ...rest }) {
-  let { littleMonthly, balancedMonthly, bigMonthly } = plans
-
-  let littlePlan = littleMonthly
-  let balancedPlan = balancedMonthly
-  let bigPlan = bigMonthly
+  let [bigPlan, mediumPlan, smallPlan] = plans
 
   return (
     <div
@@ -168,8 +172,9 @@ export default function Plans({ currentPlan, plans, selectPathname, ...rest }) {
       <Plan
         planId={bigPlan.id}
         isCurrentPlan={currentPlan && currentPlan.id === bigPlan.id}
+        currentPlanPrice={currentPlan && currentPlan.amount}
         selectPathname={selectPathname}
-        name="Big Wig"
+        name={bigPlan.name}
         description="For the maximum possible exposure"
         nameSize="1.4rem"
         nameWeight="500"
@@ -182,33 +187,35 @@ export default function Plans({ currentPlan, plans, selectPathname, ...rest }) {
       />
       <PhonePlanDivider />
       <Plan
-        planId={balancedPlan.id}
-        isCurrentPlan={currentPlan && currentPlan.id === balancedPlan.id}
+        planId={mediumPlan.id}
+        isCurrentPlan={currentPlan && currentPlan.id === mediumPlan.id}
+        currentPlanPrice={currentPlan && currentPlan.amount}
         selectPathname={selectPathname}
-        name="Balanced Wig"
+        name={mediumPlan.name}
         description="Gives you the most vouch for your cash"
         nameSize="1.3rem"
         nameWeight="400"
         image={standardWig}
-        monthlyPrice={balancedPlan.amount}
+        monthlyPrice={mediumPlan.amount}
         points={[
-          `Get ${balancedPlan.dailyVouches} vouches a day`,
+          `Get ${mediumPlan.dailyVouches} vouches a day`,
           'Pick any available username',
         ]}
       />
       <PhonePlanDivider />
       <Plan
-        planId={littlePlan.id}
-        isCurrentPlan={currentPlan && currentPlan.id === littlePlan.id}
+        planId={smallPlan.id}
+        isCurrentPlan={currentPlan && currentPlan.id === smallPlan.id}
+        currentPlanPrice={currentPlan && currentPlan.amount}
         selectPathname={selectPathname}
-        name="Little Wig"
+        name={smallPlan.name}
         description="Everything you need to get started"
         nameSize="1.2rem"
         nameWeight="300"
         image={littleWig}
-        monthlyPrice={littlePlan.amount}
+        monthlyPrice={smallPlan.amount}
         points={[
-          `Get ${littlePlan.dailyVouches} vouch a day`,
+          `Get ${smallPlan.dailyVouches} vouch a day`,
           'Pick any available username',
         ]}
       />

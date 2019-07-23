@@ -60,12 +60,13 @@ function useOperation(
 
   if (!operationRef.current) {
     operationRef.current = operation
-  } else if (process.env.NODE_ENV !== 'production') {
-    if (operationRef.current !== operation) {
-      console.warn(
-        'The operation passed to `useOperation()` changed. This is not supported; continuing to use the original operation.',
-      )
-    }
+  } else if (operationRef.current !== operation) {
+    // Given that changing an operation could change the `useDependencies()`
+    // hook that is called, it's not possible to support dynamically changing
+    // operations.
+    throw new Error(
+      'The operation passed to `useOperation()` changed. This is not supported; continuing to use the original operation.',
+    )
   }
 
   if (!useDependenciesRef.current) {

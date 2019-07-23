@@ -38,7 +38,7 @@ function Plans(props) {
   let chooseFreePlanOperation = useOperation(chooseFreePlan, {
     onSuccess: async () => {
       await navigation.navigate(
-        currentUser.canSetUsername ? '/setup/username/' : '/setup/verify',
+        currentUser.canSetUsername ? '/setup/username' : '/setup/verify',
       )
     },
   })
@@ -61,7 +61,11 @@ function Plans(props) {
           currentUser.subscription &&
           currentUser.subscription.plan
         }
-        selectPathname="../setup/payment"
+        selectPathname={
+          currentUser && currentUser.hasActiveSubscription
+            ? '/settings/billing'
+            : '/setup/subscribe'
+        }
         plans={props.plans}
       />
 

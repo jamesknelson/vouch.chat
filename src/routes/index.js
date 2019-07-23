@@ -43,7 +43,7 @@ let routesWithUserRedirects = map((request, context) => {
     let user = context.currentUser
     if (!user.hasChosenPlan) {
       if (request.params.plan) {
-        to = '/setup/payment?plan=' + request.params.plan
+        to = '/setup/subscribe?planId=' + request.params.plan
       } else {
         to = '/wigs'
       }

@@ -39,7 +39,7 @@ const Description = styled.p`
   text-align: center;
 `
 
-function Payment({ plan }) {
+function Subscribe({ plan }) {
   let navigation = useNavigation()
   let operation = useOperation(payAndSubscribe, {
     defaultProps: {
@@ -110,7 +110,13 @@ export default wrapRouteWithSetupLayout(
       return redirect(`/join?planId=${params.planId}`)
     }
     if (context.currentUser.hasActiveSubscription) {
-      return redirect(`/settings/billing?planId=${params.planId}`)
+      return redirect(
+        // The payment page relies on this redirect to move forward to the
+        // username page once payment is complete.
+        !context.currentUser.username
+          ? `/setup/username`
+          : `/settings/billing?planId=${params.planId}`,
+      )
     }
 
     if (!plan.active) {
@@ -126,7 +132,7 @@ export default wrapRouteWithSetupLayout(
       state: {
         plan,
       },
-      view: <Payment plan={plan} />,
+      view: <Subscribe plan={plan} />,
     })
   }),
 )

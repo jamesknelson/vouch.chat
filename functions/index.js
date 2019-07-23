@@ -21,3 +21,11 @@ exports.api = {
   ...require('./api/updateBillingCard'),
   ...require('./api/usernames'),
 }
+
+exports.jobs = {
+  ...require('./jobs/runScheduledTopUps'),
+}
+
+exports.webhooks = {
+  ...require('./webhooks/stripe'),
+}

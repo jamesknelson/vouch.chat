@@ -2,7 +2,7 @@ import React from 'react'
 import { mount, lazy, route } from 'navi'
 
 export default mount({
-  '/payment': lazy(() => import('./payment')),
+  '/subscribe': lazy(() => import('./subscribe')),
   '/verify': lazy(() => import('./verifyEmail')),
   '/username': lazy(() => import('./username')),
   '/profile': lazy(() => import('./profile')),

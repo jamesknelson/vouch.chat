@@ -114,7 +114,7 @@ export default function BillingPlansModal({
     )
   } else if (plansStatus === 'ready') {
     if (selectedPlanId) {
-      let plan = Object.values(plans).find(plan => plan.id === selectedPlanId)
+      let plan = plans.find(plan => plan.id === selectedPlanId)
 
       if (card) {
         content = (

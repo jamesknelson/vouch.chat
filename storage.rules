@@ -9,7 +9,7 @@ service firebase.storage {
     match /images/user/{username}/photo.png {
       allow read: if true
       allow write: if
-        request.auth.uid === userId &&
+        request.auth.uid == userId &&
         request.resource.size < 5 * 1024 * 1024 &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.username;
     }
