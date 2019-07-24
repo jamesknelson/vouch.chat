@@ -65,16 +65,18 @@ function AccountDetails() {
           <Gutter>
             <Gap size={1} />
             <FormSpy>
-              {state => (
-                <FormInputField
-                  label="Username"
-                  initialValue={user.username}
-                  name="username"
-                  hint={`https://vouch.chat/${state.values.username ||
-                    user.username ||
-                    'your_username'}`}
-                />
-              )}
+              {state =>
+                console.log(state) || (
+                  <FormInputField
+                    label="Username"
+                    initialValue={user.username}
+                    name="username"
+                    hint={`https://vouch.chat/${state.values.username ||
+                      user.username ||
+                      'your_username'}`}
+                  />
+                )
+              }
             </FormSpy>
             <FormInputField
               label="Email"

@@ -6,9 +6,12 @@ updateUsername.useDependencies = function useDependencies() {
   return [useBackend(), useCurrentUser()]
 }
 
-updateUsername.validate = async function validate(params, [_, currentUser]) {
+updateUsername.validate = async function validate(
+  params,
+  [backend, currentUser],
+) {
   return normalizeIssues({
-    username: validateUsername(currentUser, params.username),
+    username: await validateUsername(backend, currentUser, params.username),
   })
 }
 

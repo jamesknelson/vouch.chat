@@ -6,6 +6,7 @@
   "dependencies": {
     "@tippy.js/react": "^2.2.2",
     "country-region-data": "^1.4.5",
+    "debounce-promise": "^3.1.2",
     "express": "4.16.4",
     "final-form": "^4.16.1",
     "final-form-submit-listener": "^1.0.0",

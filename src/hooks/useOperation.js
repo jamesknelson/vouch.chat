@@ -98,9 +98,9 @@ function useOperation(
   }, [])
 
   let validateOperation = useCallback(
-    params => {
+    async params => {
       if (operationRef.current && operationRef.current.validate) {
-        return operationRef.current.validate(
+        return await operationRef.current.validate(
           { ...defaultProps, ...params },
           dependencies,
           invocationsRef.current.map(getPublicInvocationProperties),
@@ -113,10 +113,9 @@ function useOperation(
   let invokeOperation = useCallback(
     async params => {
       let paramsWithDefaults = { ...defaultProps, ...params }
-      let error = await validateOperation(paramsWithDefaults)
-      let outcome = error
-        ? Promise.resolve(error)
-        : operation(paramsWithDefaults, dependencies)
+      let outcome = validateOperation(paramsWithDefaults).then(
+        error => error || operation(paramsWithDefaults, dependencies),
+      )
       let outcomeWithTimeout = timeout
         ? Promise.race([outcome, delayedReject(timeout)])
         : outcome

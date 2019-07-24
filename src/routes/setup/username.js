@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components/macro'
 import Button, { ButtonLink } from 'components/button'
 import Icon from 'components/icon'
 import { Gap } from 'components/sections'
-import { useCurrentUser, useBackend } from 'context'
+import { useCurrentUser } from 'context'
 import useOperation from 'hooks/useOperation'
 import updateUsername from 'operations/updateUsername'
 import { colors } from 'theme'
@@ -46,73 +46,47 @@ const Message = styled.p`
   text-align: center;
 `
 
-const DebounceDelay = 250
-
-function UsernamePicker({ suggestedPlan }) {
+function UsernamePicker(props) {
   let [usernameInput, setUsernameInput] = useState('')
+
+  // Use `undefined` to indicate that we don't know if there are any
+  // validation issues, and `null` to indicate that everything's okay. But
+  // we'll keep it `null` for empty inputs, as that doesn't need a message.
   let [validationIssue, setValidationIssue] = useState(null)
-  let [available, setAvailable] = useState(false)
-  let backend = useBackend()
+
   let user = useCurrentUser()
   let updateUsernameOperation = useOperation(updateUsername)
   let hasSubmitted =
-    !!updateUsernameOperation.lastValue || updateUsernameOperation.busy
+    !!updateUsernameOperation.lastError || updateUsernameOperation.busy
   let submitIssue =
-    updateUsernameOperation.lastValue &&
-    Object.values(updateUsernameOperation.lastValue)[0][0]
+    updateUsernameOperation.lastError &&
+    Object.values(updateUsernameOperation.lastError)[0][0]
 
   let issue = validationIssue || submitIssue
 
+  // Run a validation on each new username input.
   useEffect(() => {
-    if (!suggestedPlan) {
-      updateUsernameOperation.clearSettled()
-      setValidationIssue(null)
-    }
-    // We only want to do this when suggestedPlan goes null after
-    // upgrading the plan.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [!!suggestedPlan])
+    let isMounted = true
 
-  useEffect(() => {
     updateUsernameOperation.clearSettled()
 
     if (usernameInput) {
+      setValidationIssue(undefined)
+
       updateUsernameOperation
         .validate({ username: usernameInput })
         .then(issues => {
-          setValidationIssue(issues && Object.values(issues)[0][0])
+          if (isMounted) {
+            setValidationIssue((issues && Object.values(issues)[0][0]) || null)
+          }
         })
-
-      let setResult = setAvailable
-
-      setAvailable(undefined)
-      let timeout = setTimeout(async () => {
-        let issues = await updateUsernameOperation.validate({
-          username: usernameInput,
-        })
-        if (!issues || !issues.username || issues.username[0] !== 'invalid') {
-          let isUsernameAvailable = backend.functions.httpsCallable(
-            'api-isUsernameAvailable',
-          )
-          isUsernameAvailable({ username: usernameInput })
-            .then(({ data }) => {
-              setResult(data)
-            })
-            .catch(() => {
-              setResult(false)
-            })
-        } else {
-          setResult(false)
-        }
-      }, DebounceDelay)
-
-      return () => {
-        setResult = () => {}
-        clearTimeout(timeout)
-      }
     } else {
-      setAvailable(false)
+      // We don't need to show any validation issues
       setValidationIssue(null)
+    }
+
+    return () => {
+      isMounted = false
     }
     // We actually only want to update the issue when the user makes a change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -134,7 +108,7 @@ function UsernamePicker({ suggestedPlan }) {
 
   let message = "Don't panic. You can change this later."
   if (hasSubmitted) {
-    if (available === false || issue === 'username-taken') {
+    if (issue === 'username-taken') {
       message = 'That username is already taken, sorry.'
     } else if (issue === 'required') {
       message =
@@ -143,10 +117,8 @@ function UsernamePicker({ suggestedPlan }) {
       message =
         'Your username can only contain letters, numbers, and an underscore (_).'
     } else if (issue === 'premium') {
-      if (available === true) {
-        message =
-          "That's a great username. But usernames for free and little wigs must contain a number."
-      }
+      message =
+        "That's a great username. But usernames for free and little wigs must contain a number."
     } else if (submitIssue) {
       message = submitIssue
     }
@@ -230,14 +202,21 @@ function UsernamePicker({ suggestedPlan }) {
                   width: 0;
                 `}
               />
-              {available !== undefined && (
-                <Icon
-                  color={colors.ink.black}
-                  glyph={available ? 'check' : 'cross2'}
-                  size="1rem"
-                />
-              )}
-              {available === undefined && (
+              {usernameInput &&
+                (issue === 'premium' ||
+                  issue === 'username-taken' ||
+                  (!issue && validationIssue === null)) && (
+                  <Icon
+                    color={colors.ink.black}
+                    glyph={
+                      validationIssue === 'premium' || !validationIssue
+                        ? 'check'
+                        : 'cross2'
+                    }
+                    size="1rem"
+                  />
+                )}
+              {usernameInput && !issue && validationIssue === undefined && (
                 <Spinner
                   size="1rem"
                   color={colors.ink.light}
@@ -249,7 +228,7 @@ function UsernamePicker({ suggestedPlan }) {
         </div>
         <Message>{message}</Message>
         <Gap size="2rem" />
-        {hasSubmitted && issue === 'premium' && available === true && (
+        {hasSubmitted && issue === 'premium' && (
           <div
             css={css`
               margin-top: -1rem;
@@ -269,9 +248,7 @@ function UsernamePicker({ suggestedPlan }) {
           type="submit"
           busy={updateUsernameOperation.busy}
           disabled={
-            available === false ||
-            (hasSubmitted && !!validationIssue) ||
-            updateUsernameOperation.busy
+            (hasSubmitted && !!validationIssue) || updateUsernameOperation.busy
           }
           outline
           css={css`
@@ -287,7 +264,7 @@ function UsernamePicker({ suggestedPlan }) {
 export default wrapRouteWithSetupLayout(
   2,
   map(async ({ context }) => {
-    let { backend, currentUser } = context
+    let { currentUser } = context
 
     if (currentUser === undefined) {
       return lazy(() => import('../loading'))
@@ -297,20 +274,9 @@ export default wrapRouteWithSetupLayout(
       return redirect('/setup/profile')
     }
 
-    let suggestedPlan
-    if (
-      currentUser.hasActiveSubscription &&
-      !currentUser.subscription.plan.premiumUsername
-    ) {
-      let getUsernameUpgradePlan = backend.functions.httpsCallable(
-        'api-getUsernameUpgradePlan',
-      )
-      suggestedPlan = (await getUsernameUpgradePlan()).data
-    }
-
     return route({
       title: 'Pick your username.',
-      view: <UsernamePicker suggestedPlan={suggestedPlan} />,
+      view: <UsernamePicker />,
     })
   }),
 )

@@ -86,12 +86,13 @@ const CardFormWithStripe = ({
       </StyledLabel>
       <ControlGroup>
         <StyledStripeCardControl>
-          {id => (
+          {({ id, style }) => (
             <CardElement
               id={id}
               hidePostalCode
               style={{
                 base: {
+                  ...style,
                   fontSize: '14px',
                 },
               }}
