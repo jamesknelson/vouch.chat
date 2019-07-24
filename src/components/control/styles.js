@@ -30,11 +30,14 @@ export const StyledControlIconLabel = styled.label`
         colors.control.icon[props.variant] || colors.control.icon['default'],
         0.1,
       )};
-  order: -1;
+  position: absolute;
+  left: 0;
   z-index: 9;
   padding: 0 0.75rem;
   text-align: right;
 `
+
+export const StyledControlValidationState = styled.span``
 
 export const StyledControlBackground = styled.div`
   ${props => css`

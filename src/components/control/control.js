@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import 'styled-components/macro'
 import { colors, srOnly, radii } from 'theme'
 import Icon from 'components/icon'
+import { Spinner } from 'components/loading'
 import useControlId from 'hooks/useControlId'
 import {
   ControlGroupItemContext,
@@ -11,6 +12,7 @@ import {
   StyledControlBackground,
   StyledControlBorders,
   StyledControlIconLabel,
+  StyledControlValidationState,
   StyledControlWrapper,
 } from './styles'
 
@@ -19,6 +21,26 @@ export function ControlIconLabel({ glyph, ...props }) {
     <StyledControlIconLabel {...props}>
       <Icon glyph={glyph} size={'1rem'} />
     </StyledControlIconLabel>
+  )
+}
+
+export function ControlValidationState({ state, ...props }) {
+  return (
+    <StyledControlValidationState {...props}>
+      {state === 'busy' ? (
+        <Spinner
+          size="1rem"
+          color={colors.ink.light}
+          backgroundColor={colors.control.bg.default}
+        />
+      ) : (
+        <Icon
+          color={colors.ink.black}
+          glyph={state === 'valid' ? 'check' : 'cross2'}
+          size="1rem"
+        />
+      )}
+    </StyledControlValidationState>
   )
 }
 
@@ -32,6 +54,7 @@ export function Control({
   variant,
   size,
   style,
+  validationState,
   ...props
 }) {
   radius = radii[radius] || radius || radii.small
@@ -66,10 +89,14 @@ export function Control({
           {label}
         </label>
       )}
-      {children(controlId)}
+      {children({
+        id: controlId,
+        style: glyph ? { paddingLeft: '2.25rem' } : {},
+      })}
       {glyph && (
         <ControlIconLabel htmlFor={controlId} variant={variant} glyph={glyph} />
       )}
+      {validationState && <ControlValidationState state={validationState} />}
       <StyledControlBackground backgroundColor={bg} {...corners} />
       <StyledControlBorders
         radius={radius}

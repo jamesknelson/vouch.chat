@@ -112,16 +112,17 @@ export function SearchForm({
       radius="9999px"
       style={style}
       onSubmit={handleSubmit}>
-      {id => (
+      {inputProps => (
         <>
           <StyledSearchInput
-            id={id}
             name="q"
             ref={inputRef}
             placeholder={label}
             onKeyDown={handleKeyDown}
             onChange={handleChange}
+            style={style}
             {...props}
+            {...inputProps}
           />
           <StyledSearchButton
             type="submit"
