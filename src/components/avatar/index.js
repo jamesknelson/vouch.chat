@@ -1,13 +1,23 @@
 import React from 'react'
-import styled from 'styled-components/macro'
-import { colors } from 'theme'
+import styled, { css } from 'styled-components/macro'
+
+import { Spinner } from 'components/loading'
 import defaultProfilePicture from 'media/defaultProfilePicture.svg'
 import hash from 'media/hash.svg'
+import { colors, focusRing } from 'theme'
+import addDefaultRemUnits from 'utils/addDefaultRemUnits'
 
 const StyledAvatarImage = styled.img`
   border-radius: 9999px;
   max-height: 100%;
   max-width: 100%;
+  position: relative;
+
+  ${props =>
+    props.busy &&
+    css`
+      opacity: 0.5;
+    `}
 `
 
 const StyledAvatarContainer = styled.span`
@@ -20,29 +30,61 @@ const StyledAvatarContainer = styled.span`
   width: ${props => props.size};
   position: relative;
   user-select: none;
+
+  ${focusRing('::after', { radius: '9999px' })}
 `
 
 export const Avatar = React.forwardRef(
-  ({ className, hidden, style, tabIndex, photoURL, size, ...props }, ref) => (
-    <StyledAvatarContainer
-      className={className}
-      hidden={hidden}
-      size={size || '2.5rem'}
-      style={style}
-      tabIndex={tabIndex}
-      ref={ref}>
-      <StyledAvatarImage {...props} src={photoURL} />
-    </StyledAvatarContainer>
-  ),
+  (
+    {
+      backgroundColor = colors.structure.bg,
+      busy = false,
+      className,
+      hidden,
+      style,
+      tabIndex,
+      photoURL,
+      size,
+      ...props
+    },
+    ref,
+  ) => {
+    size = addDefaultRemUnits(size || 2.5)
+    return (
+      <StyledAvatarContainer
+        className={className}
+        hidden={hidden}
+        size={size}
+        style={style}
+        tabIndex={tabIndex}
+        ref={ref}>
+        <Spinner
+          active={busy}
+          backgroundColor={backgroundColor}
+          color={colors.ink.black}
+          css={css`
+            position: absolute;
+            z-index: 0;
+            left: -0.05rem;
+            top: -0.05rem;
+            height: calc(${size} + 0.1rem);
+            width: calc(${size} + 0.1rem);
+          `}
+        />
+        <StyledAvatarImage {...props} busy={busy} src={photoURL} />
+      </StyledAvatarContainer>
+    )
+  },
 )
 
 export const UserAvatar = React.forwardRef(({ user, ...props }, ref) => (
   <Avatar
+    ref={ref}
     photoURL={(user && user.photoURL) || defaultProfilePicture}
     {...props}
   />
 ))
 
 export const TagAvatar = React.forwardRef(({ tag, ...props }, ref) => (
-  <Avatar photoURL={(tag && tag.photoURL) || hash} {...props} />
+  <Avatar ref={ref} photoURL={(tag && tag.photoURL) || hash} {...props} />
 ))

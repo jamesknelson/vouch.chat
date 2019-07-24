@@ -6,12 +6,14 @@ service firebase.storage {
     }
 
     // Users can write their own profile photo
-    match /images/user/{username}/photo.png {
+    match /avatars/{userId}/{filename} {
       allow read: if true
-      allow write: if
+      allow delete: if request.auth.uid == userId
+      allow create, update: if
         request.auth.uid == userId &&
-        request.resource.size < 5 * 1024 * 1024 &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.username;
+        filename[0:5] == 'user.' &&
+        request.resource.contentType.matches('image/.*') &&
+        request.resource.size < 5 * 1024 * 1024;
     }
   }
 }

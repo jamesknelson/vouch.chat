@@ -3,7 +3,11 @@ import React from 'react'
 import { useField } from 'react-final-form'
 import styled from 'styled-components/macro'
 
-import { InputControl, SelectControl } from 'components/control'
+import {
+  InputControl,
+  SelectControl,
+  TextareaControl,
+} from 'components/control'
 import Icon from 'components/icon'
 import useControlId from 'hooks/useControlId'
 import { colors, dimensions } from 'theme'
@@ -171,6 +175,63 @@ export function FormInputField({
 
   return (
     <InputField
+      {...field.input}
+      {...props}
+      label={label}
+      message={message || errorCode || hint}
+      variant={props.variant || (error ? 'warning' : undefined)}
+    />
+  )
+}
+
+export const TextareaField = ({
+  message,
+  label,
+  labelGlyph,
+  className,
+  id,
+  style,
+  hidden,
+  variant,
+  ...props
+}) => (
+  <Field
+    message={message}
+    label={label}
+    labelGlyph={labelGlyph}
+    className={className}
+    id={id}
+    style={style}
+    hidden={hidden}
+    variant={variant}>
+    <TextareaControl {...props} variant={variant} />
+  </Field>
+)
+
+export function FormTextareaField({
+  name,
+  hint,
+  initialValue,
+  label,
+  message,
+  messages = {},
+  ...props
+}) {
+  let field = useField(name, {
+    initialValue,
+  })
+  let error = field.meta.submitFailed && field.meta.invalid
+  let errorCode =
+    field.meta.submitFailed &&
+    ((error && field.meta.submitError) || field.meta.error)
+
+  label = label || humanizeString(name)
+  if (errorCode) {
+    errorCode = messages[errorCode] || errorCode
+  }
+
+  return (
+    <TextareaField
       {...field.input}
       {...props}
       label={label}

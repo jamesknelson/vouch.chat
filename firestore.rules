@@ -17,7 +17,7 @@ service cloud.firestore {
           'bio',
           'location',
           'website',
-          'email'
+          'publicEmail'
         ]);
       
       // created once user has picked a plan

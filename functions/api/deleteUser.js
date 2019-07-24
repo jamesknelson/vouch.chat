@@ -3,6 +3,8 @@ const functions = require('firebase-functions')
 const { stripe } = require('../util/stripe')
 
 const auth = admin.auth()
+const storage = admin.storage()
+const bucket = storage.bucket()
 const db = admin.firestore()
 const members = db.collection('members')
 
@@ -24,6 +26,11 @@ exports.deleteUser = functions.https.onCall(async (params, context) => {
     }
     await tx.delete(memberRef)
     await auth.deleteUser(uid)
+    try {
+      await bucket.deleteFiles({
+        prefix: `avatars/${uid}`,
+      })
+    } catch (e) {}
   })
 
   return { status: 'success' }

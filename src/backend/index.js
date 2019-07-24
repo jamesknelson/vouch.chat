@@ -3,6 +3,7 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
 import 'firebase/functions'
+import 'firebase/storage'
 import config from '../config'
 import CurrentUser from './currentUser'
 import DeviceStorage from './deviceStorage'
@@ -21,6 +22,7 @@ export default class Backend {
     this.deviceStorage = new DeviceStorage(deviceStorageOptions)
     this.auth = this.firebaseApp.auth()
     this.db = this.firebaseApp.firestore()
+    this.storage = this.firebaseApp.storage()
 
     // Firestore emulator is not currently supported in the browser.
     // See: https://github.com/firebase/firebase-tools/issues/1001

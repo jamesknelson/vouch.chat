@@ -6,7 +6,7 @@ import styled, { css } from 'styled-components/macro'
 import Button from 'components/button'
 import Currency from 'components/currency'
 import { LayoutHeaderSection } from 'components/layout'
-import { Gutter, Section, SectionSubHeading } from 'components/sections'
+import { Section, SectionSubHeading } from 'components/sections'
 import useLatestSnapshot from 'hooks/useLatestSnapshot'
 import useToggle from 'hooks/useToggle'
 import { colors } from 'theme'
@@ -21,6 +21,10 @@ const P = styled.p`
   color: ${colors.text.default};
   font-size: 0.9rem;
   margin: 1rem 0;
+`
+
+const Gutter = styled.div`
+  padding: 0 1rem 1rem;
 `
 
 function Billing(props) {

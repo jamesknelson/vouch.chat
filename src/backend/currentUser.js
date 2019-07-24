@@ -143,10 +143,11 @@ export default class CurrentUser {
         hasActiveSubscription,
       availableCasts: account.availableCasts || 0,
       availableVouches: account.availableVouches || 0,
+      hasOwnPhotoURL: !!member.photoURL,
       photoImage: await new Promise((resolve, reject) => {
         let img = new Image()
         img.onload = resolve
-        img.onerror = reject
+        img.onerror = () => resolve(null)
         img.src = photoURL
       }),
     }

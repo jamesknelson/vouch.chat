@@ -24,9 +24,15 @@ export default async function validateUsername(backend, user, username) {
       'api-isUsernameAvailable',
     )
     let getIsAvailable = async username => {
+      let cachedValue = getIsAvailable.cache[username]
+      if (cachedValue !== undefined) {
+        return cachedValue
+      }
       let { data } = await isUsernameAvailable({ username })
+      getIsAvailable.cache[username] = data
       return data
     }
+    getIsAvailable.cache = {}
     debouncedIsAvailable = debounce(getIsAvailable, debounceTime)
     debouncedIsAvailables.set(backend, debouncedIsAvailable)
   }
