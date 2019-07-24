@@ -7,6 +7,7 @@ service cloud.firestore {
 
     match /members/{userId} {
       allow get;
+      allow list: if request.query.limit == 1;
       allow create, update: if
         requestedByUser(userId) &&
         notUpdating('username') &&

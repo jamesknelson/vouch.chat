@@ -1,24 +1,102 @@
-import { route } from 'navi'
+import { map, route } from 'navi'
 import React from 'react'
-import { css } from 'styled-components/macro'
-import { colors } from 'theme'
+import styled, { css } from 'styled-components/macro'
 
-function Profile(props) {
+import { UserAvatar } from 'components/avatar'
+import { colors, dimensions } from 'theme'
+
+const Header = styled.header`
+  background-color: ${colors.ink.black};
+  display: flex;
+  height: calc(2 * ${dimensions.bar});
+`
+
+function Profile({ member, username }) {
+  if (!member) {
+    return (
+      <div
+        css={css`
+          margin: 0 auto;
+          text-align: center;
+        `}>
+        <h1
+          css={css`
+            color: ${colors.text.default};
+            font-weight: bold;
+            margin-top: 4rem;
+            margin-bottom: 1rem;
+          `}>
+          Oh dear
+        </h1>
+        <p
+          css={css`
+            color: ${colors.text.secondary};
+          `}>
+          This user doesn't seem to exist.
+        </p>
+      </div>
+    )
+  }
+
   return (
-    <h1
-      css={css`
-        color: ${colors.text};
-        font-size: 1.4rem;
-        font-weight: 800;
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-      `}>
-      @{props.username}
-    </h1>
+    <>
+      <Header>
+        <UserAvatar
+          size={8}
+          user={member}
+          css={css`
+            border: 0.25rem solid ${colors.structure.bg};
+            margin-top: 4rem;
+            margin-left: 1rem;
+          `}
+        />
+      </Header>
+      <h1
+        css={css`
+          color: ${colors.text.default};
+          font-size: 1.2rem;
+          font-weight: 800;
+          margin-left: 1rem;
+          margin-top: 5rem;
+        `}>
+        {member.displayName}
+      </h1>
+      <p
+        css={css`
+          color: ${colors.text.tertiary};
+          font-size: 0.9rem;
+          font-weight: 400;
+          margin-left: 1rem;
+        `}>
+        @{member.username}
+      </p>
+    </>
   )
 }
 
-export default route({
-  title: 'Profile',
-  getView: ({ params }) => <Profile username={params.username} />,
+export default map(async ({ context, params, state }) => {
+  let { backend } = context
+  let username = params.username.slice(1).toLowerCase()
+
+  let member = state.member
+  if (!member) {
+    let query = backend.db
+      .collection('members')
+      .where('username', '==', username)
+      .limit(1)
+
+    let querySnapshot = await query.get()
+
+    if (!querySnapshot.empty) {
+      let memberSnapshot = querySnapshot.docs[0]
+      member = memberSnapshot && memberSnapshot.data()
+    }
+  }
+
+  return route({
+    state: { member },
+    status: member ? 200 : 404,
+    title: '@' + username,
+    view: <Profile member={member} username={username} />,
+  })
 })

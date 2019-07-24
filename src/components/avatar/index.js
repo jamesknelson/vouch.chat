@@ -31,7 +31,8 @@ const StyledAvatarContainer = styled.span`
   position: relative;
   user-select: none;
 
-  ${focusRing('::after', { radius: '9999px' })}
+  ${props =>
+    props.tabIndex !== undefined && focusRing('::after', { radius: '9999px' })}
 `
 
 export const Avatar = React.forwardRef(
@@ -58,19 +59,21 @@ export const Avatar = React.forwardRef(
         style={style}
         tabIndex={tabIndex}
         ref={ref}>
-        <Spinner
-          active={busy}
-          backgroundColor={backgroundColor}
-          color={colors.ink.black}
-          css={css`
-            position: absolute;
-            z-index: 0;
-            left: -0.05rem;
-            top: -0.05rem;
-            height: calc(${size} + 0.1rem);
-            width: calc(${size} + 0.1rem);
-          `}
-        />
+        {busy && (
+          <Spinner
+            active={busy}
+            backgroundColor={backgroundColor}
+            color={colors.ink.black}
+            css={css`
+              position: absolute;
+              z-index: 0;
+              left: -0.05rem;
+              top: -0.05rem;
+              height: calc(${size} + 0.1rem);
+              width: calc(${size} + 0.1rem);
+            `}
+          />
+        )}
         <StyledAvatarImage {...props} busy={busy} src={photoURL} />
       </StyledAvatarContainer>
     )

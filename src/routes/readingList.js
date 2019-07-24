@@ -1,5 +1,14 @@
 import EventEmitter from 'events'
-import { compose, map, mount, redirect, route, withData, withView } from 'navi'
+import {
+  compose,
+  lazy,
+  map,
+  mount,
+  redirect,
+  route,
+  withData,
+  withView,
+} from 'navi'
 import React, { useEffect, useState } from 'react'
 import {
   useNavigation,
@@ -117,6 +126,24 @@ function Read(props) {
             <SectionSubHeading>Your Watchlist</SectionSubHeading>
             <Section>
               <List>
+                <ListItemLink href="/@jkn">
+                  <ListItemImage>
+                    <UnreadBadgeWrapper count={3}>
+                      <UserAvatar
+                        size="2.25rem"
+                        user={{
+                          photoURL:
+                            'https://firebasestorage.googleapis.com/v0/b/vouchchat.appspot.com/o/avatars%2Fvu8UeUrN84MVTo0IIBPaAfoJ5tA2%2Fuser.jpg?alt=media&token=42190743-15df-4603-a08b-243f549ab035',
+                        }}
+                      />
+                    </UnreadBadgeWrapper>
+                  </ListItemImage>
+                  <ListItemText
+                    title="James K Nelson"
+                    description="Look at me I'm saying silly things"
+                    meta="3 days ago"
+                  />
+                </ListItemLink>
                 <ListItemLink href="/read/about/react">
                   <ListItemImage>
                     <UnreadBadgeWrapper count={1}>
@@ -222,17 +249,7 @@ export default compose(
         return mount({})
       }
 
-      let username = params.username.slice(1)
-
-      return route({
-        title: '@' + username,
-        view: (
-          <>
-            <LayoutHeaderSection />
-            Test
-          </>
-        ),
-      })
+      return lazy(() => import('./profile'))
     }
 
     return mount({
