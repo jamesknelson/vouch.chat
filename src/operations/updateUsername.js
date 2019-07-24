@@ -15,7 +15,14 @@ updateUsername.validate = async function validate(
   })
 }
 
-export default async function updateUsername({ username }, [backend]) {
+export default async function updateUsername(
+  { username },
+  [backend, currentUser],
+) {
+  if (currentUser.username === username) {
+    return
+  }
+
   try {
     let setUsername = backend.functions.httpsCallable('api-updateUsername')
     let { data } = await setUsername({ username })

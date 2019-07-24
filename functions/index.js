@@ -13,6 +13,7 @@ exports.renderer = functions.https.onRequest(renderer)
 exports.api = {
   ...require('./api/cancelSubscription'),
   ...require('./api/createFreeAccount'),
+  ...require('./api/deleteUser'),
   ...require('./api/plans'),
   ...require('./api/removeBillingCard'),
   ...require('./api/subscribeToPlan'),

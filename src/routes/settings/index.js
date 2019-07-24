@@ -37,25 +37,25 @@ function Settings(props) {
                 <ListItemLink href="/settings/profile">
                   <ListItemText
                     title="Profile"
-                    description="Name, photo & bio."
+                    description="Name, photo & bio"
                   />
                 </ListItemLink>
                 <ListItemLink href="/settings/account">
                   <ListItemText
-                    title="Account Details"
-                    description="Username, email & language."
+                    title="Account"
+                    description="Username & email"
                   />
                 </ListItemLink>
                 <ListItemLink href="/settings/password">
                   <ListItemText
                     title="Password"
-                    description="Change or recover your password."
+                    description="Change or recover your password"
                   />
                 </ListItemLink>
                 <ListItemLink href="/settings/billing">
                   <ListItemText
                     title="Billing"
-                    description="Your subscription & billing card."
+                    description="Your subscription & billing card"
                   />
                 </ListItemLink>
               </List>
@@ -85,7 +85,7 @@ export default authenticated(
         }),
         [mediaQueries.tabletPlus]: redirect('./profile'),
       }),
-      '/account': lazy(() => import('./accountDetails')),
+      '/account': lazy(() => import('./account')),
       '/billing': lazy(() => import('./billing')),
       '/password': lazy(() => import('./password')),
       '/profile': lazy(() => import('./profile')),

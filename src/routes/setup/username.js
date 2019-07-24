@@ -1,13 +1,12 @@
 import { lazy, map, redirect, route } from 'navi'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styled, { css } from 'styled-components/macro'
 
 import Button, { ButtonLink } from 'components/button'
 import Icon from 'components/icon'
 import { Gap } from 'components/sections'
 import { useCurrentUser } from 'context'
-import useOperation from 'hooks/useOperation'
-import updateUsername from 'operations/updateUsername'
+import useUsernameForm from 'hooks/useUsernameForm'
 import { colors } from 'theme'
 
 import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
@@ -47,82 +46,8 @@ const Message = styled.p`
 `
 
 function UsernamePicker(props) {
-  let [usernameInput, setUsernameInput] = useState('')
-
-  // Use `undefined` to indicate that we don't know if there are any
-  // validation issues, and `null` to indicate that everything's okay. But
-  // we'll keep it `null` for empty inputs, as that doesn't need a message.
-  let [validationIssue, setValidationIssue] = useState(null)
-
   let user = useCurrentUser()
-  let updateUsernameOperation = useOperation(updateUsername)
-  let hasSubmitted =
-    !!updateUsernameOperation.lastError || updateUsernameOperation.busy
-  let submitIssue =
-    updateUsernameOperation.lastError &&
-    Object.values(updateUsernameOperation.lastError)[0][0]
-
-  let issue = validationIssue || submitIssue
-
-  // Run a validation on each new username input.
-  useEffect(() => {
-    let isMounted = true
-
-    updateUsernameOperation.clearSettled()
-
-    if (usernameInput) {
-      setValidationIssue(undefined)
-
-      updateUsernameOperation
-        .validate({ username: usernameInput })
-        .then(issues => {
-          if (isMounted) {
-            setValidationIssue((issues && Object.values(issues)[0][0]) || null)
-          }
-        })
-    } else {
-      // We don't need to show any validation issues
-      setValidationIssue(null)
-    }
-
-    return () => {
-      isMounted = false
-    }
-    // We actually only want to update the issue when the user makes a change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [usernameInput])
-
-  let handleSubmit = event => {
-    event.preventDefault()
-    updateUsernameOperation.invoke({ username: usernameInput })
-  }
-
-  let handleChange = event => {
-    setUsernameInput(event.target.value)
-  }
-
-  let handleClickAddNumber = () => {
-    let number = Math.round(Math.min(Math.random() * 10, 9))
-    setUsernameInput(usernameInput + number)
-  }
-
-  let message = "Don't panic. You can change this later."
-  if (hasSubmitted) {
-    if (issue === 'username-taken') {
-      message = 'That username is already taken, sorry.'
-    } else if (issue === 'required') {
-      message =
-        "So you'll actually need a username. It'll appear next to your name when you cast."
-    } else if (issue === 'invalid') {
-      message =
-        'Your username can only contain letters, numbers, and an underscore (_).'
-    } else if (issue === 'premium') {
-      message =
-        "That's a great username. But usernames for free and little wigs must contain a number."
-    } else if (submitIssue) {
-      message = submitIssue
-    }
-  }
+  let usernameForm = useUsernameForm()
 
   return (
     <InnerClamp>
@@ -138,7 +63,7 @@ function UsernamePicker(props) {
       <Description>
         Thanks for joining us! By the way, I didn't catch your username...
       </Description>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={usernameForm.onSubmit}>
         <div
           css={css`
             background-color: ${colors.ink.black};
@@ -188,8 +113,8 @@ function UsernamePicker(props) {
                 @
               </span>
               <input
-                onChange={handleChange}
-                value={usernameInput}
+                onChange={usernameForm.onChange}
+                value={usernameForm.value}
                 maxLength="15"
                 css={css`
                   color: ${colors.text.default};
@@ -202,21 +127,19 @@ function UsernamePicker(props) {
                   width: 0;
                 `}
               />
-              {usernameInput &&
-                (issue === 'premium' ||
-                  issue === 'username-taken' ||
-                  (!issue && validationIssue === null)) && (
+              {usernameForm.validationState &&
+                usernameForm.validationState !== 'busy' && (
                   <Icon
                     color={colors.ink.black}
                     glyph={
-                      validationIssue === 'premium' || !validationIssue
+                      usernameForm.validationState === 'valid'
                         ? 'check'
                         : 'cross2'
                     }
                     size="1rem"
                   />
                 )}
-              {usernameInput && !issue && validationIssue === undefined && (
+              {usernameForm.validationState === 'busy' && (
                 <Spinner
                   size="1rem"
                   color={colors.ink.light}
@@ -226,9 +149,9 @@ function UsernamePicker(props) {
             </div>
           </label>
         </div>
-        <Message>{message}</Message>
+        <Message>{usernameForm.message}</Message>
         <Gap size="2rem" />
-        {hasSubmitted && issue === 'premium' && (
+        {usernameForm.hasSubmitted && usernameForm.issue === 'premium' && (
           <div
             css={css`
               margin-top: -1rem;
@@ -239,17 +162,18 @@ function UsernamePicker(props) {
             <ButtonLink href="/wigs" size="small">
               Get a wig
             </ButtonLink>
-            <Button outline size="small" onClick={handleClickAddNumber}>
+            <Button
+              outline
+              size="small"
+              onClick={usernameForm.onClickAddNumber}>
               Add a number
             </Button>
           </div>
         )}
         <Button
           type="submit"
-          busy={updateUsernameOperation.busy}
-          disabled={
-            (hasSubmitted && !!validationIssue) || updateUsernameOperation.busy
-          }
+          busy={usernameForm.isSubmitting}
+          disabled={!usernameForm.canSubmit}
           outline
           css={css`
             margin: 0 auto;

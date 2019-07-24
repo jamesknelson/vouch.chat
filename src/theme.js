@@ -64,7 +64,7 @@ export const colors = {
 export const dimensions = {
   base: '16px',
   bar: '4rem',
-  defaultMaxFieldWidth: '26rem',
+  defaultMaxFieldWidth: '28rem',
   largeCardWidth: '48rem',
   smallCardWidth: '24rem',
 }

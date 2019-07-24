@@ -4,6 +4,10 @@ const debounceTime = 500
 const debouncedIsAvailables = new WeakMap()
 
 export default async function validateUsername(backend, user, username) {
+  if (user.username === username) {
+    return
+  }
+
   if (!username) {
     return 'required'
   } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
