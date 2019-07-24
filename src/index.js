@@ -8,7 +8,7 @@ import GlobalIconFontStyle from 'components/icon/font'
 import GlobalResetStyle from './reset.css'
 import Backend from './backend'
 import config from './config'
-import { BackendContext } from './context'
+import { BackendContext, StripeContext } from './context'
 import routes from './routes'
 
 async function main() {
@@ -34,22 +34,26 @@ async function main() {
 
   let route = await navigation.getRoute()
   let renderer = route.type === 'ready' ? ReactDOM.hydrate : ReactDOM.render
+  let stripe = window.Stripe ? window.Stripe(config.stripe.apiKey) : null
 
   renderer(
     <HelmetProvider>
       <BackendContext.Provider value={backend}>
-        <StripeProvider
-          stripe={window.Stripe ? window.Stripe(config.stripe.apiKey) : null}>
-          <NaviProvider navigation={navigation}>
-            {/*
-              Putting the global styles any deeper in the tree causes them to
-              re-render on each navigation, even on production.
-            */}
-            <GlobalResetStyle />
-            <GlobalIconFontStyle />
-            <View />
-          </NaviProvider>
-        </StripeProvider>
+        {/* Our provider makes stripe available within hooks, while the
+            stripe library's provider is required for its card form */}
+        <StripeContext.Provider value={stripe}>
+          <StripeProvider stripe={stripe}>
+            <NaviProvider navigation={navigation}>
+              {/*
+                Putting the global styles any deeper in the tree causes them to
+                re-render on each navigation, even on production.
+              */}
+              <GlobalResetStyle />
+              <GlobalIconFontStyle />
+              <View />
+            </NaviProvider>
+          </StripeProvider>
+        </StripeContext.Provider>
       </BackendContext.Provider>
     </HelmetProvider>,
     document.getElementById('root'),

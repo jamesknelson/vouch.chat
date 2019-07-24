@@ -5,10 +5,10 @@ import { FormSubmitButton } from 'components/button'
 import CardForm from 'components/cardForm'
 import Modal, { ModalGutter } from 'components/modal'
 import useOperation from 'hooks/useOperation'
-import updateBillingCard from 'operations/updateBillingCard'
+import updateBillingDetails from 'operations/updateBillingDetails'
 
 export default function BillingUpdateCardModal({ open, onClose }) {
-  let operation = useOperation(updateBillingCard, {
+  let operation = useOperation(updateBillingDetails, {
     onSuccess: onClose,
   })
 

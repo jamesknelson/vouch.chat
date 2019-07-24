@@ -21,3 +21,8 @@ export const MutableStoreContext = React.createContext({})
 export function useMutableStore() {
   return useContext(MutableStoreContext)
 }
+
+export const StripeContext = React.createContext(null)
+export function useStripe() {
+  return useContext(StripeContext)
+}

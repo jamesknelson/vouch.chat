@@ -8,7 +8,6 @@ import { Gap } from 'components/sections'
 import { useCurrentUser, useBackend } from 'context'
 import useOperation from 'hooks/useOperation'
 import updateUsername from 'operations/updateUsername'
-import changeSubscriptionPlan from 'operations/changeSubscriptionPlan'
 import { colors } from 'theme'
 
 import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
@@ -56,7 +55,6 @@ function UsernamePicker({ suggestedPlan }) {
   let backend = useBackend()
   let user = useCurrentUser()
   let updateUsernameOperation = useOperation(updateUsername)
-  let upgradeSubscriptionPlanOperation = useOperation(changeSubscriptionPlan)
   let hasSubmitted =
     !!updateUsernameOperation.lastValue || updateUsernameOperation.busy
   let submitIssue =
@@ -132,20 +130,6 @@ function UsernamePicker({ suggestedPlan }) {
   let handleClickAddNumber = () => {
     let number = Math.round(Math.min(Math.random() * 10, 9))
     setUsernameInput(usernameInput + number)
-  }
-
-  let handleClickUpgradePlan = () => {
-    if (
-      window.confirm(
-        `I can upgrade you to the ${
-          suggestedPlan.name
-        } plan for $${suggestedPlan.amount / 100} / ${
-          suggestedPlan.interval
-        }. Okay?`,
-      )
-    ) {
-      upgradeSubscriptionPlanOperation.invoke({ planId: suggestedPlan.id })
-    }
   }
 
   let message = "Don't panic. You can change this later."
@@ -273,19 +257,9 @@ function UsernamePicker({ suggestedPlan }) {
               display: flex;
               justify-content: space-around;
             `}>
-            {user.hasActiveSubscription ? (
-              <Button
-                size="small"
-                busy={upgradeSubscriptionPlanOperation.busy}
-                disabled={upgradeSubscriptionPlanOperation.busy}
-                onClick={handleClickUpgradePlan}>
-                Upgrade my wig
-              </Button>
-            ) : (
-              <ButtonLink href="/wigs" size="small">
-                Get a wig
-              </ButtonLink>
-            )}
+            <ButtonLink href="/wigs" size="small">
+              Get a wig
+            </ButtonLink>
             <Button outline size="small" onClick={handleClickAddNumber}>
               Add a number
             </Button>

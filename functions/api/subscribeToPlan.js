@@ -7,9 +7,20 @@ const topUp = require('../util/topUp')
 const db = admin.firestore()
 const members = db.collection('members')
 
-exports.createCustomerAndSubscription = functions.https.onCall(
-  async (data, context) => {
-    let stripePlan = await stripe.plans.retrieve(data.planId)
+exports.subscribeToPlan = functions.https.onCall(
+  async ({ planId }, context) => {
+    let uid = context.auth.uid
+    let accountRef = await members
+      .doc(uid)
+      .collection('private')
+      .doc('account')
+    let accountSnapshot = await accountRef.get()
+    let account = accountSnapshot.exists ? accountSnapshot.data() : {}
+    let stripeCustomerId = account.stripeCustomerId
+    let stripeSubscriptionId =
+      account.subscription && account.subscription.stripeId
+
+    let stripePlan = await stripe.plans.retrieve(planId)
     if (!stripePlan.active) {
       return {
         status: 'error',
@@ -19,77 +30,6 @@ exports.createCustomerAndSubscription = functions.https.onCall(
       }
     }
 
-    let email = context.auth.token.email
-    let uid = context.auth.uid
-    let accountRef = await members
-      .doc(uid)
-      .collection('private')
-      .doc('account')
-    let accountSnapshot = await accountRef.get()
-    let account = accountSnapshot.exists ? accountSnapshot.data() : {}
-
-    let stripeCustomerId = account.stripeCustomerId
-    let stripeSubscriptionId =
-      account.subscription && account.subscription.stripeId
-
-    // Override any old/broken customer ids
-    if (stripeCustomerId) {
-      try {
-        let { deleted } = await stripe.customers.retrieve(stripeCustomerId)
-        if (deleted) {
-          stripeCustomerId = null
-        }
-      } catch (e) {
-        stripeCustomerId = null
-      }
-    }
-
-    // Try setting up payment source for customer
-    let stripeCustomer
-    try {
-      if (!stripeCustomerId) {
-        stripeCustomer = await stripe.customers.create({
-          expand: ['default_source'],
-          preferred_locales: [data.language],
-          source: data.token,
-          email: email,
-          name: data.name,
-          tax_exempt: data.country !== 'JP' ? 'exempt' : 'none',
-          metadata: {
-            country: data.country,
-          },
-        })
-
-        stripeCustomerId = stripeCustomer.id
-
-        await accountRef.set(
-          {
-            stripeCustomerId,
-            country: data.country,
-          },
-          { merge: true },
-        )
-      } else {
-        stripeCustomer = await stripe.customers.update(stripeCustomerId, {
-          expand: ['default_source'],
-          preferred_locales: [data.language],
-          source: data.token,
-          tax_exempt: data.country !== 'JP' ? 'exempt' : 'none',
-          metadata: {
-            country: data.country,
-          },
-        })
-        await accountRef.update({
-          country: data.country,
-        })
-      }
-    } catch (error) {
-      console.error(error)
-      return { status: 'error', error }
-    }
-
-    // If there's an existing subscription id, the upgrade/downgrade
-    // functions should be used instead.
     if (stripeSubscriptionId) {
       let stripeSubscription
       try {
@@ -101,26 +41,43 @@ exports.createCustomerAndSubscription = functions.https.onCall(
         )
       } catch (error) {}
 
-      if (stripeSubscription) {
-        // Let's not create a new subscription if one already exists.
-        if (stripeSubscription.status === 'active') {
-          return {
-            status: 'error',
-            error: {
-              code: 'already-subscribed',
-            },
-          }
+      // If an active subscription already exists, let's make sure it's set to
+      // continue into the next period, and change the plan to the requested
+      // plan if required. No immediate payment is required.
+      if (stripeSubscription && stripeSubscription.status === 'active') {
+        stripeSubscription = await stripe.subscriptions.update(
+          stripeSubscription.id,
+          {
+            expand: ['plan'],
+            cancel_at_period_end: false,
+            plan: planId,
+          },
+        )
+        await accountRef.update({
+          subscription: pickers.subscription(stripeSubscription),
+        })
+        await topUp(accountRef, {
+          forPlanChange: true,
+        })
+        return {
+          status: 'success',
+          subscriptionStatus: 'active',
         }
       }
 
-      if (stripeSubscription.plan.id !== stripePlan.id) {
-        // The existing incomplete subscription has the wrong plan, so nuke it
-        // and continue to create a new one.
+      if (
+        stripeSubscription &&
+        (stripeSubscription.plan.id !== stripePlan.id ||
+          (stripeSubscription.status !== 'incomplete' &&
+            stripeSubscription.status !== 'past_due'))
+      ) {
+        // The existing subscription can't be reused, so nuke it and start
+        // from scratch.
         await stripe.subscriptions.del(stripeSubscriptionId)
         stripeSubscriptionId = undefined
       } else {
-        // We have matching plans, so let's attempt a payment with the new
-        // source.
+        // We have matching plans and a subscription that can be reused with
+        // payment, so attempt a payment.
         try {
           let invoice = await stripe.invoices.pay(
             stripeSubscription.latest_invoice.id,
@@ -130,8 +87,9 @@ exports.createCustomerAndSubscription = functions.https.onCall(
           )
 
           return await renderSubscriptionPaymentAttempt(
-            stripeCustomer,
-            await stripe.subscriptions.retrieve(stripeSubscriptionId),
+            await stripe.subscriptions.retrieve(stripeSubscriptionId, {
+              expand: ['latest_invoice.payment_intent', 'plan'],
+            }),
             invoice,
             accountRef,
           )
@@ -155,7 +113,6 @@ exports.createCustomerAndSubscription = functions.https.onCall(
       })
 
       return await renderSubscriptionPaymentAttempt(
-        stripeCustomer,
         stripeSubscription,
         stripeSubscription.latest_invoice,
         accountRef,
@@ -168,13 +125,13 @@ exports.createCustomerAndSubscription = functions.https.onCall(
 )
 
 async function renderSubscriptionPaymentAttempt(
-  stripeCustomer,
   stripeSubscription,
   stripeInvoice,
   accountRef,
 ) {
   let subscription = pickers.subscription(stripeSubscription)
   let paymentIntentStatus = stripeInvoice.payment_intent.status
+
   if (paymentIntentStatus === 'requires_payment_method') {
     await accountRef.set(
       {
@@ -201,7 +158,6 @@ async function renderSubscriptionPaymentAttempt(
       nextScheduledTopUpAt: Date.now() + 23 * 60 * 60 * 1000,
 
       subscription,
-      card: pickers.card(stripeCustomer.default_source),
     },
     { merge: true },
   )
@@ -212,5 +168,6 @@ async function renderSubscriptionPaymentAttempt(
     status: 'success',
     subscriptionStatus: stripeSubscription.status,
     paymentIntentStatus,
+    paymentIntentSecret: stripeInvoice.payment_intent.client_secret,
   }
 }

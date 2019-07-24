@@ -6,9 +6,8 @@ import CardForm from 'components/cardForm'
 import Modal, { ModalGutter } from 'components/modal'
 import { Gap } from 'components/sections'
 import useOperation from 'hooks/useOperation'
-import payAndSubscribe from 'operations/payAndSubscribe'
-import restartSubscription from 'operations/restartSubscription'
-import updateBillingCard from 'operations/updateBillingCard'
+import subscribeToPlan from 'operations/subscribeToPlan'
+import updateBillingDetails from 'operations/updateBillingDetails'
 import { colors } from 'theme'
 
 const P = styled.p`
@@ -27,37 +26,33 @@ export default function BillingRestartSubscriptionModal({
 
   useEffect(() => {
     setHasCardAtOpen(hasCard)
-    restartSubscriptionOperation.clearSettled()
+    subscribeToPlanOperation.clearSettled()
     // Only want to clear settled when the modal opens/closes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
-  let restartSubscriptionOperation = useOperation(
-    subscription.cancelAtPeriodEnd ? restartSubscription : payAndSubscribe,
-    {
-      onSuccess: onClose,
-      defaultProps: {
-        planId: subscription.plan.id,
-        language: 'en',
-      },
+  let subscribeToPlanOperation = useOperation(subscribeToPlan, {
+    onSuccess: onClose,
+    defaultProps: {
+      planId: subscription.plan.id,
     },
-  )
-  let updateCardOperation = useOperation(updateBillingCard, {
-    onSuccess: restartSubscriptionOperation.invoke,
+  })
+  let updateCardOperation = useOperation(updateBillingDetails, {
+    onSuccess: subscribeToPlanOperation.invoke,
   })
 
   let content = hasCardAtOpen ? (
     <>
       <P>Let's get your wig back.</P>
-      {restartSubscriptionOperation.error && (
+      {subscribeToPlanOperation.error && (
         <P color={colors.text.warning}>
-          {Object.values(restartSubscriptionOperation.error)[0][0]}
+          {Object.values(subscribeToPlanOperation.error)[0][0]}
         </P>
       )}
       <Button
-        busy={restartSubscriptionOperation.busy}
-        disabled={restartSubscriptionOperation.busy}
-        onClick={restartSubscriptionOperation.invoke}
+        busy={subscribeToPlanOperation.busy}
+        disabled={subscribeToPlanOperation.busy}
+        onClick={subscribeToPlanOperation.invoke}
         css={css`
           width: 100%;
         `}>
@@ -87,7 +82,7 @@ export default function BillingRestartSubscriptionModal({
       closeOnBackdropClick={false}
       closeOnEscape={false}
       title="Restart Your Subscription"
-      onClose={restartSubscriptionOperation.busy ? undefined : onClose}>
+      onClose={subscribeToPlanOperation.busy ? undefined : onClose}>
       <ModalGutter>{content}</ModalGutter>
     </Modal>
   )

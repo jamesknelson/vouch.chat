@@ -2,15 +2,15 @@ import { useBackend } from 'context'
 import { normalizeIssues } from 'utils/Issues'
 import validateBillingAddress from 'utils/validateBillingAddress'
 
-updateBillingCard.useDependencies = function useDependencies() {
+updateBillingDetails.useDependencies = function useDependencies() {
   return useBackend()
 }
 
-updateBillingCard.validate = function validate(params) {
+updateBillingDetails.validate = function validate(params) {
   return validateBillingAddress(params)
 }
 
-export default async function updateBillingCard(
+export default async function updateBillingDetails(
   { stripe, ...billing },
   backend,
 ) {
@@ -26,11 +26,13 @@ export default async function updateBillingCard(
       )
     }
 
-    let updateBillingCard = backend.functions.httpsCallable(
-      'api-updateBillingCard',
+    let updateBillingDetails = backend.functions.httpsCallable(
+      'api-updateBillingDetails',
     )
-    let { data } = await updateBillingCard({
+    let { data } = await updateBillingDetails({
       country: billing.address_country,
+      language: 'en',
+      name: billing.name,
       token: token.id,
     })
 

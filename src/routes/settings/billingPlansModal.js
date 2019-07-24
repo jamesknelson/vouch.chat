@@ -9,8 +9,8 @@ import Modal, { ModalGutter } from 'components/modal'
 import PlansGrid from 'components/plansGrid'
 import { Gap } from 'components/sections'
 import useOperation from 'hooks/useOperation'
-import changeSubscriptionPlan from 'operations/changeSubscriptionPlan'
-import payAndSubscribe from 'operations/payAndSubscribe'
+import subscribeToPlan from 'operations/subscribeToPlan'
+import updateBillingDetails from 'operations/updateBillingDetails'
 import { useBackend } from 'context'
 import { colors, dimensions } from 'theme'
 
@@ -32,7 +32,7 @@ const Title = styled.h1`
 `
 
 const P = styled.p`
-  color: ${colors.text.secondary};
+  color: ${props => props.color || colors.text.default};
   font-size: 0.9rem;
   margin: 1rem 0 2rem;
 `
@@ -47,9 +47,12 @@ export default function BillingPlansModal({
 }) {
   let backend = useBackend()
   let [
-    subscriptionWillBeInactiveAtOpen,
-    setSubscriptionWillBeInactiveAtOpen,
-  ] = useState(subscriptionWillBeInactive)
+    {
+      card: cardAtOpen,
+      subscriptionWillBeInactive: subscriptionWillBeInactiveAtOpen,
+    },
+    setDataAtOpen,
+  ] = useState({ card, subscriptionWillBeInactive })
 
   // Fetch the plans
   let [{ plans, plansStatus }, setPlansState] = useState({
@@ -77,21 +80,21 @@ export default function BillingPlansModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  let operation = useOperation(
-    card ? changeSubscriptionPlan : payAndSubscribe,
-    {
-      onSuccess: onClose,
-      defaultProps: {
-        language: 'en',
-        planId: selectedPlanId,
-      },
+  let subscribeToPlanOperation = useOperation(subscribeToPlan, {
+    onSuccess: onClose,
+    defaultProps: {
+      planId: selectedPlanId,
     },
-  )
+  })
+  let updateCardOperation = useOperation(updateBillingDetails, {
+    onSuccess: subscribeToPlanOperation.invoke,
+  })
 
   useEffect(() => {
-    operation.clearSettled()
+    subscribeToPlanOperation.clearSettled()
+    updateCardOperation.clearSettled()
     if (open) {
-      setSubscriptionWillBeInactiveAtOpen(subscriptionWillBeInactive)
+      setDataAtOpen({ card, subscriptionWillBeInactive })
     }
     // Only want to change these values the modal opens/closes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -116,7 +119,7 @@ export default function BillingPlansModal({
     if (selectedPlanId) {
       let plan = plans.find(plan => plan.id === selectedPlanId)
 
-      if (card) {
+      if (cardAtOpen) {
         content = (
           <InnerClamp>
             <Title>Great Choice!</Title>
@@ -127,10 +130,15 @@ export default function BillingPlansModal({
               {subscriptionWillBeInactiveAtOpen ? 'subscribe' : 'switch over'}{' '}
               to it immediately.
             </P>
+            {subscribeToPlanOperation.error && (
+              <P color={colors.text.warning}>
+                {Object.values(subscribeToPlanOperation.error)[0][0]}
+              </P>
+            )}
             <Button
-              busy={operation.busy}
-              disabled={operation.busy}
-              onClick={operation.invoke}
+              busy={subscribeToPlanOperation.busy}
+              disabled={subscribeToPlanOperation.busy}
+              onClick={subscribeToPlanOperation.invoke}
               css={css`
                 margin-top: 1.5rem;
                 width: 100%;
@@ -149,7 +157,9 @@ export default function BillingPlansModal({
               <Currency amount={plan.amount} currency={plan.currency} /> /
               month, please enter your credit card details below.
             </P>
-            <CardForm validate={operation.validate} onSubmit={operation.invoke}>
+            <CardForm
+              validate={updateCardOperation.validate}
+              onSubmit={updateCardOperation.invoke}>
               <FormSubmitButton
                 css={css`
                   margin-top: 1.5rem;
@@ -190,7 +200,11 @@ export default function BillingPlansModal({
       open={open}
       title={currentPlan ? 'Change Your Wig' : 'Get A Wig'}
       width={dimensions.largeCardWidth}
-      onClose={operation.busy ? undefined : onClose}>
+      onClose={
+        updateCardOperation.busy || subscribeToPlanOperation.busy
+          ? undefined
+          : onClose
+      }>
       <ModalGutter>{content}</ModalGutter>
     </Modal>
   )

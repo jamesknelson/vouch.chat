@@ -7,7 +7,8 @@ import Card from 'components/card'
 import CardForm from 'components/cardForm'
 import Currency from 'components/currency'
 import useOperation from 'hooks/useOperation'
-import payAndSubscribe from 'operations/payAndSubscribe'
+import subscribeToPlan from 'operations/subscribeToPlan'
+import updateBillingDetails from 'operations/updateBillingDetails'
 import loading from 'routes/loading'
 import { colors } from 'theme'
 import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
@@ -41,21 +42,25 @@ const Description = styled.p`
 
 function Subscribe({ plan }) {
   let navigation = useNavigation()
-  let operation = useOperation(payAndSubscribe, {
-    defaultProps: {
-      planId: plan.id,
-      language: 'en',
-    },
+  let subscribeToPlanOperation = useOperation(subscribeToPlan, {
     onSuccess: async () => {
       await navigation.getRoute()
     },
+    defaultProps: {
+      planId: plan.id,
+    },
+  })
+  let updateCardOperation = useOperation(updateBillingDetails, {
+    onSuccess: subscribeToPlanOperation.invoke,
   })
 
   return (
     <InnerClamp>
       <Title>Great choice!</Title>
       <Description>Now show us the money.</Description>
-      <CardForm onSubmit={operation.invoke} validate={operation.validate}>
+      <CardForm
+        onSubmit={updateCardOperation.invoke}
+        validate={updateCardOperation.validate}>
         <FormSubmitButton
           css={css`
             margin-top: 1.5rem;
