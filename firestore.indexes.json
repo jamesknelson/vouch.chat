@@ -1,6 +1,20 @@
 {
   "indexes": [
     {
+      "collectionGroup": "private",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        {
+          "fieldPath": "subscription.status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "nextScheduledTopUpAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "topUps",
       "queryScope": "COLLECTION",
       "fields": [
