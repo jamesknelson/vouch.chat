@@ -29,21 +29,21 @@ export const InputControl = ({
   placeholder,
   id,
   size,
+  validationState,
   variant,
-  value,
   ...props
 }) => (
   <Control
-    id={id}
-    glyph={glyph}
-    label={label}
-    variant={variant}
     className={className}
-    style={style}>
+    glyph={glyph}
+    id={id}
+    label={label}
+    style={style}
+    variant={variant}
+    validationState={validationState}>
     {inputProps => (
       <StyledInput
         placeholder={placeholder || label}
-        value={value}
         onChange={event => onChange && onChange(event.target.value)}
         {...props}
         {...inputProps}

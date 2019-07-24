@@ -3,7 +3,7 @@ import { css } from 'styled-components/macro'
 import {
   StyledControlGroupDivider,
   StyledControlGroupRowDivider,
-} from './styles'
+} from './controlStyles'
 
 export const ControlGroupRowItemContext = React.createContext({
   firstColumn: true,

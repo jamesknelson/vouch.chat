@@ -14,7 +14,7 @@ import {
   StyledControlIconLabel,
   StyledControlValidationState,
   StyledControlWrapper,
-} from './styles'
+} from './controlStyles'
 
 export function ControlIconLabel({ glyph, ...props }) {
   return (
@@ -35,7 +35,7 @@ export function ControlValidationState({ state, ...props }) {
         />
       ) : (
         <Icon
-          color={colors.ink.black}
+          color={state === 'valid' ? colors.ink.black : colors.ink.mid}
           glyph={state === 'valid' ? 'check' : 'cross2'}
           size="1rem"
         />
@@ -78,6 +78,15 @@ export function Control({
     size = 'large'
   }
 
+  let controlStyle = {}
+
+  if (glyph) {
+    controlStyle.paddingLeft = '2.25rem'
+  }
+  if (validationState) {
+    controlStyle.paddingRight = '2.25rem'
+  }
+
   return (
     <StyledControlWrapper
       as={as}
@@ -91,7 +100,7 @@ export function Control({
       )}
       {children({
         id: controlId,
-        style: glyph ? { paddingLeft: '2.25rem' } : {},
+        style: controlStyle,
       })}
       {glyph && (
         <ControlIconLabel htmlFor={controlId} variant={variant} glyph={glyph} />

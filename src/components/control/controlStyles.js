@@ -37,7 +37,10 @@ export const StyledControlIconLabel = styled.label`
   text-align: right;
 `
 
-export const StyledControlValidationState = styled.span``
+export const StyledControlValidationState = styled.span`
+  position: absolute;
+  right: 0.5rem;
+`
 
 export const StyledControlBackground = styled.div`
   ${props => css`

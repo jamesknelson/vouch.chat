@@ -46,17 +46,19 @@ export const SelectControl = ({
   placeholder,
   id,
   size,
+  validationState,
   variant,
   value,
   ...props
 }) => (
   <Control
-    id={id}
-    glyph={glyph}
-    label={label}
-    variant={variant}
     className={className}
-    style={style}>
+    glyph={glyph}
+    id={id}
+    label={label}
+    style={style}
+    validationState={validationState}
+    variant={variant}>
     {inputProps => (
       <>
         <StyledSelect
