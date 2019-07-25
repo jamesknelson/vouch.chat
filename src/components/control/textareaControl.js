@@ -16,10 +16,15 @@ const StyledTextarea = styled(Textarea)`
   font-size: 0.9rem;
   line-height: 1rem;
   padding: 0.5rem;
+  resize: none;
   border-radius: ${radii.small};
 
   /* Required to allow the input to be sized with flexbox */
   width: 0;
+
+  ::placeholder {
+    color: ${colors.text.placeholder};
+  }
 `
 
 export const TextareaControl = ({

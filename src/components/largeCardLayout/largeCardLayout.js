@@ -4,6 +4,7 @@ import Card from 'components/card'
 import { LayoutHeaderContent } from 'components/layout'
 import { TabletPlus } from 'components/media'
 import { colors, dimensions } from 'theme'
+import { mediaDependentProp } from 'utils/cssHelpers'
 
 export const Title = styled.h1`
   color: ${colors.text.default};
@@ -26,6 +27,7 @@ export const Description = styled.p`
 export const LargeCardLayout = ({
   actions,
   children,
+  padding = [0, 0, 4],
   size = 'small',
   title,
   ...props
@@ -44,11 +46,7 @@ export const LargeCardLayout = ({
           margin: 0 auto 2rem;
           max-width: ${dimensions.largeCardWidth};
         `}>
-        <Card
-          radius="small"
-          css={css`
-            padding-bottom: 4rem;
-          `}>
+        <Card padding={padding} radius="small">
           {children}
         </Card>
       </div>

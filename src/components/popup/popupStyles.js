@@ -104,7 +104,7 @@ const StyledPopupBox = styled(AnimatedCard)`
   }
   top: 0;
   left: 0;
-  z-index: 3;
+  z-index: 10;
   transform-origin: top center;
 `
 

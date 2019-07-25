@@ -28,9 +28,9 @@ const StyledNavIcon = styled(Icon)`
 
   color: ${props => (props.faded ? colors.ink.light : colors.ink.black)};
   text-shadow: 0 0 9px
-      ${props => rgba(props.faded ? colors.ink.light : colors.ink.black, 0.4)},
+      ${props => rgba(props.faded ? colors.ink.light : colors.ink.black, 0.3)},
     0 0 2px
-      ${props => rgba(props.faded ? colors.ink.light : colors.ink.black, 0.2)};
+      ${props => rgba(props.faded ? colors.ink.light : colors.ink.black, 0.15)};
   line-height: 1.5rem;
   position: relative;
   transition: color 500ms ${easings.easeOut};
@@ -165,10 +165,11 @@ export const NavItems = () => {
       />
       <NavItem
         faded={isDisabled || currentUser === null}
-        href="/share"
-        tooltip="Create"
-        // glyph="bullhorn"
-        glyph="pencil"
+        href="/cast"
+        tooltip="Cast"
+        glyph="bullhorn"
+        // glyph="cast"
+        // glyph="pencil"
       />
       {/* <NavItem
         faded={isDisabled || currentUser === null}
@@ -176,12 +177,12 @@ export const NavItems = () => {
         tooltip="Chat"
         glyph="envelope"
       /> */}
-      <NavItem
+      {/* <NavItem
         faded={isDisabled || currentUser === null}
         href="/notifications"
         tooltip="Alerts"
         glyph="bell1"
-      />
+      /> */}
       {/* <NavItem href="/explore" title="Community" glyph="globe" /> */}
     </>
   )

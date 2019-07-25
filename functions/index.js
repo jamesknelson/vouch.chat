@@ -6,6 +6,8 @@ const serviceAccount = require('./.serviceaccount.json')
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
+  storageBucket:
+    process.env.FIREBASE_CONFIG.storageBucket || 'vouchchat.appspot.com',
 })
 
 exports.renderer = functions.https.onRequest(renderer)

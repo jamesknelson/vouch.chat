@@ -83,7 +83,7 @@ export const LayoutHeaderContent = ({
     actions = children || (index ? indexHeaderActions : headerActions)
   }
 
-  if (minimal || !title) {
+  if (minimal || (!title && title !== null)) {
     title = <HeaderBrandTextLink />
   }
 

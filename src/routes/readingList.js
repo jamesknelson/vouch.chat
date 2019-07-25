@@ -1,4 +1,3 @@
-import EventEmitter from 'events'
 import {
   compose,
   lazy,
@@ -10,19 +9,19 @@ import {
   withView,
 } from 'navi'
 import React, { useEffect, useState } from 'react'
+import { combineReducers, createStore } from 'redux'
 import {
   useNavigation,
   useCurrentRoute,
   useViewElement,
   useActive,
 } from 'react-navi'
-import styled, { css } from 'styled-components/macro'
+import { css } from 'styled-components/macro'
 
-import { TagAvatar, UserAvatar } from 'components/avatar'
+import { UserAvatar } from 'components/avatar'
 import { UnreadBadgeWrapper } from 'components/badge'
 import { LogoImage } from 'components/brand'
 import { IconButton } from 'components/button'
-import Icon from 'components/icon'
 import {
   LayoutHeaderSection,
   LayoutTwinColumns,
@@ -31,48 +30,43 @@ import {
 import {
   List,
   ListItemLink,
+  ListItemIconButton,
   ListItemImage,
   ListItemText,
-  ListItemIconButton,
 } from 'components/list'
+import { MenuItem } from 'components/menu'
+import { PopupProvider, PopupMenu, PopupTrigger } from 'components/popup'
 import SearchForm from 'components/searchForm'
 import { Gap, Section, SectionSubHeading } from 'components/sections'
 import { colors, mediaQueries } from 'theme'
 import mountByMedia from 'utils/mountByMedia'
+import useLatestStoreState from 'hooks/useLatestStoreState'
+import { useCurrentUser } from 'context'
 
-const clearEmitter = new EventEmitter()
-
-const Disc = styled.div`
-  display: flex;
-  align-items: center;
-  border-radius: 9999px;
-  background-color: ${colors.ink.wash};
-  color: ${colors.control.icon.default};
-  justify-content: center;
-  ${props => css`
-    width: ${props.size};
-    height: ${props.size};
-  `}
-`
+// Use a redux store to keep track of state that is shared across the index
+// header and its body, as they can mounted in different parts of the tree.
+function isEditingReducer(state = false, action) {
+  switch (action.type) {
+    case 'edit':
+      return true
+    case 'reset':
+      return false
+    case 'stop-edit':
+      return false
+    default:
+      return state
+  }
+}
+const store = createStore(
+  combineReducers({
+    isEditing: isEditingReducer,
+  }),
+)
 
 function Read(props) {
   let route = useCurrentRoute()
   let view = useViewElement()
-  let [query, setQuery] = useState(props.query)
-
-  useEffect(() => {
-    if (typeof props.query === 'string') {
-      setQuery(props.query || '')
-    }
-  }, [props.query])
-
-  useEffect(() => {
-    let listener = () => {
-      setQuery(null)
-    }
-    clearEmitter.on('clear', listener)
-    return () => clearEmitter.off('clear', listener)
-  }, [])
+  let { isEditing } = useLatestStoreState(store)
 
   return (
     <LayoutTwinColumns
@@ -84,31 +78,6 @@ function Read(props) {
           <LayoutHeaderSection index />
           <LayoutLeftColumnContentScroller>
             <Gap size={1} />
-            {typeof query === 'string' && (
-              <>
-                <Section>
-                  <List>
-                    <ListItemLink
-                      href={'/read/search?q=' + encodeURIComponent(query)}>
-                      <ListItemImage>
-                        <Disc size="2.25rem">
-                          <Icon glyph="search" size="1.5rem" />
-                        </Disc>
-                      </ListItemImage>
-                      <ListItemText
-                        title="Search Results"
-                        description={query}
-                      />
-                      <ListItemIconButton
-                        glyph="plus1"
-                        tooltip="Add to watchlist"
-                      />
-                    </ListItemLink>
-                  </List>
-                </Section>
-                <Gap size={1} />
-              </>
-            )}
             <Section>
               <List>
                 <ListItemLink href="/read/vouched">
@@ -141,20 +110,14 @@ function Read(props) {
                   <ListItemText
                     title="James K Nelson"
                     description="Look at me I'm saying silly things"
-                    meta="3 days ago"
+                    meta={!isEditing && '3 days ago'}
                   />
-                </ListItemLink>
-                <ListItemLink href="/read/about/react">
-                  <ListItemImage>
-                    <UnreadBadgeWrapper count={1}>
-                      <TagAvatar size="2.25rem" />
-                    </UnreadBadgeWrapper>
-                  </ListItemImage>
-                  <ListItemText
-                    title="#reactjs"
-                    description="@devdevcharlie - For my 1st internal Atlassian hackathon, I spent the last 24h trying to implement my brain sensor framework w/ react-beautiful-dnd:"
-                    meta="2 hours ago"
-                  />
+                  {isEditing && (
+                    <ListItemIconButton
+                      glyph="trash"
+                      tooltip="Remove from watchlist"
+                    />
+                  )}
                 </ListItemLink>
                 <ListItemLink href="/@elonmusk">
                   <ListItemImage>
@@ -165,18 +128,14 @@ function Read(props) {
                   <ListItemText
                     title="Elon Musk"
                     description="Rocket fairing returning from space"
-                    meta="3 days ago"
+                    meta={!isEditing && '3 days ago'}
                   />
-                </ListItemLink>
-                <ListItemLink href="/read/about/navi">
-                  <ListItemImage>
-                    <TagAvatar size="2.25rem" />
-                  </ListItemImage>
-                  <ListItemText
-                    title="#navijs"
-                    description="@james - The #navijs docs are really starting to fill out. You can now learn to:"
-                    meta="19/12/18"
-                  />
+                  {isEditing && (
+                    <ListItemIconButton
+                      glyph="trash"
+                      tooltip="Remove from watchlist"
+                    />
+                  )}
                 </ListItemLink>
               </List>
             </Section>
@@ -212,7 +171,6 @@ function ReadingListSearch(props) {
       value={query || ''}
       onClear={() => {
         setQuery('')
-        clearEmitter.emit('clear')
         if (isViewingSearch) {
           navigation.navigate('/read')
         }
@@ -225,23 +183,63 @@ function ReadingListSearch(props) {
   )
 }
 
+function ReadingListHeaderActions() {
+  let currentUser = useCurrentUser()
+  let { isEditing } = useLatestStoreState(store)
+
+  useEffect(
+    () => () =>
+      store.dispatch({
+        type: 'reset',
+      }),
+    [],
+  )
+
+  return isEditing ? (
+    <IconButton
+      color={colors.ink.black}
+      glyph="cross2"
+      onClick={() => {
+        store.dispatch({
+          type: 'stop-edit',
+        })
+      }}
+      size="1.5rem"
+      style={{ width: '3.25rem' }}
+    />
+  ) : (
+    <PopupProvider triggerOnFocus triggerOnSelect>
+      <PopupTrigger>
+        {ref => (
+          <IconButton
+            color={currentUser !== null ? colors.ink.black : colors.ink.light}
+            glyph="cog"
+            ref={ref}
+            size="1.5rem"
+            style={{ width: '3.25rem' }}
+          />
+        )}
+      </PopupTrigger>
+      <PopupMenu placement="bottom">
+        <MenuItem
+          onClick={() => {
+            store.dispatch({
+              type: 'edit',
+            })
+          }}>
+          Edit
+        </MenuItem>
+      </PopupMenu>
+    </PopupProvider>
+  )
+}
+
 export default compose(
   withView(({ params }) => <Read query={params.q} />),
-  withData(({ context, mountpath, params }) => ({
-    layoutIndexHeaderActions: (
-      <IconButton
-        color={
-          context.currentUser !== null ? colors.ink.black : colors.ink.light
-        }
-        glyph="cog"
-        tooltip="Options"
-        tooltipPlacement="bottom"
-        size="1.5rem"
-        style={{ width: '3.25rem' }}
-      />
-    ),
+  withData((context, params) => ({
+    layoutIndexHeaderActions: <ReadingListHeaderActions />,
     layoutIndexHeaderTitle: <ReadingListSearch query={params.q} />,
-    layoutIndexPathname: mountpath,
+    layoutIndexPathname: '/read',
   })),
   map(({ params, query }) => {
     if (params.username && !query.username) {
@@ -274,15 +272,6 @@ export default compose(
       }),
       '/vouched': route({
         title: 'Recent Activity',
-        view: (
-          <>
-            <LayoutHeaderSection />
-            Test
-          </>
-        ),
-      }),
-      '/about/:tag': route({
-        getTitle: ({ params }) => `#${params.tag}`,
         view: (
           <>
             <LayoutHeaderSection />

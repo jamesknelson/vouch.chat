@@ -30,6 +30,7 @@
     "react-spring": "^8.0.27",
     "react-stripe-elements": "^4.0.0",
     "react-textarea-autosize": "^7.1.0",
+    "redux": "^4.0.4",
     "rimraf": "^2.6.3",
     "styled-components": "^4.3.2",
     "universal-react-scripts": "3.0.3",

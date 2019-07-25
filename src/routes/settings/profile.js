@@ -1,11 +1,12 @@
 import { route } from 'navi'
 import React, { useState } from 'react'
 import FileUploader from 'react-firebase-file-uploader'
-import styled, { css } from 'styled-components/macro'
+import { css } from 'styled-components/macro'
 
 import { UserAvatar } from 'components/avatar'
 import { FormSubmitButton } from 'components/button'
 import { FormInputField, FormTextareaField } from 'components/field'
+import FlexBox from 'components/flexBox'
 import { LayoutHeaderSection } from 'components/layout'
 import { MenuItem } from 'components/menu'
 import { PopupTrigger, PopupProvider, PopupMenu } from 'components/popup'
@@ -20,58 +21,8 @@ import { useBackend, useCurrentUser } from 'context'
 import { Form, FormMessage } from 'controls/form'
 import useOperation from 'hooks/useOperation'
 import updateProfile from 'operations/updateProfile'
-import { dimensions, media, mediaQueries } from 'theme'
-import ensureWrappedWithArray from 'utils/ensureWrappedWithArray'
+import { dimensions, media } from 'theme'
 import useControlId from 'hooks/useControlId'
-
-function mediaDependentProp(
-  cssName,
-  { defaultValue = undefined, propNames = [] } = {},
-) {
-  propNames = [cssName].concat(ensureWrappedWithArray(propNames))
-
-  return props => {
-    let propName = propNames.find(propName => !!props[propName])
-    let value = props[propName] || defaultValue
-    if (!value) {
-      return ''
-    }
-    if (typeof value === 'number') {
-      value = value + 'rem'
-    }
-    if (typeof value === 'string') {
-      value = { default: value }
-    }
-    let values = value.default ? `${cssName}: ${value.default};` : ``
-    delete value.default
-    values += Object.entries(value)
-      .map(
-        ([mediaQuery, value]) => `
-          @media screen and ${mediaQueries[mediaQuery] || mediaQuery} {
-            ${cssName}: ${value};
-          }
-        `,
-      )
-      .join(';')
-    return values
-  }
-}
-
-const FlexBox = styled.div`
-  display: flex;
-  ${mediaDependentProp('align-items', {
-    defaultValue: 'center',
-    propNames: 'alignItems',
-  })}
-  ${mediaDependentProp('flex-direction', {
-    defaultValue: 'row',
-    propNames: 'flexDirection',
-  })}
-  ${mediaDependentProp('justify-content', {
-    defaultValue: 'center',
-    propNames: 'justifyContent',
-  })}
-`
 
 function Profile() {
   let updateOperation = useOperation(updateProfile)

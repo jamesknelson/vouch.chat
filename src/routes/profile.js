@@ -3,7 +3,9 @@ import React from 'react'
 import styled, { css } from 'styled-components/macro'
 
 import { UserAvatar } from 'components/avatar'
+import { useCurrentUser } from 'context'
 import { colors, dimensions } from 'theme'
+import { ButtonLink } from 'components/button'
 
 const Header = styled.header`
   background-color: ${colors.ink.black};
@@ -12,6 +14,8 @@ const Header = styled.header`
 `
 
 function Profile({ member, username }) {
+  let currentUser = useCurrentUser()
+
   if (!member) {
     return (
       <div
@@ -51,6 +55,18 @@ function Profile({ member, username }) {
           `}
         />
       </Header>
+      {currentUser && (
+        <ButtonLink
+          href="/settings/profile"
+          outline
+          css={css`
+            position: absolute;
+            right: 1rem;
+            margin-top: 9rem;
+          `}>
+          Edit Profile
+        </ButtonLink>
+      )}
       <h1
         css={css`
           color: ${colors.text.default};
@@ -96,7 +112,7 @@ export default map(async ({ context, params, state }) => {
   return route({
     state: { member },
     status: member ? 200 : 404,
-    title: '@' + username,
+    title: member ? member.displayName : 'Not Found',
     view: <Profile member={member} username={username} />,
   })
 })
