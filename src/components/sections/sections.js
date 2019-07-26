@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components/macro'
+import { space } from 'styled-system'
 
-import { colors, media, shadows } from 'theme'
+import { colors, media, radii, shadows } from 'theme'
 import addDefaultRemUnits from 'utils/addDefaultRemUnits'
 
 const SectionTitle = styled.h4`
@@ -14,6 +15,7 @@ const SectionTitle = styled.h4`
 `
 
 const StyledSection = styled.section`
+  ${space};
   position: relative;
 `
 
@@ -22,7 +24,6 @@ const StyledSectionHeader = styled.header`
   top: 0;
   padding-top: 0.5rem;
   width: 100%;
-  border-bottom: 1px solid ${colors.structure.border};
   z-index: 8;
 
   ${media.tabletPlus`
@@ -31,7 +32,9 @@ const StyledSectionHeader = styled.header`
 `
 
 const StyledSectionBody = styled.div`
+  ${space};
   background-color: ${colors.structure.bg};
+  border-top: 1px solid ${colors.structure.border};
   position: relative;
   z-index: 0;
 
@@ -71,22 +74,33 @@ StyledSectionShadow.defaultProps = {
   side: 'top',
 }
 
-export const Section = ({ children, title, ...rest }) => (
+export const Section = ({
+  children,
+  title,
+  padding,
+  paddingX,
+  paddingY,
+  paddingTop,
+  paddingBottom,
+  ...rest
+}) => (
   <StyledSection {...rest}>
     <StyledSectionHeader>
       {title && <SectionTitle>{title}</SectionTitle>}
     </StyledSectionHeader>
-    <StyledSectionBody>
+    <StyledSectionBody
+      {...{
+        padding,
+        paddingX,
+        paddingY,
+        paddingTop,
+        paddingBottom,
+      }}>
       {children}
       <StyledSectionShadow />
     </StyledSectionBody>
   </StyledSection>
 )
-
-export const Gap = styled.div`
-  height: ${props => addDefaultRemUnits(props.size) || '1rem'};
-  width: 100%;
-`
 
 export const Gutter = styled.div`
   padding: ${props =>

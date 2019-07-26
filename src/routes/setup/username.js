@@ -4,21 +4,13 @@ import styled, { css } from 'styled-components/macro'
 
 import Button, { ButtonLink } from 'components/button'
 import Icon from 'components/icon'
-import { Gap } from 'components/sections'
+import { Spinner } from 'components/loading'
+import { Clamp, Gap } from 'components/responsive'
 import { useCurrentUser } from 'context'
 import useUsernameForm from 'hooks/useUsernameForm'
 import { colors } from 'theme'
 
 import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
-import { Spinner } from 'components/loading'
-
-const InnerClamp = styled.div`
-  margin: 1rem auto;
-  width: calc(100% - 2rem);
-  padding-bottom: 3rem;
-  max-width: calc(320px);
-  position: relative;
-`
 
 const Title = styled.h1`
   color: ${colors.text.default};
@@ -50,7 +42,7 @@ function UsernamePicker(props) {
   let usernameForm = useUsernameForm()
 
   return (
-    <InnerClamp>
+    <Clamp paddingBottom="3rem">
       <Title>
         {user && user.hasActiveSubscription ? (
           <>
@@ -181,7 +173,7 @@ function UsernamePicker(props) {
           Come on in
         </Button>
       </form>
-    </InnerClamp>
+    </Clamp>
   )
 }
 

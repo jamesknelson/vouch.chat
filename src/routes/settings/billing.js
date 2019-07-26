@@ -1,32 +1,21 @@
 import { route } from 'navi'
 import React, { useEffect } from 'react'
 import { useNavigation } from 'react-navi'
-import styled, { css } from 'styled-components/macro'
+import { css } from 'styled-components/macro'
 
 import Button from 'components/button'
 import Currency from 'components/currency'
 import { LayoutHeaderSection } from 'components/layout'
-import { PhoneOnly } from 'components/media'
-import { Gap, Section } from 'components/sections'
+import { Box, Gap, P } from 'components/responsive'
+import { Section } from 'components/sections'
 import useLatestSnapshot from 'hooks/useLatestSnapshot'
 import useToggle from 'hooks/useToggle'
-import { colors } from 'theme'
 import formatDate from 'utils/formatDate'
 import BillingCancelSubscriptionModal from './billingCancelSubscriptionModal'
 import BillingPlansModal from './billingPlansModal'
 import BillingRemoveCardModal from './billingRemoveCardModal'
 import BillingRestartSubscriptionModal from './billingRestartSubscriptionModal'
 import BillingUpdateCardModal from './billingUpdateCardModal'
-
-const P = styled.p`
-  color: ${colors.text.default};
-  font-size: 0.9rem;
-  margin: 1rem 0;
-`
-
-const Gutter = styled.div`
-  padding: 0 1rem 1rem;
-`
 
 function Billing(props) {
   let planId = props.planId
@@ -77,11 +66,9 @@ function Billing(props) {
   return (
     <>
       <LayoutHeaderSection />
-      <PhoneOnly>
-        <Gap />
-      </PhoneOnly>
+      <Gap size={{ default: 1, tabletPlus: 0 }} />
       <Section title="Your Wig">
-        <Gutter>
+        <Box padding="0 1rem 1rem">
           {subscription && subscription.status === 'active' ? (
             <>
               <P>
@@ -168,14 +155,12 @@ function Billing(props) {
                 />
               </>
             ))}
-        </Gutter>
+        </Box>
       </Section>
-      <PhoneOnly>
-        <Gap />
-      </PhoneOnly>
+      <Gap size={{ default: 1, tabletPlus: 0 }} />
       {account.stripeCustomerId && (
         <Section title="Your Card">
-          <Gutter>
+          <Box padding="0 1rem 1rem">
             {card ? (
               <ul
                 css={css`
@@ -231,7 +216,7 @@ function Billing(props) {
                 />
               </>
             )}
-          </Gutter>
+          </Box>
         </Section>
       )}
     </>

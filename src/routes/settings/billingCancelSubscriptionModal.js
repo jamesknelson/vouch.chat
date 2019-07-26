@@ -1,18 +1,13 @@
 import React from 'react'
-import styled, { css } from 'styled-components/macro'
+import { css } from 'styled-components/macro'
 
 import Button from 'components/button'
 import Modal, { ModalGutter } from 'components/modal'
+import { P, Strong } from 'components/responsive'
 import useOperation from 'hooks/useOperation'
 import cancelSubscription from 'operations/cancelSubscription'
 import { colors } from 'theme'
 import formatDate from 'utils/formatDate'
-
-const P = styled.p`
-  color: ${props => props.color || colors.text.default};
-  font-size: 0.9rem;
-  margin: 1rem 0;
-`
 
 export default function BillingCancelSubscriptionModal({
   currentPeriodEnd,
@@ -31,7 +26,7 @@ export default function BillingCancelSubscriptionModal({
       <ModalGutter>
         <P>
           If you cancel now, you'll no longer have access from{' '}
-          <strong>{formatDate(currentPeriodEnd, 'en')}</strong>.
+          <Strong>{formatDate(currentPeriodEnd, 'en')}</Strong>.
         </P>
         {operation.error && (
           <P color={colors.text.warning}>

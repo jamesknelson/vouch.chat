@@ -3,17 +3,11 @@ import React from 'react'
 import styled, { css } from 'styled-components/macro'
 
 import { colors } from 'theme'
-import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
 import { StyledLink } from 'components/button'
+import { Clamp } from 'components/responsive'
 import { useCurrentUser } from 'context'
 
-const InnerClamp = styled.div`
-  margin: 1rem auto;
-  width: calc(100% - 2rem);
-  padding-bottom: 3rem;
-  max-width: calc(380px);
-  position: relative;
-`
+import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
 
 const Title = styled.h1`
   color: ${colors.text.default};
@@ -37,7 +31,7 @@ function VerifyEmail() {
   let currentUser = useCurrentUser()
 
   return (
-    <InnerClamp>
+    <Clamp paddingBottom="3rem" maxWidth="380px">
       <Title>It's verification time.</Title>
       <Description>
         You should have received a verification email at:{' '}
@@ -66,7 +60,7 @@ function VerifyEmail() {
         You can do so in your{' '}
         <StyledLink href="/settings/account">account settings</StyledLink>.
       </p>
-    </InnerClamp>
+    </Clamp>
   )
 }
 

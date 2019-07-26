@@ -7,20 +7,12 @@ import Currency from 'components/currency'
 import { Spinner } from 'components/loading'
 import Modal, { ModalGutter } from 'components/modal'
 import PlansGrid from 'components/plansGrid'
-import { Gap } from 'components/sections'
+import { Clamp, Gap, P } from 'components/responsive'
 import useOperation from 'hooks/useOperation'
 import subscribeToPlan from 'operations/subscribeToPlan'
 import updateBillingDetails from 'operations/updateBillingDetails'
 import { useBackend } from 'context'
 import { colors, dimensions } from 'theme'
-
-const InnerClamp = styled.div`
-  margin: 1rem auto;
-  width: calc(100% - 2rem);
-  padding-bottom: 3rem;
-  max-width: calc(320px);
-  position: relative;
-`
 
 const Title = styled.h1`
   color: ${colors.text.default};
@@ -29,12 +21,6 @@ const Title = styled.h1`
   margin-top: 3rem;
   margin-bottom: 2.5rem;
   text-align: center;
-`
-
-const P = styled.p`
-  color: ${props => props.color || colors.text.default};
-  font-size: 0.9rem;
-  margin: 1rem 0 2rem;
 `
 
 export default function BillingPlansModal({
@@ -121,7 +107,7 @@ export default function BillingPlansModal({
 
       if (cardAtOpen) {
         content = (
-          <InnerClamp>
+          <Clamp paddingBottom="3rem">
             <Title>Great Choice!</Title>
             <P>
               The {plan.name} goes for{' '}
@@ -140,17 +126,17 @@ export default function BillingPlansModal({
               disabled={subscribeToPlanOperation.busy}
               onClick={subscribeToPlanOperation.invoke}
               css={css`
-                margin-top: 1.5rem;
+                margin-top: 2.5rem;
                 width: 100%;
               `}>
               {subscriptionWillBeInactiveAtOpen ? 'Subscribe' : 'Change to'} the{' '}
               {plan.name}
             </Button>
-          </InnerClamp>
+          </Clamp>
         )
       } else {
         content = (
-          <InnerClamp>
+          <Clamp paddingBottom="3rem">
             <Title>Great Choice!</Title>
             <P>
               To get the {plan.name} for{' '}
@@ -162,13 +148,13 @@ export default function BillingPlansModal({
               onSubmit={updateCardOperation.invoke}>
               <FormSubmitButton
                 css={css`
-                  margin-top: 1.5rem;
+                  margin-top: 2.5rem;
                   width: 100%;
                 `}>
                 Pay and Get My Wig
               </FormSubmitButton>
             </CardForm>
-          </InnerClamp>
+          </Clamp>
         )
       }
     } else {

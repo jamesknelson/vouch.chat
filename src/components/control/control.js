@@ -1,9 +1,10 @@
 import React, { useContext } from 'react'
 import 'styled-components/macro'
-import { colors, srOnly, radii } from 'theme'
+import { colors, radii } from 'theme'
 import Icon from 'components/icon'
 import { Spinner } from 'components/loading'
 import useControlId from 'hooks/useControlId'
+import srOnly from 'utils/srOnly'
 import {
   ControlGroupItemContext,
   ControlGroupRowItemContext,

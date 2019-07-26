@@ -6,6 +6,7 @@ import AuthLink from 'components/authLink'
 import { FormSubmitButton, LoginButton } from 'components/button'
 import { FormInputField } from 'components/field'
 import { Form } from 'components/form'
+import { Gap } from 'components/responsive'
 import SmallCardLayout, {
   Instructions,
   RelatedLinkGroup,
@@ -13,7 +14,6 @@ import SmallCardLayout, {
 } from 'components/smallCardLayout'
 import useOperation from 'hooks/useOperation'
 import sendPasswordResetEmail from 'operations/sendPasswordResetEmail'
-import { Gap } from 'components/sections'
 
 function Recover(props) {
   let navigation = useNavigation()

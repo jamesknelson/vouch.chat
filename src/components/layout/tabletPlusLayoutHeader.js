@@ -1,13 +1,15 @@
 import React from 'react'
 import styled from 'styled-components/macro'
 
-import { tabletPlus } from 'components/media'
 import { PopupProvider, PopupTrigger, PopupMenu } from 'components/popup'
+import { tabletPlus, Gap } from 'components/responsive'
 import Tooltip from 'components/tooltip'
 import { colors, dimensions, shadows } from 'theme'
+
 import { NavItems, NavItem } from './layoutNavItems'
 import LayoutNavMenuItems from './layoutNavMenuItems'
 import ProfileFlipper from './layoutProfileFlipper'
+import { Section } from 'components/sections'
 
 const StyledTabletPlusNavbar = styled.nav`
   background-color: ${colors.structure.bg};
@@ -33,7 +35,6 @@ const NavbarCorner = styled.div`
   color: ${colors.ink.black};
   height: ${dimensions.bar};
   left: 0;
-  margin-bottom: 1rem;
   top: 0;
   width: 100%;
   z-index: 100;
@@ -62,7 +63,10 @@ function TabletPlusLayoutHeaderContent({
           <ProfileFlipper withoutSpinner={withoutFlipperSpinner} />
         </Tooltip>
       </NavbarCorner>
-      <NavItems />
+      <Section>
+        <Gap size={0.5} />
+        <NavItems />
+      </Section>
       <PopupMoreMenu>
         {ref => <NavItem glyph="ellipsis" ref={ref} />}
       </PopupMoreMenu>

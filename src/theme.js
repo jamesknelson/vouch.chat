@@ -1,12 +1,14 @@
 import { rgba } from 'polished'
 import { css } from 'styled-components/macro'
 
-export const breakpoints = {
-  mediumPhonePlus: 360,
-  tabletPlus: 768,
-  laptopPlus: 1100,
-  widescreenPlus: 1240,
-}
+// styled-system expects breakpoints to be an array, but we're sticking to
+// named breakpoints as it's easier to read.
+export const breakpoints = []
+
+breakpoints.mediumPhonePlus = '360px'
+breakpoints.tabletPlus = '768px'
+breakpoints.laptopPlus = '1100px'
+breakpoints.widescreenPlus = '1240px'
 
 export const colors = {
   structure: {
@@ -82,12 +84,12 @@ const mediaFactory = query => (...args) => css`
 `
 
 export const mediaQueries = {
-  smallPhoneOnly: `(max-width: ${breakpoints.mediumPhonePlus - 1}px)`,
-  phoneOnly: `(max-width: ${breakpoints.tabletPlus - 1}px)`,
-  mediumPhonePlus: `(min-width: ${breakpoints.mediumPhonePlus}px)`,
-  tabletPlus: `(min-width: ${breakpoints.tabletPlus}px)`,
-  laptopPlus: `(min-width: ${breakpoints.laptopPlus}px)`,
-  widescreenPlus: `(min-width: ${breakpoints.widescreenPlus}px)`,
+  smallPhoneOnly: `(max-width: calc(${breakpoints.mediumPhonePlus} - 1px))`,
+  phoneOnly: `(max-width: calc(${breakpoints.tabletPlus} - 1px))`,
+  mediumPhonePlus: `(min-width: ${breakpoints.mediumPhonePlus})`,
+  tabletPlus: `(min-width: ${breakpoints.tabletPlus})`,
+  laptopPlus: `(min-width: ${breakpoints.laptopPlus})`,
+  widescreenPlus: `(min-width: ${breakpoints.widescreenPlus})`,
 }
 export const media = {
   smallPhoneOnly: mediaFactory(mediaQueries.smallPhoneOnly),
@@ -117,24 +119,6 @@ export const shadows = {
     `0 0 4px 3px ${rgba(color, 0.4)}`,
   focus: color => `${shadows.focusHard(color)}, ${shadows.focusSoft(color)}`,
 }
-
-/**
- * Make an element readable by screenreaders, but invisible otherwise.
- * Useful for adding <label> elements for form inputs whose purpose is
- * visually obvious.
- * From Bootstrap: https://github.com/twbs/bootstrap/blob/master/scss/mixins/_screen-reader.scss
- */
-export const srOnly = css`
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-`
 
 export const focusRing = (
   selector,
@@ -172,4 +156,12 @@ export const focusRing = (
       box-shadow: ${shadows.focus(color)};
     }
   `
+}
+
+export default {
+  breakpoints,
+  colors,
+  dimensions,
+  easings,
+  radii,
 }

@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import styled, { css } from 'styled-components/macro'
+import { css } from 'styled-components/macro'
 
 import Button, { FormSubmitButton } from 'components/button'
 import CardForm from 'components/cardForm'
 import Modal, { ModalGutter } from 'components/modal'
-import { Gap } from 'components/sections'
+import { Gap, P } from 'components/responsive'
 import useOperation from 'hooks/useOperation'
 import subscribeToPlan from 'operations/subscribeToPlan'
 import updateBillingDetails from 'operations/updateBillingDetails'
 import { colors } from 'theme'
-
-const P = styled.p`
-  color: ${props => props.color || colors.text.default};
-  font-size: 0.9rem;
-  margin: 1rem 0;
-`
 
 export default function BillingRestartSubscriptionModal({
   hasCard,

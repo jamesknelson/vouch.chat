@@ -5,9 +5,8 @@ import { FormSubmitButton, StyledLink } from 'components/button'
 import { FormInputField } from 'components/field'
 import { Form, FormMessage } from 'components/form'
 import { LayoutHeaderSection } from 'components/layout'
+import { Box, Gap } from 'components/responsive'
 import {
-  Gap,
-  Gutter,
   Section,
   SectionFooter,
   SectionFooterMessage,
@@ -24,8 +23,8 @@ function Password() {
       <LayoutHeaderSection />
       <Section>
         <Form onSubmit={operation.invoke} validate={operation.validate}>
-          <Gutter>
-            <Gap size={1} />
+          <Box paddingX="1rem">
+            <Gap />
             <FormInputField
               label="Current Password"
               name="currentPassword"
@@ -51,9 +50,9 @@ function Password() {
               type="password"
               name="passwordConfirmation"
             />
-          </Gutter>
+          </Box>
           <SectionFooter>
-            <Gutter vertical={1}>
+            <Box padding="1rem">
               <FormSubmitButton inline>Update Password</FormSubmitButton>
               <FormMessage
                 dirty="You have unsaved changes."
@@ -69,7 +68,7 @@ function Password() {
                   </SectionFooterMessage>
                 )}
               </FormMessage>
-            </Gutter>
+            </Box>
           </SectionFooter>
         </Form>
       </Section>

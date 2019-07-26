@@ -1,9 +1,11 @@
 import React from 'react'
 import styled, { css } from 'styled-components/macro'
+
 import { StyledLink } from 'components/button'
 import Card from 'components/card'
 import { LayoutHeaderContent } from 'components/layout'
-import { TabletPlus } from 'components/media'
+import { TabletPlus } from 'components/responsive'
+
 import { colors, dimensions, media } from 'theme'
 
 export const RelatedLinkGroup = styled.div`

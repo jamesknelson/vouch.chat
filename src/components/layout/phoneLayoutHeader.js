@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import styled, { css } from 'styled-components/macro'
 
-import { phoneOnly } from 'components/media'
 import { Menu } from 'components/menu'
+import { phoneOnly } from 'components/responsive'
 import Sidebar from 'components/sidebar'
 import useLastScrollDirection from 'hooks/useLastScrollDirection'
 import useTrigger from 'popup-trigger/hook.cjs'

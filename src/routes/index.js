@@ -21,13 +21,11 @@ let logout = map(async ({ context, params }) => {
 let routes = mount({
   '*': lazy(() => import('./readingList')),
 
-  // '/chat': lazy(() => import('./messages')),
   '/notifications': lazy(() => import('./notifications')),
   '/cast': lazy(() => import('./cast')),
   '/join': lazy(() => import('./join')),
   '/login': lazy(() => import('./login')),
 
-  '/explore': lazy(() => import('./explore')),
   '/recover': lazy(() => import('./recover')),
 
   '/welcome': lazy(() => import('./welcome')),

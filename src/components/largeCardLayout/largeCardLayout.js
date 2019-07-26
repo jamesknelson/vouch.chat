@@ -1,8 +1,9 @@
 import React from 'react'
 import styled, { css } from 'styled-components/macro'
+
 import Card from 'components/card'
 import { LayoutHeaderContent } from 'components/layout'
-import { TabletPlus } from 'components/media'
+import { TabletPlus } from 'components/responsive'
 import { colors, dimensions } from 'theme'
 
 export const Title = styled.h1`
@@ -26,7 +27,7 @@ export const Description = styled.p`
 export const LargeCardLayout = ({
   actions,
   children,
-  padding = [0, 0, 4],
+  padding = '0 0 4rem',
   size = 'small',
   title,
   ...props

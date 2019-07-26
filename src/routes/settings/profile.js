@@ -6,14 +6,12 @@ import { css } from 'styled-components/macro'
 import { UserAvatar } from 'components/avatar'
 import { FormSubmitButton } from 'components/button'
 import { FormInputField, FormTextareaField } from 'components/field'
-import FlexBox from 'components/flexBox'
 import { Form, FormMessage } from 'components/form'
 import { LayoutHeaderSection } from 'components/layout'
 import { MenuItem } from 'components/menu'
 import { PopupTrigger, PopupProvider, PopupMenu } from 'components/popup'
+import { Box, FlexBox, Gap } from 'components/responsive'
 import {
-  Gap,
-  Gutter,
   Section,
   SectionFooter,
   SectionFooterMessage,
@@ -21,7 +19,7 @@ import {
 import { useBackend, useCurrentUser } from 'context'
 import useOperation from 'hooks/useOperation'
 import updateProfile from 'operations/updateProfile'
-import { dimensions, media } from 'theme'
+import { dimensions } from 'theme'
 import useControlId from 'hooks/useControlId'
 
 function Profile() {
@@ -83,19 +81,19 @@ function Profile() {
         <Form
           onSubmit={updateOperation.invoke}
           validate={updateOperation.validate}>
-          <Gap size={1} />
+          <Gap />
           <FlexBox
             alignItems={{
-              default: 'flex-start',
-              phoneOnly: 'center',
+              default: 'center',
+              tabletPlus: 'flex-start',
             }}
             flexDirection={{
-              default: 'row-reverse',
-              phoneOnly: 'column',
+              default: 'column',
+              tabletPlus: 'row-reverse',
             }}
             justifyContent={{
-              default: 'flex-end',
-              phoneOnly: 'flex-start',
+              default: 'flex-start',
+              tabletPlus: 'flex-end',
             }}>
             <PopupProvider triggerOnFocus triggerOnSelect>
               <PopupTrigger>
@@ -123,14 +121,13 @@ function Profile() {
                 )}
               </PopupMenu>
             </PopupProvider>
-            <Gutter
-              css={css`
-                max-width: ${dimensions.defaultMaxFieldWidth};
-                width: 100%;
-                ${media.tabletPlus`
-                  width: calc(100% - 10rem);
-                `}
-              `}>
+            <Box
+              paddingX="1rem"
+              maxWidth={dimensions.defaultMaxFieldWidth}
+              width={{
+                default: '100%',
+                tabletPlus: 'calc(100% - 10rem)',
+              }}>
               <FormInputField
                 label="Name"
                 initialValue={user.displayName}
@@ -159,10 +156,10 @@ function Profile() {
                 initialValue={user.website}
                 name="website"
               />
-            </Gutter>
+            </Box>
           </FlexBox>
           <SectionFooter>
-            <Gutter vertical={1}>
+            <Box padding="1rem">
               <FormSubmitButton inline>Save</FormSubmitButton>
               <FormMessage dirty except={['displayName', 'bio']}>
                 {({ message, variant }) => (
@@ -171,7 +168,7 @@ function Profile() {
                   </SectionFooterMessage>
                 )}
               </FormMessage>
-            </Gutter>
+            </Box>
           </SectionFooter>
         </Form>
       </Section>

@@ -6,6 +6,7 @@ import { ButtonLink, FormSubmitButton } from 'components/button'
 import Card from 'components/card'
 import CardForm from 'components/cardForm'
 import Currency from 'components/currency'
+import { Clamp } from 'components/responsive'
 import useOperation from 'hooks/useOperation'
 import subscribeToPlan from 'operations/subscribeToPlan'
 import updateBillingDetails from 'operations/updateBillingDetails'
@@ -13,14 +14,6 @@ import loading from 'routes/loading'
 import { colors } from 'theme'
 import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
 import { useNavigation } from 'react-navi'
-
-const InnerClamp = styled.div`
-  margin: 1rem auto;
-  width: calc(100% - 2rem);
-  padding-bottom: 3rem;
-  max-width: calc(320px);
-  position: relative;
-`
 
 const Title = styled.h1`
   color: ${colors.text.default};
@@ -55,7 +48,7 @@ function Subscribe({ plan }) {
   })
 
   return (
-    <InnerClamp>
+    <Clamp paddingBottom="3rem">
       <Title>Great choice!</Title>
       <Description>Now show us the money.</Description>
       <CardForm
@@ -69,7 +62,7 @@ function Subscribe({ plan }) {
           Pay <Currency amount={plan.amount} currency={plan.currency} />
         </FormSubmitButton>
       </CardForm>
-    </InnerClamp>
+    </Clamp>
   )
 }
 

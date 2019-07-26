@@ -1,17 +1,12 @@
 import React, { useEffect } from 'react'
-import styled, { css } from 'styled-components/macro'
+import { css } from 'styled-components/macro'
 
 import Button from 'components/button'
 import Modal, { ModalGutter } from 'components/modal'
+import { P } from 'components/responsive'
 import useOperation from 'hooks/useOperation'
 import removeBillingCard from 'operations/removeBillingCard'
 import { colors } from 'theme'
-
-const P = styled.p`
-  color: ${props => props.color || colors.text.default};
-  font-size: 0.9rem;
-  margin: 1rem 0;
-`
 
 export default function BillingRemoveCardModal({ canRemove, open, onClose }) {
   let operation = useOperation(removeBillingCard, {

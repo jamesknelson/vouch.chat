@@ -1,17 +1,12 @@
 import React from 'react'
-import styled, { css } from 'styled-components/macro'
+import { css } from 'styled-components/macro'
 
 import Button, { ButtonLink } from 'components/button'
 import { InputField } from 'components/field'
 import Modal, { ModalGutter } from 'components/modal'
+import { P } from 'components/responsive'
 import { colors } from 'theme'
 import useUsernameForm from 'hooks/useUsernameForm'
-
-const P = styled.p`
-  color: ${colors.text.warning};
-  font-size: 0.9rem;
-  margin: 1rem 0;
-`
 
 export default function AccountUsernameModal({ open, onClose }) {
   let usernameForm = useUsernameForm({
@@ -25,7 +20,7 @@ export default function AccountUsernameModal({ open, onClose }) {
       onClose={usernameForm.isSubmitting ? undefined : onClose}>
       <ModalGutter>
         <form onSubmit={usernameForm.onSubmit}>
-          <P>
+          <P color={colors.text.warning}>
             Changing your username will allow your old username to be taken by
             someone else.
           </P>

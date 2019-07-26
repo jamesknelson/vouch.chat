@@ -1,7 +1,7 @@
 import styled from 'styled-components/macro'
+import { border, layout, space } from 'styled-system'
 
 import { colors, radii, shadows } from 'theme'
-import { spacing } from 'utils/cssHelpers'
 
 const Card = styled.div`
   background-color: ${colors.structure.bg};
@@ -15,7 +15,9 @@ const Card = styled.div`
     props.raised ? shadows.raisedCard() : shadows.card()};
   border-radius: ${props => radii[props.radius] || props.radius || 0};
   position: relative;
-  ${spacing};
+  ${border};
+  ${layout};
+  ${space};
 `
 
 Card.defaultProps = {

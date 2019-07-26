@@ -4,8 +4,8 @@ import styled from 'styled-components/macro'
 
 import Button, { StyledLink } from 'components/button'
 import { LayoutHeaderSection } from 'components/layout'
-import { TabletPlus, PhoneOnly } from 'components/media'
-import { Gap, Section } from 'components/sections'
+import { Box, Gap, P } from 'components/responsive'
+import { Section } from 'components/sections'
 import { useCurrentUser } from 'context'
 import useOperation from 'hooks/useOperation'
 import useToggle from 'hooks/useToggle'
@@ -19,19 +19,9 @@ import AccountUsernameModal from './accountUsernameModal'
 // React doesn't define this during development
 const PublicURL = process.env.PUBLIC_URL || 'https://vouch.chat/'
 
-const Gutter = styled.div`
-  padding: 0 1rem 1rem;
-`
-
 const Message = styled.span`
   color: ${props => colors.text[props.variant || 'default']};
   font-size: 80%;
-  margin: 1rem 0;
-`
-
-const P = styled.p`
-  color: ${colors.text.default};
-  font-size: 90%;
   margin: 1rem 0;
 `
 
@@ -61,12 +51,10 @@ function Account() {
   return (
     <>
       <LayoutHeaderSection />
-      <PhoneOnly>
-        <Gap />
-      </PhoneOnly>
+      <Gap size={{ default: 1, tabletPlus: 0 }} />
 
       <Section title="Username">
-        <Gutter>
+        <Box padding="0 1rem 1rem">
           <P>
             Your username is <Strong>@{user.username}</Strong>, and your profile
             can be accessed at{' '}
@@ -83,13 +71,13 @@ function Account() {
             open={isUsernameModalOpen}
             onClose={hideUsernameModal}
           />
-        </Gutter>
+        </Box>
       </Section>
 
       <Gap />
 
       <Section title="Email address">
-        <Gutter>
+        <Box padding="0 1rem 1rem">
           <P>
             Your email address is <Strong>{user.email}</Strong>. This will{' '}
             <em>not</em> be publicly displayed.
@@ -125,57 +113,13 @@ function Account() {
               <Message variant={emailMessageVariant}>{emailMessage}</Message>
             </P>
           )}
-        </Gutter>
+        </Box>
       </Section>
-      {/* <Form onSubmit={handleSubmit} validate={validate}>
-          <Gutter horizontal={1} vertical={1}>
-            <FormSpy>
-              {state =>
-                console.log(state) || (
-                  <FormInputField
-                    label="Username"
-                    initialValue={user.username}
-                    validationState={
-                      state.validating
-                        ? 'busy'
-                        : !state.errors.username ||
-                          state.errors.username[0] === 'premium'
-                        ? 'valid'
-                        : state.errors.username[0] === 'username-taken'
-                        ? 'invalid'
-                        : null
-                    }
-                    name="username"
-                    hint={`https://vouch.chat/@${state.values.username ||
-                      user.username ||
-                      'your_username'}`}
-                  />
-                )
-              }
-            </FormSpy>
-            <FormInputField
-              label="Email"
-              initialValue={user.email}
-              name="email"
-              hint={
-                emailMessage || (
-                  <>
-                    This will <em>not</em> be publicly displayed.
-                  </>
-                )
-              }
-              variant={emailVariant}
-            />
-          </Gutter>
-        </Form> */}
 
       <Gap />
-      <TabletPlus>
-        <Gap size={2} />
-      </TabletPlus>
 
       <Section title="Danger Zone">
-        <Gutter>
+        <Box padding="0 1rem 1rem">
           <P>
             This cannot be undone. It will remove your account, your casts, and
             all your vouches.
@@ -187,7 +131,7 @@ function Account() {
             open={isDeleteModalOpen}
             onClose={hideDeleteModal}
           />
-        </Gutter>
+        </Box>
       </Section>
 
       <Gap size="50vh" />

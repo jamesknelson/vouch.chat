@@ -3,13 +3,17 @@ import { createMemoryNavigation, NotFoundError } from 'navi'
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { NaviProvider, View } from 'react-navi'
+import HelmetProvider from 'react-navi-helmet-async'
 import { StripeProvider } from 'react-stripe-elements'
-import { ServerStyleSheet } from 'styled-components/macro'
+import { ServerStyleSheet, ThemeProvider } from 'styled-components/macro'
+
+import { BackendContext, StripeContext } from 'context'
+import theme from 'theme'
+
 import Backend from './backend'
 import GlobalIconFontStyle from 'components/icon/font'
 import GlobalResetStyle from './reset.css'
 import routes from './routes'
-import { BackendContext } from 'context'
 
 const renderer = async (request, response) => {
   let backend, navigation, sheet
@@ -42,20 +46,28 @@ const renderer = async (request, response) => {
     // automatically replaced by the build script.
     let body = renderToString(
       sheet.collectStyles(
-        <BackendContext.Provider value={backend}>
-          <StripeProvider stripe={null}>
-            <NaviProvider navigation={navigation}>
-              {/*
-                Putting the global styles any deeper in the tree causes them to
-                re-render on each navigation, even on production.
-              */}
-              <GlobalResetStyle />
-              <GlobalIconFontStyle />
+        <HelmetProvider>
+          <BackendContext.Provider value={backend}>
+            {/* Our provider makes stripe available within hooks, while the
+            stripe library's provider is required for its card form */}
+            <StripeContext.Provider value={null}>
+              <StripeProvider stripe={null}>
+                <ThemeProvider theme={theme}>
+                  <NaviProvider navigation={navigation}>
+                    {/*
+                  Putting the global styles any deeper in the tree causes them to
+                  re-render on each navigation, even on production.
+                */}
+                    <GlobalResetStyle />
+                    <GlobalIconFontStyle />
 
-              <View />
-            </NaviProvider>
-          </StripeProvider>
-        </BackendContext.Provider>,
+                    <View />
+                  </NaviProvider>
+                </ThemeProvider>
+              </StripeProvider>
+            </StripeContext.Provider>
+          </BackendContext.Provider>
+        </HelmetProvider>,
       ),
     )
 

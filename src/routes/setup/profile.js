@@ -2,17 +2,11 @@ import { map, route } from 'navi'
 import React from 'react'
 import styled from 'styled-components/macro'
 
+import { Clamp } from 'components/responsive'
 import loading from 'routes/loading'
 import { colors } from 'theme'
-import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
 
-const InnerClamp = styled.div`
-  margin: 1rem auto;
-  width: calc(100% - 2rem);
-  padding-bottom: 3rem;
-  max-width: calc(320px);
-  position: relative;
-`
+import wrapRouteWithSetupLayout from './wrapRouteWithSetupLayout'
 
 const Title = styled.h1`
   color: ${colors.text.default};
@@ -34,10 +28,10 @@ const Description = styled.p`
 
 function Profile({ plan }) {
   return (
-    <InnerClamp>
+    <Clamp paddingBottom="3rem">
       <Title>Profile</Title>
       <Description>Set it up.</Description>
-    </InnerClamp>
+    </Clamp>
   )
 }
 

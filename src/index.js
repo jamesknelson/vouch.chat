@@ -4,7 +4,11 @@ import ReactDOM from 'react-dom'
 import { NaviProvider, View } from 'react-navi'
 import HelmetProvider from 'react-navi-helmet-async'
 import { StripeProvider } from 'react-stripe-elements'
+import { ThemeProvider } from 'styled-components/macro'
+
 import GlobalIconFontStyle from 'components/icon/font'
+import theme from 'theme'
+
 import GlobalResetStyle from './reset.css'
 import Backend from './backend'
 import config from './config'
@@ -43,15 +47,17 @@ async function main() {
             stripe library's provider is required for its card form */}
         <StripeContext.Provider value={stripe}>
           <StripeProvider stripe={stripe}>
-            <NaviProvider navigation={navigation}>
-              {/*
-                Putting the global styles any deeper in the tree causes them to
-                re-render on each navigation, even on production.
-              */}
-              <GlobalResetStyle />
-              <GlobalIconFontStyle />
-              <View />
-            </NaviProvider>
+            <ThemeProvider theme={theme}>
+              <NaviProvider navigation={navigation}>
+                {/*
+                  Putting the global styles any deeper in the tree causes them to
+                  re-render on each navigation, even on production.
+                */}
+                <GlobalResetStyle />
+                <GlobalIconFontStyle />
+                <View />
+              </NaviProvider>
+            </ThemeProvider>
           </StripeProvider>
         </StripeContext.Provider>
       </BackendContext.Provider>

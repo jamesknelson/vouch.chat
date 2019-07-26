@@ -37,7 +37,7 @@ import {
 import { MenuItem } from 'components/menu'
 import { PopupProvider, PopupMenu, PopupTrigger } from 'components/popup'
 import SearchForm from 'components/searchForm'
-import { Gap, Section } from 'components/sections'
+import { Section } from 'components/sections'
 import { colors, mediaQueries } from 'theme'
 import mountByMedia from 'utils/mountByMedia'
 import useLatestStoreState from 'hooks/useLatestStoreState'
@@ -77,7 +77,6 @@ function Read(props) {
         <>
           <LayoutHeaderSection index />
           <LayoutLeftColumnContentScroller>
-            <Gap size={1} />
             <Section>
               <List>
                 <ListItemLink href="/recent">
@@ -109,21 +108,21 @@ function Read(props) {
                   <ListItemText
                     title="James K Nelson"
                     description="Look at me I'm saying silly things"
-                    meta={!isEditing && '3 days ago'}
+                    meta={!isEditing && '1 day ago'}
                   />
                   {isEditing && (
                     <ListItemIconButton glyph="trash" tooltip="Remove" />
                   )}
                 </ListItemLink>
-                <ListItemLink href="/elonmusk">
+                <ListItemLink href="/frontarm">
                   <ListItemImage>
-                    <UnreadBadgeWrapper count={3}>
+                    <UnreadBadgeWrapper count={1}>
                       <UserAvatar size="2.25rem" />
                     </UnreadBadgeWrapper>
                   </ListItemImage>
                   <ListItemText
-                    title="Elon Musk"
-                    description="Rocket fairing returning from space"
+                    title="Frontend Armory"
+                    description="Learn to build vouch.chat with React & Bacon"
                     meta={!isEditing && '3 days ago'}
                   />
                   {isEditing && (

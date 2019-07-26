@@ -3,7 +3,7 @@ import { Link, useNavigation } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 
 import { BrandImage } from 'components/brand'
-import { tabletPlus } from 'components/media'
+import { tabletPlus } from 'components/responsive'
 import { StyledSectionShadow } from 'components/sections'
 import { colors, dimensions, focusRing } from 'theme'
 import LayoutContext from './layoutContext'

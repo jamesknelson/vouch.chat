@@ -1,19 +1,14 @@
 import React from 'react'
-import styled, { css } from 'styled-components/macro'
+import { css } from 'styled-components/macro'
 
 import { FormSubmitButton } from 'components/button'
 import { FormInputField } from 'components/field'
 import Form, { FormMessage } from 'components/form'
 import Modal, { ModalGutter } from 'components/modal'
+import { P, Strong } from 'components/responsive'
 import useOperation from 'hooks/useOperation'
 import deleteUser from 'operations/deleteUser'
 import { colors } from 'theme'
-
-const P = styled.p`
-  color: ${props => props.color || colors.text.default};
-  font-size: 0.9rem;
-  margin: 1rem 0;
-`
 
 export default function AccountDeleteModal({ open, onClose }) {
   let operation = useOperation(deleteUser)
@@ -31,13 +26,8 @@ export default function AccountDeleteModal({ open, onClose }) {
             It will also free up your username to be taken by someone else.
           </P>
           <P>
-            <strong
-              css={css`
-                font-weight: bold;
-              `}>
-              This cannot be undone.
-            </strong>{' '}
-            To be absolutely sure, please confirm by typing your username below.
+            <Strong>This cannot be undone.</Strong> To be absolutely sure,
+            please confirm by typing your username below.
           </P>
           <P>We'll be sorry to see you go.</P>
           <FormMessage except="username">
