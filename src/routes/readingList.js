@@ -80,7 +80,7 @@ function Read(props) {
             <Gap size={1} />
             <Section>
               <List>
-                <ListItemLink href="/read/vouched">
+                <ListItemLink href="/recent">
                   <ListItemImage>
                     <LogoImage size="2.25rem" />
                   </ListItemImage>
@@ -95,7 +95,7 @@ function Read(props) {
             <SectionSubHeading>Your Watchlist</SectionSubHeading>
             <Section>
               <List>
-                <ListItemLink href="/@jkn">
+                <ListItemLink href="/jkn">
                   <ListItemImage>
                     <UnreadBadgeWrapper count={3}>
                       <UserAvatar
@@ -119,7 +119,7 @@ function Read(props) {
                     />
                   )}
                 </ListItemLink>
-                <ListItemLink href="/@elonmusk">
+                <ListItemLink href="/elonmusk">
                   <ListItemImage>
                     <UnreadBadgeWrapper count={3}>
                       <UserAvatar size="2.25rem" />
@@ -150,7 +150,7 @@ function Read(props) {
 function ReadingListSearch(props) {
   let [query, setQuery] = useState(props.query)
   let navigation = useNavigation()
-  let isViewingSearch = useActive('/read/search')
+  let isViewingSearch = useActive('/search')
 
   // Keep the query up to date with navigation.
   useEffect(() => {
@@ -172,12 +172,12 @@ function ReadingListSearch(props) {
       onClear={() => {
         setQuery('')
         if (isViewingSearch) {
-          navigation.navigate('/read')
+          navigation.navigate('/')
         }
       }}
       onChange={setQuery}
       onSubmit={() => {
-        navigation.navigate('/read/search?q=' + encodeURIComponent(query))
+        navigation.navigate('/search?q=' + encodeURIComponent(query))
       }}
     />
   )
@@ -239,46 +239,40 @@ export default compose(
   withData((context, params) => ({
     layoutIndexHeaderActions: <ReadingListHeaderActions />,
     layoutIndexHeaderTitle: <ReadingListSearch query={params.q} />,
-    layoutIndexPathname: '/read',
+    layoutIndexPathname: '/',
   })),
-  map(({ params, query }) => {
-    if (params.username && !query.username) {
-      if (params.username[0] !== '@') {
-        return mount({})
+  mount({
+    '/': mountByMedia({
+      default: route({
+        data: {
+          layoutShowIndexOnPhone: true,
+        },
+        title: 'Reading List',
+      }),
+      [mediaQueries.tabletPlus]: redirect('./recent'),
+    }),
+
+    // The `readList` route can route just by having a username param on
+    // the params (so long as it's not also on the query).
+    '/:username': map(({ params, query }) => {
+      if (params.username && !query.username) {
+        return lazy(() => import('./profile'))
       }
+    }),
 
-      return lazy(() => import('./profile'))
-    }
-
-    return mount({
-      '/': mountByMedia({
-        default: route({
-          data: {
-            layoutShowIndexOnPhone: true,
-          },
-          title: 'Reading List',
-        }),
-        [mediaQueries.tabletPlus]: redirect('./vouched'),
-      }),
-
-      '/search': route({
-        getTitle: ({ params }) =>
-          params.q ? `Search for "${decodeURIComponent(params.q)}"` : 'Search',
-        view: <div />,
-      }),
-      '/edit': route({
-        title: 'Edit',
-        view: <div />,
-      }),
-      '/vouched': route({
-        title: 'Recent Activity',
-        view: (
-          <>
-            <LayoutHeaderSection />
-            Test
-          </>
-        ),
-      }),
-    })
+    '/search': route({
+      getTitle: ({ params }) =>
+        params.q ? `Search for "${decodeURIComponent(params.q)}"` : 'Search',
+      view: <div />,
+    }),
+    '/recent': route({
+      title: 'Recent Activity',
+      view: (
+        <>
+          <LayoutHeaderSection />
+          Test
+        </>
+      ),
+    }),
   }),
 )

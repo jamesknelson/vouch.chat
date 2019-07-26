@@ -27,7 +27,7 @@ const StyledSection = styled.section`
 
   ${media.phoneOnly`
     /* On mobile, the white background feels a little too much so we'll
-      represent the sections as cards with a slightly lighter color
+      represent the sections as cards with a slightly lighter shadow
       color than usual (so they feel closer to the surface) */
     box-shadow: ${shadows.card(colors.ink.mid)};
   `}

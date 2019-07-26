@@ -19,17 +19,13 @@ let logout = map(async ({ context, params }) => {
 })
 
 let routes = mount({
-  '/': lazy(() => import('./landing')),
+  '*': lazy(() => import('./readingList')),
+
   // '/chat': lazy(() => import('./messages')),
   '/notifications': lazy(() => import('./notifications')),
   '/cast': lazy(() => import('./cast')),
   '/join': lazy(() => import('./join')),
   '/login': lazy(() => import('./login')),
-
-  // The `readList` route can route just by having a username param on
-  // the params (so long as it's not also on the query).
-  '/read': lazy(() => import('./readingList')),
-  '/:username': lazy(() => import('./readingList')),
 
   '/explore': lazy(() => import('./explore')),
   '/recover': lazy(() => import('./recover')),

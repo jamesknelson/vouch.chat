@@ -4,7 +4,6 @@ import Card from 'components/card'
 import { LayoutHeaderContent } from 'components/layout'
 import { TabletPlus } from 'components/media'
 import { colors, dimensions } from 'theme'
-import { mediaDependentProp } from 'utils/cssHelpers'
 
 export const Title = styled.h1`
   color: ${colors.text.default};

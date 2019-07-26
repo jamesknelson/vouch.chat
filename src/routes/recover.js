@@ -2,15 +2,15 @@ import { mount, route } from 'navi'
 import React from 'react'
 import { useNavigation } from 'react-navi'
 
+import AuthLink from 'components/authLink'
 import { FormSubmitButton, LoginButton } from 'components/button'
+import { FormInputField } from 'components/field'
+import { Form } from 'components/form'
 import SmallCardLayout, {
   Instructions,
   RelatedLinkGroup,
   RelatedLink,
 } from 'components/smallCardLayout'
-import { FormInputField } from 'components/field'
-import AuthLink from 'controls/authLink'
-import { Form } from 'controls/form'
 import useOperation from 'hooks/useOperation'
 import sendPasswordResetEmail from 'operations/sendPasswordResetEmail'
 import { Gap } from 'components/sections'

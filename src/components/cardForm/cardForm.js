@@ -11,7 +11,7 @@ import {
   FormSelectControl,
 } from 'components/control'
 import { StyledLabel } from 'components/field'
-import { Form, FormMessage } from 'controls/form'
+import { Form, FormMessage } from 'components/form'
 import { colors } from 'theme'
 
 const StyledStripeCardControl = styled(Control)`

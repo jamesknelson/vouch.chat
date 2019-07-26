@@ -92,7 +92,7 @@ function Profile({ member, username }) {
 
 export default map(async ({ context, params, state }) => {
   let { backend } = context
-  let username = params.username.slice(1).toLowerCase()
+  let username = params.username.toLowerCase()
 
   let member = state.member
   if (!member) {

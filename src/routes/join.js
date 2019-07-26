@@ -12,9 +12,9 @@ import SmallCardLayout, {
 } from 'components/smallCardLayout'
 import { ControlGroup, FormInputControl } from 'components/control'
 import Divider from 'components/divider'
-import { Form, FormMessage } from 'controls/form'
+import { Form, FormMessage } from 'components/form'
 import { Gap } from 'components/sections'
-import AuthLink from 'controls/authLink'
+import AuthLink from 'components/authLink'
 import useOperation from 'hooks/useOperation'
 import emailRegister from 'operations/emailRegister'
 

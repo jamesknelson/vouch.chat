@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigation } from 'react-navi'
 import { css } from 'styled-components/macro'
 
+import AuthLink from 'components/authLink'
 import Button, {
   AuthLinkButton,
   FormSubmitButton,
@@ -10,6 +11,8 @@ import Button, {
   StyledLink,
 } from 'components/button'
 import { ControlGroup, FormInputControl } from 'components/control'
+import Divider from 'components/divider'
+import { Form, FormMessage } from 'components/form'
 import SmallCardLayout, {
   Greeting,
   Instructions,
@@ -17,9 +20,6 @@ import SmallCardLayout, {
   RelatedLink,
   RelatedLinkGroup,
 } from 'components/smallCardLayout'
-import Divider from 'components/divider'
-import AuthLink from 'controls/authLink'
-import { Form, FormMessage } from 'controls/form'
 import useOperation from 'hooks/useOperation'
 import emailLogin from 'operations/emailLogin'
 import socialLogin from 'operations/socialLogin'
@@ -133,7 +133,7 @@ function Login(props) {
       <Divider />
       <Instructions>
         Please sign in only if you agree to our policies{' '}
-        <StyledLink href="/pages/policies">Policies and Terms</StyledLink>..
+        <StyledLink href="/pages/policies">Policies and Terms</StyledLink>.
       </Instructions>
     </SmallCardLayout>
   )
@@ -206,7 +206,7 @@ export default compose(
     if (currentUser === undefined) {
       return lazy(() => import('./loading'))
     } else if (currentUser) {
-      return redirect(params.redirectTo || '/read', { exact: false })
+      return redirect(params.redirectTo || '/', { exact: false })
     } else {
       let previousLoginProviderDoc = backend.deviceConfig.previousLoginProvider
 

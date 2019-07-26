@@ -9,11 +9,33 @@ const processValue = value =>
     .map(addDefaultRemUnits)
     .join(' ')
 
+const buildAttributes = (cssProps, transform, value) => {
+  return cssProps
+    .map(prop => [prop, ': ', transform(value), ';'].join(''))
+    .join('')
+}
+
 export function mediaDependentProp(
-  cssName,
-  { defaultValue = undefined, propNames = [] } = {},
+  propName,
+  {
+    defaultValue = undefined,
+    cssProp = null,
+    cssProps = null,
+    transform = processValue,
+    aliasProps = [],
+  } = {},
 ) {
-  propNames = [cssName].concat(ensureWrappedWithArray(propNames))
+  let propNames = [propName].concat(ensureWrappedWithArray(aliasProps))
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (cssProp && cssProps) {
+      console.warn(
+        'mediaDependentProp() received both `cssProp` and `cssProps` options. Merge both options into one to silence this message.',
+      )
+    }
+  }
+
+  cssProps = ensureWrappedWithArray(cssProps || cssProp || propName)
 
   return props => {
     let propName = propNames.find(propName => !!props[propName])
@@ -29,14 +51,14 @@ export function mediaDependentProp(
       value = { default: value }
     }
     let values = value.default
-      ? `${cssName}: ${processValue(value.default)};`
-      : ``
+      ? buildAttributes(cssProps, transform, value.default)
+      : ''
     delete value.default
     values += Object.entries(value)
       .map(
         ([mediaQuery, value]) => `
           @media screen and ${mediaQueries[mediaQuery] || mediaQuery} {
-            ${cssName}: ${processValue(value)};
+            ${buildAttributes(cssProps, transform, value)}
           }
         `,
       )

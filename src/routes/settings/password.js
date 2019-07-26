@@ -3,6 +3,7 @@ import React from 'react'
 
 import { FormSubmitButton, StyledLink } from 'components/button'
 import { FormInputField } from 'components/field'
+import { Form, FormMessage } from 'components/form'
 import { LayoutHeaderSection } from 'components/layout'
 import {
   Gap,
@@ -11,7 +12,6 @@ import {
   SectionFooter,
   SectionFooterMessage,
 } from 'components/sections'
-import { Form, FormMessage } from 'controls/form'
 import useOperation from 'hooks/useOperation'
 import updatePassword from 'operations/updatePassword'
 import { colors } from 'theme'

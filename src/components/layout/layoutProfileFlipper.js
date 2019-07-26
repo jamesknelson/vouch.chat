@@ -96,7 +96,7 @@ const ProfileFlipper = React.forwardRef(
         href={
           currentUser
             ? currentUser.username
-              ? `/@${currentUser.username}`
+              ? `/${currentUser.username}`
               : `/`
             : '/login'
         }

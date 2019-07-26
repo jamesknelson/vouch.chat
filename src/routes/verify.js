@@ -4,12 +4,12 @@ import { useNavigation } from 'react-navi'
 import { css } from 'styled-components/macro'
 
 import { FormSubmitButton, StyledLink } from 'components/button'
+import { FormInputField } from 'components/field'
+import Form, { FormMessage } from 'components/form'
 import SmallCardLayout, {
   Instructions,
   Issue,
 } from 'components/smallCardLayout'
-import { FormInputField } from 'components/field'
-import Form, { FormMessage } from 'controls/form'
 import useOperation from 'hooks/useOperation'
 import resetPassword from 'operations/resetPassword'
 import loading, { Loading } from './loading'

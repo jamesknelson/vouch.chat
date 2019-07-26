@@ -1,6 +1,6 @@
 import { rgba } from 'polished'
 import React from 'react'
-import { Link } from 'react-navi'
+import { Link, useActive } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 
 import Icon from 'components/icon'
@@ -153,11 +153,15 @@ export const NavItems = () => {
   let currentUser = useCurrentUser()
   let isDisabled = currentUser && !currentUser.username
 
+  let isReadActive = useActive('/')
+  let isRecentActive = useActive('/recent')
+
   return (
     <>
       <NavItem
         faded={isDisabled}
-        href="/read"
+        active={isReadActive || isRecentActive}
+        href="/"
         tooltip="Read"
         // unreadCount={4}
         // glyph="binoculars"

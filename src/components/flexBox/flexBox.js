@@ -5,17 +5,17 @@ import { mediaDependentProp, spacing } from 'utils/cssHelpers'
 const FlexBox = styled.div`
   display: flex;
   ${spacing};
-  ${mediaDependentProp('align-items', {
+  ${mediaDependentProp('alignItems', {
     defaultValue: 'center',
-    propNames: 'alignItems',
+    cssProp: 'align-items',
   })}
-  ${mediaDependentProp('flex-direction', {
+  ${mediaDependentProp('flexDirection', {
     defaultValue: 'row',
-    propNames: 'flexDirection',
+    cssProp: 'flex-direction',
   })}
-  ${mediaDependentProp('justify-content', {
+  ${mediaDependentProp('justifyContent', {
     defaultValue: 'center',
-    propNames: 'justifyContent',
+    cssProp: 'justify-content',
   })}
 `
 
