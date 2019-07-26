@@ -22,7 +22,6 @@ function Password() {
   return (
     <>
       <LayoutHeaderSection />
-      <Gap />
       <Section>
         <Form onSubmit={operation.invoke} validate={operation.validate}>
           <Gutter>

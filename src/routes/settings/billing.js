@@ -6,7 +6,8 @@ import styled, { css } from 'styled-components/macro'
 import Button from 'components/button'
 import Currency from 'components/currency'
 import { LayoutHeaderSection } from 'components/layout'
-import { Section, SectionSubHeading } from 'components/sections'
+import { PhoneOnly } from 'components/media'
+import { Gap, Section } from 'components/sections'
 import useLatestSnapshot from 'hooks/useLatestSnapshot'
 import useToggle from 'hooks/useToggle'
 import { colors } from 'theme'
@@ -76,11 +77,10 @@ function Billing(props) {
   return (
     <>
       <LayoutHeaderSection />
-      <SectionSubHeading>Your Wig</SectionSubHeading>
-      <Section
-        css={css`
-          color: ${colors.lightBlack};
-        `}>
+      <PhoneOnly>
+        <Gap />
+      </PhoneOnly>
+      <Section title="Your Wig">
         <Gutter>
           {subscription && subscription.status === 'active' ? (
             <>
@@ -170,69 +170,69 @@ function Billing(props) {
             ))}
         </Gutter>
       </Section>
+      <PhoneOnly>
+        <Gap />
+      </PhoneOnly>
       {account.stripeCustomerId && (
-        <>
-          <SectionSubHeading>Your Card</SectionSubHeading>
-          <Section>
-            <Gutter>
-              {card ? (
-                <ul
-                  css={css`
-                    padding-left: 1.5rem;
-                    margin: 1rem 0;
-                  `}>
-                  <li>{card.brand}</li>
-                  <li>
-                    &middot;&middot;&middot;&middot;
-                    &middot;&middot;&middot;&middot;
-                    &middot;&middot;&middot;&middot; {card.last4}
-                  </li>
-                  <li>
-                    <span>Expiration:</span> {card.expMonth}/{card.expYear}
-                  </li>
-                </ul>
-              ) : (
-                <P>You don't have any credit card details saved.</P>
-              )}
-              <Button
-                inline
-                size="small"
-                onClick={showUpdateCardModal}
+        <Section title="Your Card">
+          <Gutter>
+            {card ? (
+              <ul
                 css={css`
-                  margin: 0.2rem;
+                  padding-left: 1.5rem;
+                  margin: 1rem 0;
                 `}>
-                {card ? 'Change' : 'Add'} Card
-              </Button>
-              <BillingUpdateCardModal
-                open={isUpdateCardModalOpen}
-                onClose={hideUpdateCardModal}
-              />
-              {card && (
-                <>
-                  <Button
-                    inline
-                    outline
-                    size="small"
-                    onClick={showRemoveCardModal}
-                    css={css`
-                      margin: 0.2rem;
-                    `}>
-                    Remove Card
-                  </Button>
-                  <BillingRemoveCardModal
-                    canRemove={
-                      !subscription ||
-                      subscription.cancelAtPeriodEnd ||
-                      subscription.status !== 'active'
-                    }
-                    open={isRemoveCardModalOpen}
-                    onClose={hideRemoveCardModal}
-                  />
-                </>
-              )}
-            </Gutter>
-          </Section>
-        </>
+                <li>{card.brand}</li>
+                <li>
+                  &middot;&middot;&middot;&middot;
+                  &middot;&middot;&middot;&middot;
+                  &middot;&middot;&middot;&middot; {card.last4}
+                </li>
+                <li>
+                  <span>Expiration:</span> {card.expMonth}/{card.expYear}
+                </li>
+              </ul>
+            ) : (
+              <P>You don't have any credit card details saved.</P>
+            )}
+            <Button
+              inline
+              size="small"
+              onClick={showUpdateCardModal}
+              css={css`
+                margin: 0.2rem;
+              `}>
+              {card ? 'Change' : 'Add'} Card
+            </Button>
+            <BillingUpdateCardModal
+              open={isUpdateCardModalOpen}
+              onClose={hideUpdateCardModal}
+            />
+            {card && (
+              <>
+                <Button
+                  inline
+                  outline
+                  size="small"
+                  onClick={showRemoveCardModal}
+                  css={css`
+                    margin: 0.2rem;
+                  `}>
+                  Remove Card
+                </Button>
+                <BillingRemoveCardModal
+                  canRemove={
+                    !subscription ||
+                    subscription.cancelAtPeriodEnd ||
+                    subscription.status !== 'active'
+                  }
+                  open={isRemoveCardModalOpen}
+                  onClose={hideRemoveCardModal}
+                />
+              </>
+            )}
+          </Gutter>
+        </Section>
       )}
     </>
   )

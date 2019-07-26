@@ -1,43 +1,58 @@
 import React from 'react'
 import styled from 'styled-components/macro'
 
-import { colors, dimensions, media, shadows } from 'theme'
+import { colors, media, shadows } from 'theme'
 import addDefaultRemUnits from 'utils/addDefaultRemUnits'
 
-export const SectionSubHeading = styled.h4`
+const SectionTitle = styled.h4`
   color: ${colors.text.subHeading};
   font-size: 0.6875rem;
   font-weight: 700;
   line-height: 1.5rem;
   padding: 0 1rem;
-  margin-top: 1rem;
   text-transform: uppercase;
 `
 
 const StyledSection = styled.section`
-  background-color: ${colors.structure.bg};
-  border-color: ${colors.structure.border};
-  border-style: solid;
-  border-width: 1px 0;
   position: relative;
+`
+
+const StyledSectionHeader = styled.header`
+  position: sticky;
+  top: 0;
+  padding-top: 0.5rem;
+  width: 100%;
+  border-bottom: 1px solid ${colors.structure.border};
+  z-index: 8;
 
   ${media.tabletPlus`
-    border-bottom-width: 0;
+    background-color: ${colors.structure.bg};
   `}
+`
+
+const StyledSectionBody = styled.div`
+  background-color: ${colors.structure.bg};
+  position: relative;
+  z-index: 0;
+
+  /* A pixel of padding ensures background gets applied, even if the children
+     have top margins. */
+  padding-top: 1px;
 
   ${media.phoneOnly`
     /* On mobile, the white background feels a little too much so we'll
       represent the sections as cards with a slightly lighter shadow
       color than usual (so they feel closer to the surface) */
     box-shadow: ${shadows.card(colors.ink.mid)};
+    border-bottom: 1px solid ${colors.structure.border};
   `}
 `
 
 /* Create a vertical shadow, without escaping the section boundaries horizontally. */
-const StyledSectionShadow = styled.div`
+export const StyledSectionShadow = styled.div`
   position: absolute;
-  top: 1rem;
-  bottom: 1rem;
+  top: ${props => (props.side === 'top' ? -1 : 0)}rem;
+  bottom: ${props => (props.side === 'top' ? 0 : -1)}rem;
   width: 100%;
   overflow: hidden;
   z-index: -1;
@@ -45,17 +60,26 @@ const StyledSectionShadow = styled.div`
   &::before {
     content: ' ';
     position: absolute;
-    top: 1rem;
-    bottom: 1rem;
+    top: ${props => (props.side === 'top' ? 1 : -1)}rem;
+    bottom: ${props => (props.side === 'top' ? -1 : 1)}rem;
     width: 100%;
     box-shadow: ${shadows.section()};
   }
 `
 
-export const Section = ({ children, ...rest }) => (
+StyledSectionShadow.defaultProps = {
+  side: 'top',
+}
+
+export const Section = ({ children, title, ...rest }) => (
   <StyledSection {...rest}>
-    {children}
-    <StyledSectionShadow />
+    <StyledSectionHeader>
+      {title && <SectionTitle>{title}</SectionTitle>}
+    </StyledSectionHeader>
+    <StyledSectionBody>
+      {children}
+      <StyledSectionShadow />
+    </StyledSectionBody>
   </StyledSection>
 )
 
@@ -71,42 +95,19 @@ export const Gutter = styled.div`
     )}`};
 `
 
-const StyledSectionHeader = styled(StyledSection)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: ${dimensions.bar};
-  margin: 0;
-  z-index: 9;
-  border-top-width: 0;
-  position: sticky;
-  top: 0;
-`
-
-export const SectionHeader = ({ children, ...rest }) => {
-  return (
-    <StyledSectionHeader {...rest}>
-      {children}
-      <StyledSectionShadow />
-    </StyledSectionHeader>
-  )
-}
-
-const StyledSectionFooter = styled(StyledSection)`
+const StyledSectionFooter = styled(StyledSectionBody)`
   position: sticky;
   bottom: -1px;
+  margin-bottom: -1rem;
   z-index: 8;
-  border-top-color: ${colors.structure.divider};
-  border-bottom-width: 0;
+  border-top: 1px solid ${colors.structure.divider};
 `
 
 export const SectionFooter = ({ children, ...rest }) => (
-  <>
-    <StyledSectionFooter {...rest}>
-      {children}
-      <StyledSectionShadow />
-    </StyledSectionFooter>
-  </>
+  <StyledSectionFooter {...rest}>
+    {children}
+    <StyledSectionShadow />
+  </StyledSectionFooter>
 )
 
 export const SectionFooterMessage = styled.span`

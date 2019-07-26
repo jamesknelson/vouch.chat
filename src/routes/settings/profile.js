@@ -62,7 +62,6 @@ function Profile() {
   return (
     <>
       <LayoutHeaderSection />
-      <Gap />
       <FileUploader
         hidden
         id={fileUploaderId}

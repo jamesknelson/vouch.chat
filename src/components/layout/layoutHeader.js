@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components/macro'
 
 import { BrandImage } from 'components/brand'
 import { tabletPlus } from 'components/media'
-import { Section } from 'components/sections'
+import { StyledSectionShadow } from 'components/sections'
 import { colors, dimensions, focusRing } from 'theme'
 import LayoutContext from './layoutContext'
 import { NavItem } from './layoutNavItems'
@@ -121,11 +121,12 @@ export const LayoutHeaderContent = ({
   )
 }
 
-const StyledLayoutHeaderSection = styled(Section)`
+const StyledLayoutHeaderSection = styled.header`
   height: ${dimensions.bar};
+  background-color: ${colors.structure.bg};
   border-bottom: 1px solid ${colors.structure.divider};
-  border-top-width: 0;
   z-index: 10;
+  position: relative;
 
   ${props =>
     props.sticky &&
@@ -155,6 +156,7 @@ export const LayoutHeaderSection = ({
         title={title}
         actions={actions}
       />
+      <StyledSectionShadow side="bottom" />
     </TabletPlusLayoutHeaderSection>
   )
 }

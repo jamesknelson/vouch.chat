@@ -4,8 +4,8 @@ import styled from 'styled-components/macro'
 
 import Button, { StyledLink } from 'components/button'
 import { LayoutHeaderSection } from 'components/layout'
-import { TabletPlus } from 'components/media'
-import { Gap, Section, SectionSubHeading } from 'components/sections'
+import { TabletPlus, PhoneOnly } from 'components/media'
+import { Gap, Section } from 'components/sections'
 import { useCurrentUser } from 'context'
 import useOperation from 'hooks/useOperation'
 import useToggle from 'hooks/useToggle'
@@ -61,8 +61,11 @@ function Account() {
   return (
     <>
       <LayoutHeaderSection />
-      <SectionSubHeading>Username</SectionSubHeading>
-      <Section>
+      <PhoneOnly>
+        <Gap />
+      </PhoneOnly>
+
+      <Section title="Username">
         <Gutter>
           <P>
             Your username is <Strong>@{user.username}</Strong>, and your profile
@@ -85,8 +88,7 @@ function Account() {
 
       <Gap />
 
-      <SectionSubHeading>Email address</SectionSubHeading>
-      <Section>
+      <Section title="Email address">
         <Gutter>
           <P>
             Your email address is <Strong>{user.email}</Strong>. This will{' '}
@@ -172,8 +174,7 @@ function Account() {
         <Gap size={2} />
       </TabletPlus>
 
-      <SectionSubHeading>Danger Zone</SectionSubHeading>
-      <Section>
+      <Section title="Danger Zone">
         <Gutter>
           <P>
             This cannot be undone. It will remove your account, your casts, and

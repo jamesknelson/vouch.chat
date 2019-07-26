@@ -37,7 +37,7 @@ import {
 import { MenuItem } from 'components/menu'
 import { PopupProvider, PopupMenu, PopupTrigger } from 'components/popup'
 import SearchForm from 'components/searchForm'
-import { Gap, Section, SectionSubHeading } from 'components/sections'
+import { Gap, Section } from 'components/sections'
 import { colors, mediaQueries } from 'theme'
 import mountByMedia from 'utils/mountByMedia'
 import useLatestStoreState from 'hooks/useLatestStoreState'
@@ -92,8 +92,7 @@ function Read(props) {
                 </ListItemLink>
               </List>
             </Section>
-            <SectionSubHeading>Your Watchlist</SectionSubHeading>
-            <Section>
+            <Section title="Your Reading List">
               <List>
                 <ListItemLink href="/jkn">
                   <ListItemImage>
@@ -113,10 +112,7 @@ function Read(props) {
                     meta={!isEditing && '3 days ago'}
                   />
                   {isEditing && (
-                    <ListItemIconButton
-                      glyph="trash"
-                      tooltip="Remove from watchlist"
-                    />
+                    <ListItemIconButton glyph="trash" tooltip="Remove" />
                   )}
                 </ListItemLink>
                 <ListItemLink href="/elonmusk">
@@ -131,10 +127,7 @@ function Read(props) {
                     meta={!isEditing && '3 days ago'}
                   />
                   {isEditing && (
-                    <ListItemIconButton
-                      glyph="trash"
-                      tooltip="Remove from watchlist"
-                    />
+                    <ListItemIconButton glyph="trash" tooltip="Remove" />
                   )}
                 </ListItemLink>
               </List>

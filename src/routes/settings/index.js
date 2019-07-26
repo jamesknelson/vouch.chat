@@ -8,7 +8,7 @@ import {
   LayoutTwinColumns,
 } from 'components/layout'
 import { List, ListItemLink, ListItemText } from 'components/list'
-import { Section, Gap } from 'components/sections'
+import { Section } from 'components/sections'
 import { mediaQueries } from 'theme'
 import authenticated from 'utils/authenticated'
 import mountByMedia from 'utils/mountByMedia'
@@ -31,7 +31,6 @@ function Settings(props) {
         <>
           <LayoutHeaderSection index />
           <LayoutLeftColumnContentScroller>
-            <Gap size={1} />
             <Section>
               <List>
                 <ListItemLink href="/settings/profile">
