@@ -8,7 +8,6 @@ import Modal, { ModalGutter } from 'components/modal'
 import { P, Strong } from 'components/responsive'
 import useOperation from 'hooks/useOperation'
 import deleteUser from 'operations/deleteUser'
-import { colors } from 'theme'
 
 export default function AccountDeleteModal({ open, onClose }) {
   let operation = useOperation(deleteUser)
@@ -30,13 +29,16 @@ export default function AccountDeleteModal({ open, onClose }) {
             please confirm by typing your username below.
           </P>
           <P>We'll be sorry to see you go.</P>
-          <FormMessage except="username">
-            {({ issue }) => issue && <P color={colors.text.warning}>{issue}</P>}
+          <FormMessage>
+            {({ message, variant }) => (
+              <FormInputField
+                name="username"
+                label="Type the username of your account"
+                message={message}
+                variant={variant}
+              />
+            )}
           </FormMessage>
-          <FormInputField
-            name="username"
-            label="Type the username of your account"
-          />
           <FormSubmitButton
             busy={operation.busy}
             disabled={operation.busy}
@@ -44,7 +46,7 @@ export default function AccountDeleteModal({ open, onClose }) {
             css={css`
               width: 100%;
             `}>
-            Delete my acocunt
+            Delete my account
           </FormSubmitButton>
         </Form>
       </ModalGutter>

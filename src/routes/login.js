@@ -13,10 +13,10 @@ import Button, {
 import { ControlGroup, FormInputControl } from 'components/control'
 import Divider from 'components/divider'
 import { Form, FormMessage } from 'components/form'
+import { FirstIssueMessage } from 'components/message'
 import SmallCardLayout, {
   Greeting,
   Instructions,
-  Issue,
   RelatedLink,
   RelatedLinkGroup,
 } from 'components/smallCardLayout'
@@ -99,11 +99,10 @@ function Login(props) {
         onClick={() => login(facebookLoginOperation)}>
         Sign in with Facebook
       </Button>
-      {facebookLoginOperation.lastError && (
-        <Issue style={{ textAlign: 'center' }}>
-          {Object.values(facebookLoginOperation.error)[0]}
-        </Issue>
-      )}
+      <FirstIssueMessage
+        issues={facebookLoginOperation.error}
+        textAlign="center"
+      />
       <Button
         css={buttonStyles}
         glyph="google"
@@ -117,6 +116,10 @@ function Login(props) {
         onClick={() => login(googleLoginOperation)}>
         Sign in with Google
       </Button>
+      <FirstIssueMessage
+        issues={googleLoginOperation.error}
+        textAlign="center"
+      />
       {/* <Button
         css={buttonStyles}
         glyph="twitter"
@@ -170,9 +173,7 @@ function EmailLogin(props) {
             type="password"
           />
         </ControlGroup>
-        <FormMessage>
-          {({ issue }) => issue && <Issue>{issue}</Issue>}
-        </FormMessage>
+        <FormMessage />
         <FormSubmitButton css={buttonStyles}>Sign in</FormSubmitButton>
       </Form>
       <RelatedLinkGroup>

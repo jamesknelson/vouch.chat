@@ -43,8 +43,8 @@ export default async function subscribeToPlan({ planId }, [backend, stripe]) {
       }
     }
 
-    return normalizeIssues('Something went wrong')
+    return normalizeIssues('error')
   } catch (error) {
-    return normalizeIssues(error.message || 'Something went wrong')
+    return normalizeIssues(error.message || 'error')
   }
 }

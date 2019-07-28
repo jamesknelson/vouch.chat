@@ -1,6 +1,6 @@
 import { rgba } from 'polished'
 import React from 'react'
-import { Link, useActive } from 'react-navi'
+import { useActive, useLinkProps } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 
 import Icon from 'components/icon'
@@ -46,61 +46,72 @@ const StyledNavIcon = styled(Icon)`
   `}
 `
 
-const NavLink = React.forwardRef(
-  (
-    { children, faded, focusRingSize, glyph, hideActiveIndicator, ...rest },
-    ref,
-  ) => (
-    <Link activeClassName="NavbarLink-active" {...rest} ref={ref}>
-      {children}
-      {!hideActiveIndicator && <span className="NavbarLink-activeIndicator" />}
-    </Link>
-  ),
-)
+const StyledNavLinkIndicator = styled.span`
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 
-export const StyledNavLink = styled(NavLink)`
+  ::before {
+    position: absolute;
+    content: ' ';
+    width: 4px;
+    height: 4px;
+    border-radius: 4px;
+    background-color: transparent;
+    transition: background-color 200ms ${easings.easeOut};
+
+    ${media.phoneOnly`
+      left: calc(50% - 1px);
+      bottom: -2px;
+    `}
+    ${media.tabletPlus`
+      top: calc(50% - 1px);
+      right: -2px;
+    `}
+  }
+
+  ${props =>
+    props.active &&
+    css`
+      ::before {
+        background-color: ${rgba(colors.ink.black, 0.75)};
+        box-shadow: 0 0 7px 2px ${rgba(colors.ink.black, 0.12)};
+      }
+    `}
+`
+
+const StyledNavLink = styled.a`
   position: relative;
   display: flex;
   align-items: center;
   flex: 1;
   justify-content: center;
   ${navbarFocusRing};
-
-  .NavbarLink-activeIndicator {
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-
-    ::before {
-      position: absolute;
-      content: ' ';
-      width: 4px;
-      height: 4px;
-      border-radius: 4px;
-      background-color: transparent;
-      transition: background-color 200ms ${easings.easeOut};
-
-      ${media.phoneOnly`
-        left: calc(50% - 1px);
-        bottom: -2px;
-      `}
-      ${media.tabletPlus`
-        top: calc(50% - 1px);
-        right: -2px;
-      `}
-    }
-  }
-
-  &.NavbarLink-active {
-    .NavbarLink-activeIndicator::before {
-      background-color: ${rgba(colors.ink.black, 0.75)};
-      box-shadow: 0 0 7px 2px ${rgba(colors.ink.black, 0.12)};
-    }
-  }
 `
+
+export const NavLink = React.forwardRef(
+  ({ active, children, hideActiveIndicator, ...rest }, ref) => {
+    let linkProps = useLinkProps(rest)
+    let activeFromHook = useActive(rest.href, {
+      exact: true,
+      loading: true,
+    })
+
+    if (active === undefined) {
+      active = activeFromHook
+    }
+
+    return (
+      <StyledNavLink {...linkProps} ref={ref}>
+        {children}
+        {!hideActiveIndicator && <StyledNavLinkIndicator active={active} />}
+      </StyledNavLink>
+    )
+  },
+)
 
 const StyledNavButton = styled.button`
   display: flex;
@@ -117,6 +128,7 @@ const StyledNavButton = styled.button`
 export const NavItem = React.forwardRef(
   (
     {
+      active,
       faded = false,
       glyph,
       size = '1.5rem',
@@ -128,9 +140,9 @@ export const NavItem = React.forwardRef(
   ) => {
     let icon = <StyledNavIcon faded={faded} glyph={glyph} size={size} />
     let content = href ? (
-      <StyledNavLink href={href} ref={ref} {...rest}>
+      <NavLink active={active} href={href} ref={ref} {...rest}>
         {icon}
-      </StyledNavLink>
+      </NavLink>
     ) : (
       <StyledNavButton {...rest} ref={ref}>
         {icon}
@@ -153,8 +165,14 @@ export const NavItems = () => {
   let currentUser = useCurrentUser()
   let isDisabled = currentUser && !currentUser.username
 
-  let isReadActive = useActive('/')
-  let isRecentActive = useActive('/recent')
+  let isReadActive = useActive('/', {
+    exact: true,
+    loading: true,
+  })
+  let isRecentActive = useActive('/recent', {
+    exact: true,
+    loading: true,
+  })
 
   return (
     <>

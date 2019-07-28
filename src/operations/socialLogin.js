@@ -12,6 +12,6 @@ export default async function socialLogin({ providerName }, backend) {
     provider.addScope('email')
     await backend.auth.signInWithRedirect(provider)
   } catch (error) {
-    return normalizeIssues(error.message || 'Something went wrong')
+    return normalizeIssues(error.message || 'error')
   }
 }

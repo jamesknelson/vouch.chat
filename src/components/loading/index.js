@@ -1,72 +1,125 @@
 import React from 'react'
-import { css, keyframes } from 'styled-components/macro'
+import styled, { css, keyframes } from 'styled-components/macro'
 
-const spinnerAnimation = keyframes`
+import { colors } from 'theme'
+
+const loadingBarKeyframes = keyframes`
   0% {
-    transform: rotate(0deg);
+    transform: scaleX(0);
+  }
+  10% {
+    transform: scaleX(0.3);
+  }
+  50% {
+    transform: scaleX(0.7);
   }
   90% {
-    transform: rotate(350deg);
+    transform: scaleX(0.8);
   }
   100% {
+    transform: scaleX(1);
+  }
+`
+
+export const LoadingBar = styled.div`
+  height: 2px;
+  width: 100%;
+  background-color: ${props => props.color || colors.ink.black};
+  background-size: 35px 35px;
+  z-index: 9999;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+  transition: transform ease-in 300ms, opacity ease-in 300ms;
+  transition-delay: 0;
+  transform-origin: left center;
+  transform: scaleX(0);
+  opacity: 0;
+  bottom: 0;
+
+  ${props =>
+    props.active &&
+    css`
+      opacity: 1;
+
+      /**
+       * Wait 100ms before showing any loading bar. This should be long enough
+       * prevent the display of a loading bar for instant page loads, while
+       * short enough to help the user know that something is happening on
+       * pages with async data.
+       */
+      transition-delay: 100ms;
+
+      animation: ${loadingBarKeyframes} 10s ease-out;
+      animation-fill-mode: forwards;
+    `}
+`
+
+const spinnerDashAnimation = keyframes`
+  0%,
+  10% {
+    stroke-dashoffset: 280;
+    transform: rotate(0);
+  }
+  
+  50%,
+  60% {
+    stroke-dashoffset: 75;
+    transform: rotate(45deg);
+  }
+  
+  100% {
+    stroke-dashoffset: 280;
     transform: rotate(360deg);
   }
 `
 
+const spinnerRotatorAnimation = keyframes`
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg)
+  }
+`
+
+// From: https://glennmccomb.com/articles/building-a-pure-css-animated-svg-spinner/
 export const Spinner = ({
   active = true,
   color = '#aabbcc',
-  backgroundColor = 'inherit',
   borderWidth = 2.5,
+  position = 'relative',
   size = '100%',
-  ...props
-}) => (
-  <span
-    {...props}
-    css={css`
-      position: relative;
-      background-color: ${backgroundColor};
-      border-radius: 50%;
-      display: block;
-      width: ${typeof size === 'number' ? size + 'px' : size};
-      height: ${typeof size === 'number' ? size + 'px' : size};
-      box-shadow: inset 0 0 0 ${borderWidth}px ${color};
-    `}>
-    <span
-      css={css`
-        position: absolute;
-        display: block;
-        width: calc(50% + 1.5px);
-        height: calc(100% + 3px);
-        background-color: ${backgroundColor};
-        border-radius: 9999px 0 0 9999px;
-        top: -1px;
-        left: -1px;
-        transform-origin: calc(100% - 0.5px) calc(50%);
-        ${active &&
-          css`
-            animation: ${spinnerAnimation} 1.2s infinite
-              cubic-bezier(0.5, 0, 0.5, 1) 0.32s;
+  ...rest
+}) => {
+  return (
+    (active || null) && (
+      <svg
+        viewBox="0 0 100 100"
+        css={css`
+          position: ${position};
+          background-color: transparent;
+          border-radius: 50%;
+          display: block;
+          width: ${typeof size === 'number' ? size + 'px' : size};
+          height: ${typeof size === 'number' ? size + 'px' : size};
+          animation: ${spinnerRotatorAnimation} 1.8s linear infinite;
+        `}
+        {...rest}>
+        <circle
+          stroke={color}
+          strokeWidth={4}
+          strokeMiterlimit={1}
+          fill="none"
+          cx={50}
+          cy={50}
+          r={48}
+          css={css`
+            stroke-dasharray: 283;
+            stroke-dashoffset: 280;
+            transform-origin: 50% 50%;
+            animation: ${spinnerDashAnimation} 1.6s ease-in-out infinite both;
           `}
-      `}
-    />
-    <span
-      css={css`
-        position: absolute;
-        display: block;
-        width: calc(50% + 1.5px);
-        height: calc(100% + 3px);
-        background-color: ${backgroundColor};
-        border-radius: 0 9999px 9999px 0;
-        top: -1px;
-        left: calc(50% - 0.5px);
-        transform-origin: 0 calc(50%);
-        ${active &&
-          css`
-            animation: ${spinnerAnimation} 1.2s infinite
-              cubic-bezier(0.5, 0, 0.5, 1);
-          `}
-      `}
-    />
-  </span>
-)
+        />
+      </svg>
+    )
+  )
+}

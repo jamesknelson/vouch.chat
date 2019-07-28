@@ -9,6 +9,6 @@ export default async function sendVerificationEmail(_, backend) {
   try {
     await backend.auth.currentUser.sendEmailVerification()
   } catch (error) {
-    return normalizeIssues({ email: error.message || 'Something went wrong' })
+    return normalizeIssues({ email: error.message || 'error' })
   }
 }

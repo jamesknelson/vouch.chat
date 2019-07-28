@@ -37,6 +37,6 @@ export default async function resetPassword(params, backend) {
     // provider.
     await backend.deviceConfig.previousLoginProvider.set(null)
   } catch (error) {
-    return normalizeIssues(error.message || 'Something went wrong')
+    return normalizeIssues(error.message || 'error')
   }
 }

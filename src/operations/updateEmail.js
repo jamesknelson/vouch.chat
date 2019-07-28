@@ -41,7 +41,7 @@ export default async function updateEmail(
     } else if (error.code === 'auth/email-already-in-use') {
       return normalizeIssues({ email: 'taken' })
     } else {
-      return normalizeIssues('Something went wrong')
+      return normalizeIssues('error')
     }
   }
 }

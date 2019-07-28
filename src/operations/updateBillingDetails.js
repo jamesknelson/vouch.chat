@@ -21,9 +21,7 @@ export default async function updateBillingDetails(
     })
 
     if (error) {
-      return normalizeIssues(
-        (error && error.message) || 'Something went wrong.',
-      )
+      return normalizeIssues((error && error.message) || 'error')
     }
 
     let updateBillingDetails = backend.functions.httpsCallable(
@@ -37,11 +35,9 @@ export default async function updateBillingDetails(
     })
 
     if (data.status === 'error') {
-      return normalizeIssues(
-        (data.error && data.error.code) || 'Something went wrong.',
-      )
+      return normalizeIssues((data.error && data.error.code) || 'error')
     }
   } catch (error) {
-    return normalizeIssues('Something went wrong.')
+    return normalizeIssues('error')
   }
 }

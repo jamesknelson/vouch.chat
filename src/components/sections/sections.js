@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import { space } from 'styled-system'
 
-import { colors, media, radii, shadows } from 'theme'
+import { colors, media, shadows } from 'theme'
 import addDefaultRemUnits from 'utils/addDefaultRemUnits'
 
 const SectionTitle = styled.h4`
@@ -123,9 +123,3 @@ export const SectionFooter = ({ children, ...rest }) => (
     <StyledSectionShadow />
   </StyledSectionFooter>
 )
-
-export const SectionFooterMessage = styled.span`
-  color: ${props => colors.text[props.variant || 'tertiary']};
-  font-size: 90%;
-  margin-left: 1rem;
-`

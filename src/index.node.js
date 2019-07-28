@@ -17,15 +17,27 @@ import routes from './routes'
 
 const renderer = async (request, response) => {
   let backend, navigation, sheet
+
+  // Read in a HTML template, into which we'll substitute React's rendered
+  // content, styles, and Navi's route state.
   let template = fs.readFileSync(process.env.HTML_TEMPLATE_PATH, 'utf8')
   let [header, footer] = template.split('<div id="root">%RENDERED_CONTENT%')
 
   try {
+    // Create a `backend` object through which routes and the React app can
+    // access the API.
     backend = new Backend({ ssr: true })
+
     navigation = createMemoryNavigation({
       context: {
         backend,
+
+        // We'll handle authentication in the client so that all rendered
+        // pages are identical regardless of who views them. This allows for
+        // anything we render to be cached, at least for a short while.
         currentUser: undefined,
+
+        // Some thing don't need rendering when doing SSR.
         ssr: true,
       },
       request,
@@ -33,17 +45,10 @@ const renderer = async (request, response) => {
     })
     sheet = new ServerStyleSheet()
 
-    await navigation.getRoute()
+    // Wait for Navi to get the page's data and route, so that everything can
+    // be synchronously rendered with `renderToString`.
+    let route = await navigation.getRoute()
 
-    // The index.html file is a template, which will have environment variables
-    // and bundled scripts and stylesheets injected during the build step, and
-    // placed at the location specified by `process.env.HTML_TEMPLATE_PATH`.
-    //
-    // To customize the rendered HTML, you can add other placeholder strings,
-    // and replace them within this function -- just as %RENDERED_CONTENT% is
-    // replaced. Note however that if you name the placeholder after an
-    // environment variable available at build time, then it will be
-    // automatically replaced by the build script.
     let body = renderToString(
       sheet.collectStyles(
         <HelmetProvider>
@@ -55,9 +60,11 @@ const renderer = async (request, response) => {
                 <ThemeProvider theme={theme}>
                   <NaviProvider navigation={navigation}>
                     {/*
-                  Putting the global styles any deeper in the tree causes them to
-                  re-render on each navigation, even on production.
-                */}
+                      Putting the global styles any deeper in the tree causes
+                      them to re-render on each navigation, even on production.
+                      Unfortunately this means they have to be repeated across
+                      the server and the client code.
+                    */}
                     <GlobalResetStyle />
                     <GlobalIconFontStyle />
 
@@ -71,25 +78,36 @@ const renderer = async (request, response) => {
       ),
     )
 
-    // Extract the navigation state into a script tag to bootstrap the browser Navigation.
+    // Extract the navigation state into a script tag so that data doesn't need
+    // to be fetched twice across server and client.
     let state = `<script>window.__NAVI_STATE__=${JSON.stringify(
       navigation.extractState() || {},
     ).replace(/</g, '\\u003c')};</script>`
 
+    // Generate stylesheets containing the minimal CSS necessary to render the
+    // page. The rest of the CSS will be loaded at runtime.
     let styleTags = sheet.getStyleTags()
+
+    // Generate the complete HTML
     let html = header + state + styleTags + '<div id="root">' + body + footer
-    response.send(html)
+
+    // The route status defaults to `200`, but can be set to other statuses by
+    // passing a `status` option to `route()`
+    response.status(route.status).send(html)
   } catch (error) {
+    // Render an empty page, letting the client actually generate the 404
+    // message.
     if (error instanceof NotFoundError) {
       let html = header + '<div id="root">' + footer
       response.status(404).send(html)
       return
     }
 
+    // Log an error, but only render it in development mode.
     let html
     console.error(error)
     if (process.env.NODE_ENV === 'production') {
-      html = `<h1>500 Error</h1>`
+      html = `<h1>500 Error - Something went wrong.</h1>`
     } else {
       html = `<h1>500 Error</h1><pre>${String(error)}</pre>` + header + footer
     }

@@ -3,12 +3,12 @@ import { css } from 'styled-components/macro'
 
 import Button, { FormSubmitButton } from 'components/button'
 import CardForm from 'components/cardForm'
+import { FirstIssueMessage } from 'components/message'
 import Modal, { ModalGutter } from 'components/modal'
 import { Gap, P } from 'components/responsive'
 import useOperation from 'hooks/useOperation'
 import subscribeToPlan from 'operations/subscribeToPlan'
 import updateBillingDetails from 'operations/updateBillingDetails'
-import { colors } from 'theme'
 
 export default function BillingRestartSubscriptionModal({
   hasCard,
@@ -38,11 +38,7 @@ export default function BillingRestartSubscriptionModal({
   let content = hasCardAtOpen ? (
     <>
       <P>Let's get your wig back.</P>
-      {subscribeToPlanOperation.error && (
-        <P color={colors.text.warning}>
-          {Object.values(subscribeToPlanOperation.error)[0][0]}
-        </P>
-      )}
+      <FirstIssueMessage issues={subscribeToPlanOperation.error} />
       <Button
         busy={subscribeToPlanOperation.busy}
         disabled={subscribeToPlanOperation.busy}

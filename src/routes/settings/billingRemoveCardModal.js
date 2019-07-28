@@ -2,11 +2,11 @@ import React, { useEffect } from 'react'
 import { css } from 'styled-components/macro'
 
 import Button from 'components/button'
+import { FirstIssueMessage } from 'components/message'
 import Modal, { ModalGutter } from 'components/modal'
 import { P } from 'components/responsive'
 import useOperation from 'hooks/useOperation'
 import removeBillingCard from 'operations/removeBillingCard'
-import { colors } from 'theme'
 
 export default function BillingRemoveCardModal({ canRemove, open, onClose }) {
   let operation = useOperation(removeBillingCard, {
@@ -22,11 +22,7 @@ export default function BillingRemoveCardModal({ canRemove, open, onClose }) {
   let content = canRemove ? (
     <>
       <P>So you want to remove your card details?</P>
-      {operation.error && (
-        <P color={colors.text.warning}>
-          {Object.values(operation.error)[0][0]}
-        </P>
-      )}
+      <FirstIssueMessage issues={operation.error} />
       <Button
         busy={operation.busy}
         disabled={operation.busy}

@@ -13,13 +13,13 @@ function getFormIssues({
    * Allows you to specify a base issue for when there is an issue with
    * the form, but it is not in the filtered paths.
    */
-  defaultInvalidCode,
+  defaultInvalidMessage,
 
   /**
    * Allows you to set the base issue for when the form couldn't be submitted,
    * and there's no submit error message.
    */
-  defaultSubmitFailedCode,
+  defaultSubmitFailedMessage,
 }) {
   if (!formState || !formState.invalid || !formState.submitFailed) {
     return undefined
@@ -46,13 +46,13 @@ function getFormIssues({
   }
 
   if (!issues) {
-    if (!formState.hasValidationErrors && defaultSubmitFailedCode) {
+    if (!formState.hasValidationErrors && defaultSubmitFailedMessage) {
       issues = {
-        [BaseIssue]: defaultSubmitFailedCode,
+        [BaseIssue]: defaultSubmitFailedMessage,
       }
-    } else if (defaultInvalidCode) {
+    } else if (defaultInvalidMessage) {
       issues = {
-        [BaseIssue]: defaultInvalidCode,
+        [BaseIssue]: defaultInvalidMessage,
       }
     }
   }

@@ -28,17 +28,20 @@ export const colors = {
   control: {
     bg: {
       default: '#FBFCFF',
-      warning: '#FFFBFD',
+      warning: '#FFFDFD',
+      issue: '#FFFDFD',
       highlight: rgba('#4488dd', 0.05),
     },
     border: {
       default: '#E0E8EC',
-      warning: '#c7b7b7',
+      warning: '#c7c0c0',
+      issue: '#c7c0c0',
     },
     icon: {
       default: '#334455',
       empty: '#C8CAD0',
       warning: '#D0C0C0',
+      issue: '#D0C0C0',
     },
   },
 
@@ -56,8 +59,9 @@ export const colors = {
     tertiary: '#607080',
     subHeading: '#9098B0',
     placeholder: '#778899',
-    warning: '#733939',
-    success: '#112233',
+    issue: '#4e3e3e',
+    warning: '#4e3e3e',
+    success: '#113322',
     link: '#102030',
     light: 'rgba(255, 255, 255, 0.93)',
   },
@@ -98,6 +102,18 @@ export const media = {
   tabletPlus: mediaFactory(mediaQueries.tabletPlus),
   laptopPlus: mediaFactory(mediaQueries.laptopPlus),
   widescreenPlus: mediaFactory(mediaQueries.widescreenPlus),
+}
+
+export const messages = {
+  dirty: {
+    color: colors.text.tertiary,
+  },
+  issue: {
+    color: '#4e3e3e',
+  },
+  success: {
+    color: colors.text.success,
+  },
 }
 
 export const radii = {
@@ -163,5 +179,6 @@ export default {
   colors,
   dimensions,
   easings,
+  messages,
   radii,
 }

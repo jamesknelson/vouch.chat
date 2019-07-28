@@ -7745,10 +7745,10 @@ popper.js@^1.14.4, popper.js@^1.14.7:
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
   integrity sha512-w010cY1oCUmI+9KwwlWki+r5jxKfTFDVoadl7MSrIujHU5MJ5OR6HTDj6Xo8aoR/QsA56x8jKjA59qGH4ELtrA==
 
-popup-trigger@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/popup-trigger/-/popup-trigger-0.2.2.tgz#ba801135f8cfa8efc60d53b7c270f39d88880a03"
-  integrity sha512-uV02H+FP0St7FKcA8hD5cTtHW5Nyxzklqsj8tGNUAKZyBQBGMW6MoEWuRU1sEQ0Hba/5bUiYCylVZo5GqKNiMA==
+popup-trigger@0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/popup-trigger/-/popup-trigger-0.2.3.tgz#f6c8c396d510f2805d271cb6f53fc84abbb3df06"
+  integrity sha512-7bkr5Zhb8wdllk9gAVzQDzdFR7tZ+lAIUG6+1+WQ5BiFs/0LYHviiz2uW43h47m+RbaIelBewVrW/yfGabhEDA==
 
 portfinder@^1.0.9:
   version "1.0.20"
@@ -8771,10 +8771,10 @@ react-navi-helmet-async@^0.13.3:
     "@types/react-helmet" "^5.0.8"
     react-helmet-async "^1.0.2"
 
-react-navi@^0.13.3:
-  version "0.13.3"
-  resolved "https://registry.yarnpkg.com/react-navi/-/react-navi-0.13.3.tgz#f8dbf478173b5995ab271b587b639562084d0b87"
-  integrity sha512-QyagKZtT7XE8bILSp/WsaqESEPv7a2MM3JmrMQDNYux84y4UPdSabR4yagR1sOW3UCAqkjd2WQt8GMdrfWdWnA==
+react-navi@^0.13.5:
+  version "0.13.5"
+  resolved "https://registry.yarnpkg.com/react-navi/-/react-navi-0.13.5.tgz#a8c928b1938bc692ea9b6564d68b398a303e6f20"
+  integrity sha512-o6U22I3wd2+CobP8ugWzDYB4GsbR1i8qOurasKxpNpS7zAzwWVceK/d7kqMJRKllFATMfLN4J/2VP6A4nQb9Jg==
   dependencies:
     "@types/history" "^4.6.2"
 

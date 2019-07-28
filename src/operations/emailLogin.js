@@ -24,6 +24,6 @@ export default async function emailLogin(params, backend) {
     await backend.currentUser.getCurrentValue()
     await backend.deviceConfig.previousLoginProvider.set(null)
   } catch (error) {
-    return normalizeIssues(error.message || 'Something went wrong')
+    return normalizeIssues(error.message || 'error')
   }
 }

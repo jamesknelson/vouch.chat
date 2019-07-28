@@ -144,7 +144,7 @@ function Billing(props) {
                   css={css`
                     margin: 0.2rem;
                   `}>
-                  Cancel my subscription
+                  I don’t want my wig anymore
                 </Button>
                 <BillingCancelSubscriptionModal
                   currentPeriodEnd={

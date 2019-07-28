@@ -5,6 +5,7 @@ import Button, { FormSubmitButton } from 'components/button'
 import CardForm from 'components/cardForm'
 import Currency from 'components/currency'
 import { Spinner } from 'components/loading'
+import { FirstIssueMessage } from 'components/message'
 import Modal, { ModalGutter } from 'components/modal'
 import PlansGrid from 'components/plansGrid'
 import { Clamp, Gap, P } from 'components/responsive'
@@ -116,11 +117,7 @@ export default function BillingPlansModal({
               {subscriptionWillBeInactiveAtOpen ? 'subscribe' : 'switch over'}{' '}
               to it immediately.
             </P>
-            {subscribeToPlanOperation.error && (
-              <P color={colors.text.warning}>
-                {Object.values(subscribeToPlanOperation.error)[0][0]}
-              </P>
-            )}
+            <FirstIssueMessage issues={subscribeToPlanOperation.error} />
             <Button
               busy={subscribeToPlanOperation.busy}
               disabled={subscribeToPlanOperation.busy}

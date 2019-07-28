@@ -6,11 +6,7 @@ import { FormInputField } from 'components/field'
 import { Form, FormMessage } from 'components/form'
 import { LayoutHeaderSection } from 'components/layout'
 import { Box, Gap } from 'components/responsive'
-import {
-  Section,
-  SectionFooter,
-  SectionFooterMessage,
-} from 'components/sections'
+import { Section, SectionFooter } from 'components/sections'
 import useOperation from 'hooks/useOperation'
 import updatePassword from 'operations/updatePassword'
 import { colors } from 'theme'
@@ -55,19 +51,12 @@ function Password() {
             <Box padding="1rem">
               <FormSubmitButton inline>Update Password</FormSubmitButton>
               <FormMessage
-                dirty="You have unsaved changes."
+                as="span"
+                dirty
                 success="Your password was successfully changed."
-                except={[
-                  'password',
-                  'currentPassword',
-                  'passwordConfirmation',
-                ]}>
-                {({ message, variant }) => (
-                  <SectionFooterMessage variant={variant}>
-                    {message}
-                  </SectionFooterMessage>
-                )}
-              </FormMessage>
+                except={['password', 'currentPassword', 'passwordConfirmation']}
+                marginLeft="1rem"
+              />
             </Box>
           </SectionFooter>
         </Form>

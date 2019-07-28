@@ -14,7 +14,7 @@ export default async function removeBillingCard(params, backend) {
     let { data } = await removeBillingCard()
 
     if (data.status !== 'success') {
-      return resolve(normalizeIssues('Something went wrong'))
+      return resolve(normalizeIssues('error'))
     }
 
     // Wait for the card to actually be removed

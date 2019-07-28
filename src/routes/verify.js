@@ -6,10 +6,7 @@ import { css } from 'styled-components/macro'
 import { FormSubmitButton, StyledLink } from 'components/button'
 import { FormInputField } from 'components/field'
 import Form, { FormMessage } from 'components/form'
-import SmallCardLayout, {
-  Instructions,
-  Issue,
-} from 'components/smallCardLayout'
+import SmallCardLayout, { Instructions } from 'components/smallCardLayout'
 import useOperation from 'hooks/useOperation'
 import resetPassword from 'operations/resetPassword'
 import loading, { Loading } from './loading'
@@ -53,9 +50,7 @@ export const ResetPassword = props => {
           name="passwordConfirmation"
           type="password"
         />
-        <FormMessage except={['password', 'passwordConfirmation']}>
-          {({ issue }) => issue && <Issue>{issue}</Issue>}
-        </FormMessage>
+        <FormMessage except={['password', 'passwordConfirmation']} />
         <FormSubmitButton
           css={css`
             margin-top: 1.5rem;

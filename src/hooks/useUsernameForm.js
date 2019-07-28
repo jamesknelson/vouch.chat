@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 
 import useOperation from 'hooks/useOperation'
 import updateUsername from 'operations/updateUsername'
+import { getFirstIssue } from 'utils/Issues'
 
-export default function useUsernameForm({ onSuccess }) {
+export default function useUsernameForm({ onSuccess } = {}) {
   let [usernameInput, setUsernameInput] = useState('')
 
   // Use `undefined` to indicate that we don't know if there are any
@@ -15,8 +16,7 @@ export default function useUsernameForm({ onSuccess }) {
     onSuccess,
   })
   let hasSubmitted = !!operation.lastError || operation.busy
-  let submitIssue =
-    operation.lastError && Object.values(operation.lastError)[0][0]
+  let submitIssue = getFirstIssue(operation.lastError)
 
   let issue = validationIssue || submitIssue
 
@@ -31,7 +31,7 @@ export default function useUsernameForm({ onSuccess }) {
 
       operation.validate({ username: usernameInput }).then(issues => {
         if (isMounted) {
-          setValidationIssue((issues && Object.values(issues)[0][0]) || null)
+          setValidationIssue(getFirstIssue(issues))
         }
       })
     } else {

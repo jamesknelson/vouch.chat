@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { useLoadingRoute } from 'react-navi'
 import { animated, useTransition } from 'react-spring'
 import styled, { css } from 'styled-components/macro'
 
+import { LoadingBar } from 'components/loading'
 import { dimensions, media } from 'theme'
 import LayoutAuthFooter from './layoutAuthFooter'
 import LayoutContext from './layoutContext'
@@ -101,8 +103,11 @@ const Layout = props => {
     ],
   )
 
+  let loadingRoute = useLoadingRoute()
+
   return (
     <LayoutContext.Provider value={context}>
+      <LoadingBar active={!!loadingRoute} />
       <StyledWrapper>
         <PhoneLayoutHeader
           indexPathname={indexPathname}

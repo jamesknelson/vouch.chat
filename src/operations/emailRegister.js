@@ -52,6 +52,6 @@ export default async function emailRegister(params, backend) {
     await backend.currentUser.getCurrentValue()
     await backend.deviceConfig.previousLoginProvider.set(null)
   } catch (error) {
-    return error.message || 'Something went wrong'
+    return error.message || 'error'
   }
 }

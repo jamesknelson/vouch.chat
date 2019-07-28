@@ -1,7 +1,10 @@
 import createDecorator from 'final-form-submit-listener'
 import React, { useEffect, useRef } from 'react'
 import { Form as FinalForm, useFormState } from 'react-final-form'
+
+import { Message } from 'components/message'
 import getFormIssues from 'utils/getFormIssues'
+import { getFirstIssue } from 'utils/Issues'
 
 export function Form({
   children,
@@ -78,30 +81,45 @@ export function Form({
   )
 }
 
-export function FormMessage({ children, dirty, success, ...rest }) {
+const defaultFormMessageChildren = ({ message, ...rest }) => (
+  <Message name={message} marginTop="0.5rem" textAlign="left" {...rest} />
+)
+
+export function FormMessage({
+  children = defaultFormMessageChildren,
+  dirty,
+  success,
+  except,
+  only,
+  defaultInvalidMessage,
+  defaultSubmitFailedMessage,
+  ...rest
+}) {
   let formState = useFormState()
-  let issues = getFormIssues({ formState, ...rest })
-  let issue = null
+  let issues = getFormIssues({
+    formState,
+    except,
+    only,
+    defaultInvalidMessage,
+    defaultSubmitFailedMessage,
+  })
   let message = null
   let variant = null
   if (issues) {
-    let firstIssue = Object.values(issues)[0]
-    if (Array.isArray(firstIssue)) {
-      firstIssue = firstIssue[0]
-    }
-    issue = message = firstIssue
-    variant = 'warning'
+    let firstIssue = getFirstIssue(issues)
+    message = firstIssue
+    variant = firstIssue ? 'issue' : null
   } else if (!formState.submitting && dirty && formState.dirty) {
-    message = typeof dirty === 'string' ? dirty : 'You have unsaved changes.'
+    message = typeof dirty === 'string' ? dirty : 'dirty'
+    variant = 'dirty'
   } else if (formState.submitSucceeded && success) {
-    message = typeof success === 'string' ? success : 'Your changes were saved.'
+    message = typeof success === 'string' ? success : 'success'
     variant = 'success'
   }
   return children({
-    dirty: formState.dirty,
-    issue,
     message,
     variant,
+    ...rest,
   })
 }
 

@@ -5,7 +5,6 @@ import Button, { ButtonLink } from 'components/button'
 import { InputField } from 'components/field'
 import Modal, { ModalGutter } from 'components/modal'
 import { P } from 'components/responsive'
-import { colors } from 'theme'
 import useUsernameForm from 'hooks/useUsernameForm'
 
 export default function AccountUsernameModal({ open, onClose }) {
@@ -20,7 +19,7 @@ export default function AccountUsernameModal({ open, onClose }) {
       onClose={usernameForm.isSubmitting ? undefined : onClose}>
       <ModalGutter>
         <form onSubmit={usernameForm.onSubmit}>
-          <P color={colors.text.warning}>
+          <P>
             Changing your username will allow your old username to be taken by
             someone else.
           </P>

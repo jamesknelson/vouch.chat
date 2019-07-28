@@ -13,9 +13,7 @@ function delayedReject(ms) {
   return new Promise((_, reject) => setTimeout(reject, ms))
 }
 
-useOperation.defaultReplaceThrownErrorWith = normalizeIssues(
-  'Something went wrong.',
-)
+useOperation.defaultReplaceThrownErrorWith = normalizeIssues('error')
 
 /**
  * You may want to notify someone that something went wrong in here.

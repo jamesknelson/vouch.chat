@@ -28,11 +28,9 @@ export default async function updateUsername(
     let { data } = await setUsername({ username })
 
     if (data.status !== 'success') {
-      return normalizeIssues(
-        data.code || data.message || 'Something went wrong',
-      )
+      return normalizeIssues(data.code || data.message || 'error')
     }
   } catch (error) {
-    return normalizeIssues(error.message || 'Something went wrong')
+    return normalizeIssues(error.message || 'error')
   }
 }

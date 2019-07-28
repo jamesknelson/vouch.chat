@@ -31,8 +31,9 @@ export default function useLastScrollDirection(threshold = 50) {
     }
 
     let checkScroll = () => {
+      // Position can go negative on mobile devices
+      let pos = Math.max(0, window.scrollY)
       let { direction, mark } = stateRef.current
-      let pos = window.scrollY
       let diff = 0
       if (!direction) {
         diff = Math.abs(pos - mark)

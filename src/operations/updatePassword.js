@@ -49,6 +49,6 @@ export default async function updatePassword(params, backend) {
 
     await backend.auth.currentUser.updatePassword(params.password)
   } catch (error) {
-    return normalizeIssues(error.message || 'Something went wrong.')
+    return normalizeIssues(error.message || 'error')
   }
 }

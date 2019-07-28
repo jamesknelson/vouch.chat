@@ -44,7 +44,8 @@ export function FormSubmitButton(props) {
     <Button
       {...props}
       type="submit"
-      busy={submitting || props.busy}
+      // Must pass `false` when not busy to leave space for the spinner
+      busy={submitting || props.busy || false}
       disabled={submitting || props.disabled}
     />
   )

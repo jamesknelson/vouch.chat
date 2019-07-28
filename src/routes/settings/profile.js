@@ -11,11 +11,7 @@ import { LayoutHeaderSection } from 'components/layout'
 import { MenuItem } from 'components/menu'
 import { PopupTrigger, PopupProvider, PopupMenu } from 'components/popup'
 import { Box, FlexBox, Gap } from 'components/responsive'
-import {
-  Section,
-  SectionFooter,
-  SectionFooterMessage,
-} from 'components/sections'
+import { Section, SectionFooter } from 'components/sections'
 import { useBackend, useCurrentUser } from 'context'
 import useOperation from 'hooks/useOperation'
 import updateProfile from 'operations/updateProfile'
@@ -161,13 +157,19 @@ function Profile() {
           <SectionFooter>
             <Box padding="1rem">
               <FormSubmitButton inline>Save</FormSubmitButton>
-              <FormMessage dirty except={['displayName', 'bio']}>
-                {({ message, variant }) => (
-                  <SectionFooterMessage variant={variant}>
-                    {message}
-                  </SectionFooterMessage>
-                )}
-              </FormMessage>
+              <FormMessage
+                as="span"
+                dirty
+                success="Your changes are now public."
+                except={[
+                  'displayName',
+                  'bio',
+                  'location',
+                  'publicEmail',
+                  'website',
+                ]}
+                marginLeft="1rem"
+              />
             </Box>
           </SectionFooter>
         </Form>

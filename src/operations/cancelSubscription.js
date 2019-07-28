@@ -12,6 +12,6 @@ export default async function cancelSubscription(params, backend) {
   let { data } = await cancelSubscription()
 
   if (data.status !== 'success') {
-    return normalizeIssues('Something went wrong')
+    return normalizeIssues('error')
   }
 }

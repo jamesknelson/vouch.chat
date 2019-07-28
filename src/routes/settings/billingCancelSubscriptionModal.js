@@ -2,11 +2,11 @@ import React from 'react'
 import { css } from 'styled-components/macro'
 
 import Button from 'components/button'
+import { FirstIssueMessage } from 'components/message'
 import Modal, { ModalGutter } from 'components/modal'
 import { P, Strong } from 'components/responsive'
 import useOperation from 'hooks/useOperation'
 import cancelSubscription from 'operations/cancelSubscription'
-import { colors } from 'theme'
 import formatDate from 'utils/formatDate'
 
 export default function BillingCancelSubscriptionModal({
@@ -28,11 +28,7 @@ export default function BillingCancelSubscriptionModal({
           If you cancel now, you'll no longer have access from{' '}
           <Strong>{formatDate(currentPeriodEnd, 'en')}</Strong>.
         </P>
-        {operation.error && (
-          <P color={colors.text.warning}>
-            {Object.values(operation.error)[0][0]}
-          </P>
-        )}
+        <FirstIssueMessage issues={operation.error} />
         <Button
           busy={operation.busy}
           disabled={operation.busy}

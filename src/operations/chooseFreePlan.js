@@ -20,6 +20,6 @@ export default async function chooseFreePlan(params, [_, backend]) {
     )
     await createFreeAccount()
   } catch (error) {
-    return error.message || 'Something went wrong'
+    return error.message || 'error'
   }
 }

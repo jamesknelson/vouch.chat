@@ -12,17 +12,12 @@ import {
 } from 'components/control'
 import { StyledLabel } from 'components/field'
 import { Form, FormMessage } from 'components/form'
-import { colors } from 'theme'
 
 const StyledStripeCardControl = styled(Control)`
   .StripeElement {
     padding: 0.5rem;
     width: 100%;
   }
-`
-
-const Issue = styled.p`
-  color: ${colors.text.warning};
 `
 
 const CardFormWithStripe = ({
@@ -74,10 +69,13 @@ const CardFormWithStripe = ({
           ))}
         </FormSelectControl>
       </ControlGroup>
-      <FormMessage only={addressFields}>
-        {({ issue }) => issue && <Issue>{issue}</Issue>}
-      </FormMessage>
-
+      <FormMessage
+        only={addressFields}
+        strings={{
+          required:
+            "You'll need to complete your billing address before continuing.",
+        }}
+      />
       <StyledLabel
         css={css`
           margin-top: 1rem;
@@ -100,9 +98,7 @@ const CardFormWithStripe = ({
           )}
         </StyledStripeCardControl>
       </ControlGroup>
-      <FormMessage except={addressFields}>
-        {({ issue }) => issue && <Issue>{issue}</Issue>}
-      </FormMessage>
+      <FormMessage except={addressFields} />
 
       {children}
     </Form>

@@ -6,9 +6,8 @@ import { UserAvatar } from 'components/avatar'
 import { Spinner } from 'components/loading'
 import { CurrentUserVouchCountWrapper } from 'components/badge'
 import { useCurrentUser } from 'context'
-import { StyledNavLink } from './layoutNavItems'
+import { NavLink } from './layoutNavItems'
 import logo from 'media/anonymous.svg'
-import { useLoadingRoute } from 'react-navi'
 
 const StyledDisc = styled.div`
   display: flex;
@@ -85,20 +84,19 @@ const ProfileFlipper = React.forwardRef(
       config,
       angle: flickAngle,
     })
-    let loadingRoute = useLoadingRoute()
 
-    let isLoading = !!loadingRoute || currentUser === undefined
+    let isLoading = currentUser === undefined
 
     return (
-      <StyledNavLink
-        exact
-        activeClassName=""
+      <NavLink
+        hideActiveIndicator
         href={
-          currentUser
-            ? currentUser.username
-              ? `/${currentUser.username}`
-              : `/`
-            : '/login'
+          '#'
+          // currentUser
+          //   ? currentUser.username
+          //     ? `/${currentUser.username}`
+          //     : `/`
+          //   : '/login'
         }
         focusRingSize={`${sizeRem - 0.25}rem`}
         onTouchStart={() => {
@@ -106,6 +104,9 @@ const ProfileFlipper = React.forwardRef(
         }}
         onMouseDown={() => {
           setFlickAngle(Math.PI / 6)
+        }}
+        onMouseLeave={() => {
+          setFlickAngle(0)
         }}
         onTouchEnd={() => {
           setFlickAngle(0)
@@ -123,19 +124,14 @@ const ProfileFlipper = React.forwardRef(
           position: relative;
           width: 100%;
         `}>
-        {!withoutSpinner && (
-          <Spinner
-            active={isLoading}
-            backgroundColor={backgroundColor}
-            color={colors.ink.black}
-            css={css`
-              position: absolute;
-              z-index: 0;
-              height: ${sizeRem}rem;
-              width: ${sizeRem}rem;
-            `}
-          />
-        )}
+        <Spinner
+          active={!withoutSpinner && isLoading}
+          backgroundColor={backgroundColor}
+          color={colors.ink.black}
+          position="absolute"
+          size={sizeRem + 'rem'}
+          style={{ zIndex: 0 }}
+        />
         <StyledCutout size={sizeRem - 0.5 + 'rem'}>
           <CurrentUserVouchCountWrapper badgeSizeRem={badgeSizeRem}>
             <AnimatedDisc
@@ -163,7 +159,7 @@ const ProfileFlipper = React.forwardRef(
             />
           </CurrentUserVouchCountWrapper>
         </StyledCutout>
-      </StyledNavLink>
+      </NavLink>
     )
   },
 )

@@ -1,6 +1,6 @@
 import { rgba } from 'polished'
 import React from 'react'
-import { useLinkProps, useCurrentRoute, useLoadingRoute } from 'react-navi'
+import { useLinkProps, useActive } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 
 import { IconButton } from 'components/button'
@@ -87,12 +87,9 @@ export const ListItem = ({ active, children, ...rest }) => {
 }
 
 export const ListItemLink = ({ children, className, href, style, ...rest }) => {
-  let currentRoute = useCurrentRoute()
-  let loadingRoute = useLoadingRoute()
-  let route = loadingRoute || currentRoute
-  let routePathname = route.url.pathname
-  console.log(routePathname, href)
-  let active = href === routePathname
+  let active = useActive(href, {
+    loading: true,
+  })
   let linkProps = useLinkProps({ href, ...rest })
 
   return (

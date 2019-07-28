@@ -158,6 +158,7 @@ export function FormInputField({
   label,
   message,
   messages = {},
+  variant,
   ...props
 }) {
   let field = useField(name, {
@@ -179,7 +180,7 @@ export function FormInputField({
       {...props}
       label={label}
       message={message || errorCode || hint}
-      variant={props.variant || (error ? 'warning' : undefined)}
+      variant={variant || (error ? 'warning' : undefined)}
     />
   )
 }

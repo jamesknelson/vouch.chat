@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components/macro'
+import { css } from 'styled-components/macro'
 
 import { FormSubmitButton, StyledLink } from 'components/button'
 import { FormInputField } from 'components/field'
@@ -8,12 +8,6 @@ import Modal, { ModalGutter } from 'components/modal'
 import useOperation from 'hooks/useOperation'
 import updateEmail from 'operations/updateEmail'
 import { colors } from 'theme'
-
-const P = styled.p`
-  color: ${props => props.color || colors.text.default};
-  font-size: 0.9rem;
-  margin: 1rem 0;
-`
 
 export default function AccountEmailModal({ open, onClose }) {
   let operation = useOperation(updateEmail, {
@@ -46,9 +40,7 @@ export default function AccountEmailModal({ open, onClose }) {
               </>
             }
           />
-          <FormMessage except={['email', 'password']}>
-            {({ issue }) => issue && <P color={colors.text.warning}>{issue}</P>}
-          </FormMessage>
+          <FormMessage except={['email', 'password']} marginTop="1rem" />
           <FormSubmitButton
             busy={operation.busy}
             disabled={operation.busy}

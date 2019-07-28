@@ -21,6 +21,6 @@ export default async function sendPasswordResetEmail(params, backend) {
   try {
     await backend.auth.sendPasswordResetEmail(params.email)
   } catch (error) {
-    return normalizeIssues({ email: error.message || 'Something went wrong' })
+    return normalizeIssues({ email: error.message || 'error' })
   }
 }

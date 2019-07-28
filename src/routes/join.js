@@ -6,7 +6,6 @@ import { FormSubmitButton, LoginButton, StyledLink } from 'components/button'
 import SmallCardLayout, {
   Greeting,
   Instructions,
-  Issue,
   RelatedLinkGroup,
   RelatedLink,
 } from 'components/smallCardLayout'
@@ -45,9 +44,7 @@ function Join() {
             type="password"
           />
         </ControlGroup>
-        <FormMessage>
-          {({ issue }) => issue && <Issue>{issue}</Issue>}
-        </FormMessage>
+        <FormMessage />
         <Gap />
         <FormSubmitButton width="100%">Join in</FormSubmitButton>
       </Form>

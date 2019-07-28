@@ -20,7 +20,7 @@ export default async function deleteUser(params, [backend]) {
   let { data } = await deleteUser()
 
   if (data.status !== 'success') {
-    return normalizeIssues('Something went wrong')
+    return normalizeIssues('error')
   }
 
   await backend.auth.signOut()
