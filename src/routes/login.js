@@ -74,7 +74,7 @@ function Login(props) {
       </Greeting>
       <AuthLinkButton
         css={buttonStyles}
-        glyph="envelope1"
+        glyph="mail"
         href="/login/email"
         disabled={disabled}
         outline={disabled || loginProvider !== undefined}>
@@ -82,7 +82,7 @@ function Login(props) {
       </AuthLinkButton>
       <Button
         css={buttonStyles}
-        glyph="facebook"
+        glyph="facebook-fill"
         color="#4267b2"
         outline={
           (!facebookLoginOperation.busy && disabled) ||
@@ -99,7 +99,7 @@ function Login(props) {
       />
       <Button
         css={buttonStyles}
-        glyph="google"
+        glyph="google-fill"
         color="#ea4335"
         outline={
           (!googleLoginOperation.busy && disabled) ||
@@ -143,7 +143,7 @@ function EmailLogin(props) {
         <ControlGroup>
           <FormInputControl
             label="Email"
-            glyph="envelope1"
+            glyph="mail"
             name="email"
             type="email"
           />

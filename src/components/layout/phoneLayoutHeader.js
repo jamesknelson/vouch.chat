@@ -101,7 +101,7 @@ const PhoneHeaderOverlay = ({ className, hide, indexPathname, minimal }) => {
       <SidebarMoreMenu side="left">
         {ref => (
           <NavItem
-            glyph="menu1"
+            glyph="menu"
             tooltip="More"
             ref={ref}
             css={css`

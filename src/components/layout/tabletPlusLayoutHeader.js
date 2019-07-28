@@ -68,7 +68,7 @@ function TabletPlusLayoutHeaderContent({
         <NavItems />
       </Section>
       <PopupMoreMenu>
-        {ref => <NavItem glyph="ellipsis" ref={ref} />}
+        {ref => <NavItem glyph="more-horizontal" ref={ref} />}
       </PopupMoreMenu>
     </StyledTabletPlusNavbar>
   )

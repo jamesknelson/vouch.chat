@@ -4,7 +4,12 @@ import Tippy from '@tippy.js/react'
 import useMediaQuery from 'hooks/useMedia'
 import { mediaQueries } from 'theme'
 
-export default function Tooltip({ children, placement = 'top', content }) {
+export default function Tooltip({
+  children,
+  placement = 'top',
+  content,
+  ...rest
+}) {
   let isPhone = useMediaQuery(mediaQueries.phoneOnly)
   if (isPhone) {
     return children
@@ -15,7 +20,8 @@ export default function Tooltip({ children, placement = 'top', content }) {
         touch={false}
         arrow={true}
         arrowType="round"
-        content={content}>
+        content={content}
+        {...rest}>
         {children}
       </Tippy>
     )

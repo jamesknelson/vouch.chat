@@ -24,10 +24,10 @@ export const StyledLink = styled(Link)`
   }
 `
 
-export const StyledAnimatedButtonGlyph = styled(animated.span)`
+export const StyledAnimatedButtonGlyph = styled(animated.div)`
   position: absolute;
   left: 0rem;
-  line-height: 1rem;
+  margin-top: 0.125rem;
 `
 
 export const StyledAnimatedButtonLabel = styled(animated.span)`
@@ -39,7 +39,7 @@ export const StyledButtonBase = styled.button`
   border-radius: 9999px;
   cursor: pointer;
   display: ${props => (props.inline ? 'inline-flex' : 'flex')};
-  font-weight: 600;
+  font-weight: 500;
   padding: 0 ${props => (props.leaveGlyphSpace ? '1.825rem' : '1rem')};
   position: relative;
   text-align: center;
@@ -187,75 +187,81 @@ export const StyledSolidButton = styled(StyledButtonBase)`
   `}
 `
 
-export const Button = ({
-  busy,
-  children,
-  color = colors.ink.black,
-  glyph,
-  glyphColor,
-  spinnerColor,
-  inline = false,
-  type = 'button',
-  outline = false,
-  width = undefined,
-  ...props
-}) => {
-  let StyledButton = outline ? StyledOutlineButton : StyledSolidButton
+export const Button = React.forwardRef(
+  (
+    {
+      busy,
+      children,
+      color = colors.ink.black,
+      glyph,
+      glyphColor,
+      spinnerColor,
+      inline = false,
+      type = 'button',
+      outline = false,
+      width = undefined,
+      ...props
+    },
+    ref,
+  ) => {
+    let StyledButton = outline ? StyledOutlineButton : StyledSolidButton
 
-  if (!glyphColor) {
-    glyphColor = outline ? rgba(color, 0.85) : colors.structure.bg
-  }
-  if (!spinnerColor) {
-    spinnerColor = glyphColor
-  }
-  if (busy) {
-    glyph = 'busy'
-  }
+    if (!glyphColor) {
+      glyphColor = outline ? rgba(color, 0.85) : colors.structure.bg
+    }
+    if (!spinnerColor) {
+      spinnerColor = glyphColor
+    }
+    if (busy) {
+      glyph = 'busy'
+    }
 
-  let glyphTransitions = useTransition(glyph, null, {
-    initial: { t: 1 },
-    from: { t: 0 },
-    enter: { t: 1 },
-    leave: { t: 0 },
-  })
-  let labelStyleSpring = useSpring({
-    to: { transform: glyph ? 'translateX(0.75rem)' : 'translateX(0rem)' },
-  })
+    let glyphTransitions = useTransition(glyph, null, {
+      initial: { t: 1 },
+      from: { t: 0 },
+      enter: { t: 1 },
+      leave: { t: 0 },
+    })
+    let labelStyleSpring = useSpring({
+      to: { transform: glyph ? 'translateX(0.75rem)' : 'translateX(0rem)' },
+    })
 
-  return (
-    <StyledButton
-      color={color}
-      inline={inline}
-      leaveGlyphSpace={busy !== undefined || glyph !== undefined}
-      type={type}
-      outline={outline}
-      width={width}
-      {...props}>
-      {glyphTransitions.map(
-        ({ item, props: { t }, key }) =>
-          item && (
-            <StyledAnimatedButtonGlyph
-              key={key}
-              style={{
-                transform: t.interpolate(t => `translateX(${t}rem)`),
-                opacity: t,
-              }}>
-              {item === 'busy' ? (
-                <Spinner
-                  color={spinnerColor}
-                  backgroundColor={outline ? colors.structure.bg : color}
-                  size="1.25rem"
-                  active
-                />
-              ) : (
-                <Icon color={glyphColor} size="1rem" glyph={item} />
-              )}
-            </StyledAnimatedButtonGlyph>
-          ),
-      )}
-      <StyledAnimatedButtonLabel style={labelStyleSpring}>
-        {children}
-      </StyledAnimatedButtonLabel>
-    </StyledButton>
-  )
-}
+    return (
+      <StyledButton
+        color={color}
+        inline={inline}
+        leaveGlyphSpace={busy !== undefined || glyph !== undefined}
+        type={type}
+        ref={ref}
+        outline={outline}
+        width={width}
+        {...props}>
+        {glyphTransitions.map(
+          ({ item, props: { t }, key }) =>
+            item && (
+              <StyledAnimatedButtonGlyph
+                key={key}
+                style={{
+                  transform: t.interpolate(t => `translateX(${t}rem)`),
+                  opacity: t,
+                }}>
+                {item === 'busy' ? (
+                  <Spinner
+                    color={spinnerColor}
+                    backgroundColor={outline ? colors.structure.bg : color}
+                    size="1.25rem"
+                    active
+                  />
+                ) : (
+                  <Icon color={glyphColor} size="1rem" glyph={item} />
+                )}
+              </StyledAnimatedButtonGlyph>
+            ),
+        )}
+        <StyledAnimatedButtonLabel style={labelStyleSpring}>
+          {children}
+        </StyledAnimatedButtonLabel>
+      </StyledButton>
+    )
+  },
+)

@@ -41,8 +41,7 @@ const StyledNavIcon = styled(Icon)`
   `}
   ${media.tabletPlus`
     width: ${dimensions.bar};
-    padding: 1rem 0;
-    margin: 0.325rem 0;
+    margin: 0.75rem 0;
   `}
 `
 
@@ -187,17 +186,15 @@ export const NavItems = () => {
       />
       <NavItem
         faded={isDisabled || currentUser === null}
-        href="/cast"
-        tooltip="Cast"
-        glyph="bullhorn"
-        // glyph="cast"
-        // glyph="pencil"
+        href="/log"
+        tooltip="Log"
+        glyph="edit"
       />
       {/* <NavItem
         faded={isDisabled || currentUser === null}
         href="/messages"
         tooltip="Chat"
-        glyph="envelope"
+        glyph="mail"
       /> */}
       {/* <NavItem
         faded={isDisabled || currentUser === null}

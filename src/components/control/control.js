@@ -37,7 +37,7 @@ export function ControlValidationState({ state, ...props }) {
       ) : (
         <Icon
           color={state === 'valid' ? colors.ink.black : colors.ink.mid}
-          glyph={state === 'valid' ? 'check' : 'cross2'}
+          glyph={state === 'valid' ? 'check' : 'x'}
           size="1rem"
         />
       )}

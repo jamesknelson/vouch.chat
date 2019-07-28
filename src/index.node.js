@@ -11,7 +11,6 @@ import { BackendContext, StripeContext } from 'context'
 import theme from 'theme'
 
 import Backend from './backend'
-import GlobalIconFontStyle from 'components/icon/font'
 import GlobalResetStyle from './reset.css'
 import routes from './routes'
 
@@ -40,7 +39,7 @@ const renderer = async (request, response) => {
         // Some thing don't need rendering when doing SSR.
         ssr: true,
       },
-      request,
+      url: request.url,
       routes,
     })
     sheet = new ServerStyleSheet()
@@ -66,7 +65,6 @@ const renderer = async (request, response) => {
                       the server and the client code.
                     */}
                     <GlobalResetStyle />
-                    <GlobalIconFontStyle />
 
                     <View />
                   </NaviProvider>

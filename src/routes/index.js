@@ -22,7 +22,7 @@ let routes = mount({
   '*': lazy(() => import('./readingList')),
 
   '/notifications': lazy(() => import('./notifications')),
-  '/cast': lazy(() => import('./cast')),
+  '/log': lazy(() => import('./log')),
   '/join': lazy(() => import('./join')),
   '/login': lazy(() => import('./login')),
 

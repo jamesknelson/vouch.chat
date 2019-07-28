@@ -190,7 +190,7 @@ function ReadingListHeaderActions() {
   return isEditing ? (
     <IconButton
       color={colors.ink.black}
-      glyph="cross2"
+      glyph="x"
       onClick={() => {
         store.dispatch({
           type: 'stop-edit',
@@ -205,7 +205,7 @@ function ReadingListHeaderActions() {
         {ref => (
           <IconButton
             color={currentUser !== null ? colors.ink.black : colors.ink.light}
-            glyph="cog"
+            glyph="settings"
             ref={ref}
             size="1.5rem"
             style={{ width: '3.25rem' }}

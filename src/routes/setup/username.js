@@ -124,9 +124,7 @@ function UsernamePicker(props) {
                   <Icon
                     color={colors.ink.black}
                     glyph={
-                      usernameForm.validationState === 'valid'
-                        ? 'check'
-                        : 'cross2'
+                      usernameForm.validationState === 'valid' ? 'check' : 'x'
                     }
                     size="1rem"
                   />

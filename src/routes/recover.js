@@ -33,7 +33,7 @@ function Recover(props) {
         }}>
         <FormInputField
           label="Your email"
-          glyph="envelope1"
+          glyph="mail"
           name="email"
           type="email"
           showLabelAsPlaceholder

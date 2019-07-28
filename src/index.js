@@ -6,7 +6,6 @@ import HelmetProvider from 'react-navi-helmet-async'
 import { StripeProvider } from 'react-stripe-elements'
 import { ThemeProvider } from 'styled-components/macro'
 
-import GlobalIconFontStyle from 'components/icon/font'
 import theme from 'theme'
 
 import GlobalResetStyle from './reset.css'
@@ -54,7 +53,6 @@ async function main() {
                   re-render on each navigation, even on production.
                 */}
                 <GlobalResetStyle />
-                <GlobalIconFontStyle />
                 <View />
               </NaviProvider>
             </ThemeProvider>

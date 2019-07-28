@@ -107,7 +107,15 @@ const Layout = props => {
 
   return (
     <LayoutContext.Provider value={context}>
-      <LoadingBar active={!!loadingRoute} />
+      <LoadingBar
+        active={!!loadingRoute}
+        css={css`
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+        `}
+      />
       <StyledWrapper>
         <PhoneLayoutHeader
           indexPathname={indexPathname}

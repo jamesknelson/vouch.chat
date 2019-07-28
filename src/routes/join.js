@@ -30,10 +30,10 @@ function Join() {
       <Greeting>Every journey starts with a single step.</Greeting>
       <Form onSubmit={operation.invoke} validate={operation.validate}>
         <ControlGroup>
-          <FormInputControl label="Name" glyph="person" name="name" />
+          <FormInputControl label="Name" glyph="user" name="name" />
           <FormInputControl
             label="Email"
-            glyph="envelope1"
+            glyph="mail"
             name="email"
             type="email"
           />

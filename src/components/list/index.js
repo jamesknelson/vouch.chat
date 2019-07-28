@@ -1,33 +1,17 @@
-import { rgba } from 'polished'
 import React from 'react'
 import { useLinkProps, useActive } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
+import { layout, space } from 'styled-system'
 
 import { IconButton } from 'components/button'
+import Icon from 'components/icon'
 import { colors, easings, focusRing } from 'theme'
 
-export const ListSection = ({ children, title, ...rest }) => (
-  <>
-    <ListHeading>{title}</ListHeading>
-    <List
-      css={css`
-        background-color: ${colors.structure.bg};
-        box-shadow: 0 0 12px 1px ${rgba(colors.structure.wash, 0.66)},
-          0 0 10px 2px ${rgba(colors.structure.wash, 0.33)} inset;
-      `}
-      {...rest}>
-      {children}
-    </List>
-  </>
-)
-
-export const ListHeading = styled.h4`
+export const ListDivider = styled.div`
+  border-top: 1px solid ${colors.structure.divider};
   border-bottom: 1px solid ${colors.structure.divider};
-  color: ${colors.text.subHeading};
-  font-size: 0.6875rem;
-  font-weight: 700;
-  padding: 0.9rem 1rem 0.1rem;
-  text-transform: uppercase;
+  height: 0.5rem;
+  width: 100%;
 `
 
 const StyledListItem = styled.div`
@@ -44,6 +28,8 @@ const StyledListItem = styled.div`
   width: 100%;
   white-space: nowrap;
 
+  ${space};
+
   ::before {
     z-index: 1;
   }
@@ -57,7 +43,12 @@ const StyledListItem = styled.div`
     border-top: 1px solid ${colors.structure.divider};
   }
 
-  ${focusRing('::before', { padding: '-0.25rem' })}
+  ${props =>
+    props.onClick &&
+    css`
+      cursor: pointer;
+      ${focusRing('::before', { padding: '-0.25rem' })}
+    `}
 `
 
 const StyledListItemActiveIndicator = styled.div`
@@ -86,11 +77,22 @@ export const ListItem = ({ active, children, ...rest }) => {
   )
 }
 
-export const ListItemLink = ({ children, className, href, style, ...rest }) => {
-  let active = useActive(href, {
+export const ListItemLink = ({
+  active,
+  children,
+  className,
+  href,
+  style,
+  ...rest
+}) => {
+  let activeFromURL = useActive(href, {
     loading: true,
   })
   let linkProps = useLinkProps({ href, ...rest })
+
+  if (active === undefined) {
+    active = activeFromURL
+  }
 
   return (
     <ListItem
@@ -104,7 +106,30 @@ export const ListItemLink = ({ children, className, href, style, ...rest }) => {
   )
 }
 
+const StyledListItemIcon = styled.div`
+  align-items: center;
+  justify-content: flex-end;
+  display: flex;
+  padding: 0.75rem 0;
+
+  ${layout};
+  ${space};
+`
+
+export const ListItemIcon = ({
+  color = colors.control.icon.default,
+  glyph,
+  size = '1.25rem',
+  ...rest
+}) => (
+  <StyledListItemIcon {...rest}>
+    <Icon glyph={glyph} size={size} color={color} />
+  </StyledListItemIcon>
+)
+
 export const ListItemImage = styled.div`
+  ${layout};
+
   align-items: center;
   justify-content: center;
   display: flex;

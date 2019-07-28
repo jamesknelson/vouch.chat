@@ -35,12 +35,7 @@ const StyledAuthFooterButtons = styled.div`
 `
 
 const AuthFooterCloseButton = props => (
-  <IconButton
-    glyph="cross2"
-    size="1.25rem"
-    color={colors.ink.light}
-    {...props}
-  />
+  <IconButton glyph="x" size="1.25rem" color={colors.ink.light} {...props} />
 )
 
 const StyledAuthFooterMessage = styled.p`

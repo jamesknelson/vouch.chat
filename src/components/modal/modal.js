@@ -159,7 +159,7 @@ function Modal({
                     color={colors.gray}
                     disabled={!onClose}
                     autoFocus
-                    glyph="cross2"
+                    glyph="x"
                     size={1}
                     onClick={onClose}
                   />

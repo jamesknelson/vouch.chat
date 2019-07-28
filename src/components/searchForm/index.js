@@ -67,6 +67,7 @@ export function SearchForm({
   onChange,
   onClear,
   onSubmit,
+  value,
   ...props
 }) {
   let inputRef = useRef()
@@ -121,6 +122,7 @@ export function SearchForm({
             onKeyDown={handleKeyDown}
             onChange={handleChange}
             style={style}
+            value={value}
             {...props}
             {...inputProps}
           />
@@ -130,9 +132,14 @@ export function SearchForm({
             variant={props.value ? 'default' : 'empty'}>
             <Icon glyph="search" size="1.25rem" />
           </StyledSearchButton>
-          <StyledClearButton type="button" tabIndex={-1} onClick={handleClear}>
-            <Icon glyph="cross2" size="1.25rem" />
-          </StyledClearButton>
+          {value && (
+            <StyledClearButton
+              type="button"
+              tabIndex={-1}
+              onClick={handleClear}>
+              <Icon glyph="x" size="1.25rem" />
+            </StyledClearButton>
+          )}
         </>
       )}
     </Control>
