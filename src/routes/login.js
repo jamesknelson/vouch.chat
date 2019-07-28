@@ -1,5 +1,5 @@
 import { compose, lazy, map, mount, redirect, route, withData } from 'navi'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useNavigation } from 'react-navi'
 import { css } from 'styled-components/macro'
 
@@ -23,6 +23,7 @@ import SmallCardLayout, {
 import useOperation from 'hooks/useOperation'
 import emailLogin from 'operations/emailLogin'
 import socialLogin from 'operations/socialLogin'
+import useLatestSnapshot from 'hooks/useLatestSnapshot'
 
 const buttonStyles = css`
   margin: 1rem 0;
@@ -47,29 +48,22 @@ function useSocialLoginOperation(providerName) {
 }
 
 function Login(props) {
-  let [previousLoginProvider, setPreviousLoginProvider] = useState(
-    props.previousLoginProvider.initialSnapshot.data(),
+  let loginProviderSnapshot = useLatestSnapshot(
+    props.previousLoginProviderSnapshot,
   )
-  useEffect(() =>
-    props.previousLoginProvider.doc.onSnapshot(next => {
-      setPreviousLoginProvider(next.data())
-    }),
-  )
+  let loginProvider = loginProviderSnapshot.data()
 
   let facebookLoginOperation = useSocialLoginOperation('FacebookAuthProvider')
   let googleLoginOperation = useSocialLoginOperation('GoogleAuthProvider')
-  // let twitterLoginOperation = useSocialLoginOperation('TwitterAuthProvider')
 
   let login = operation => {
-    setPreviousLoginProvider(operation.providerName)
+    loginProviderSnapshot.ref.set(operation.providerName)
     facebookLoginOperation.clearSettled()
     googleLoginOperation.clearSettled()
-    // twitterLoginOperation.clearSettled()
     operation.invoke()
   }
 
-  let disabled = facebookLoginOperation.busy || googleLoginOperation.busy // ||
-  // twitterLoginOperation.busy
+  let disabled = facebookLoginOperation.busy || googleLoginOperation.busy
 
   return (
     <SmallCardLayout title="Sign in">
@@ -83,7 +77,7 @@ function Login(props) {
         glyph="envelope1"
         href="/login/email"
         disabled={disabled}
-        outline={disabled || previousLoginProvider !== undefined}>
+        outline={disabled || loginProvider !== undefined}>
         Sign in with Email
       </AuthLinkButton>
       <Button
@@ -92,7 +86,7 @@ function Login(props) {
         color="#4267b2"
         outline={
           (!facebookLoginOperation.busy && disabled) ||
-          previousLoginProvider !== facebookLoginOperation.providerName
+          loginProvider !== facebookLoginOperation.providerName
         }
         disabled={disabled}
         busy={facebookLoginOperation.busy}
@@ -109,7 +103,7 @@ function Login(props) {
         color="#ea4335"
         outline={
           (!googleLoginOperation.busy && disabled) ||
-          previousLoginProvider !== googleLoginOperation.providerName
+          loginProvider !== googleLoginOperation.providerName
         }
         disabled={disabled}
         busy={googleLoginOperation.busy}
@@ -120,19 +114,6 @@ function Login(props) {
         issues={googleLoginOperation.error}
         textAlign="center"
       />
-      {/* <Button
-        css={buttonStyles}
-        glyph="twitter"
-        color="#00ACED"
-        outline={
-          (!twitterLoginOperation.busy && disabled) ||
-          previousLoginProvider !== twitterLoginOperation.providerName
-        }
-        disabled={disabled}
-        busy={twitterLoginOperation.busy}
-        onClick={() => login(twitterLoginOperation)}>
-        Sign in with Twitter
-      </Button> */}
       <Divider />
       <Instructions>
         Please sign in only if you agree to our policies{' '}
@@ -217,10 +198,9 @@ export default compose(
           view: (
             <Login
               {...params}
-              previousLoginProvider={{
-                doc: previousLoginProviderDoc,
-                initialSnapshot: await previousLoginProviderDoc.get(),
-              }}
+              previousLoginProviderSnapshot={
+                await previousLoginProviderDoc.get()
+              }
             />
           ),
         }),

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 
-export default function useLatestSnapshot(ref, initialSnapshot) {
+export default function useLatestSnapshot(initialSnapshot) {
   let [latestSnapshot, setLatestSnapshot] = useState(initialSnapshot)
-  useEffect(() => ref.onSnapshot(setLatestSnapshot), [ref])
+  useEffect(() => initialSnapshot.ref.onSnapshot(setLatestSnapshot), [
+    initialSnapshot.ref,
+  ])
   return latestSnapshot
 }

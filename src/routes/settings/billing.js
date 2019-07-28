@@ -19,10 +19,7 @@ import BillingUpdateCardModal from './billingUpdateCardModal'
 
 function Billing(props) {
   let planId = props.planId
-  let accountSnapshot = useLatestSnapshot(
-    props.accountRef,
-    props.accountSnapshot,
-  )
+  let accountSnapshot = useLatestSnapshot(props.accountSnapshot)
   let navigation = useNavigation()
   let account = accountSnapshot.exists && accountSnapshot.data()
   let { card, subscription } = account || { card: null, subscription: null }
@@ -234,12 +231,6 @@ export default route({
       .doc('account')
     let accountSnapshot = await accountRef.get()
 
-    return (
-      <Billing
-        accountRef={accountRef}
-        accountSnapshot={accountSnapshot}
-        planId={params.planId}
-      />
-    )
+    return <Billing accountSnapshot={accountSnapshot} planId={params.planId} />
   },
 })
