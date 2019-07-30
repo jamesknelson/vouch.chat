@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useLoadingRoute } from 'react-navi'
 import { animated, useTransition } from 'react-spring'
 import styled, { css } from 'styled-components/macro'
 
@@ -48,6 +47,7 @@ const Layout = props => {
     indexHeaderActions = null,
     indexHeaderTitle = null,
     indexPathname = null,
+    isLoading = false,
     headerActions = null,
     headerTitle = null,
     withoutFlipperSpinner = false,
@@ -103,12 +103,10 @@ const Layout = props => {
     ],
   )
 
-  let loadingRoute = useLoadingRoute()
-
   return (
     <LayoutContext.Provider value={context}>
       <LoadingBar
-        active={!!loadingRoute}
+        active={!!isLoading}
         css={css`
           position: fixed;
           top: 0;

@@ -4,11 +4,10 @@ import styled, { css } from 'styled-components/macro'
 import { colors } from 'theme'
 import addDefaultRemUnits from 'utils/addDefaultRemUnits'
 
-const requireIcon = require.context(
-  '@svgr/webpack?-svgo,+titleProp,+ref[path]!./icomoon/SVG',
-  false,
-  /\.svg$/,
-)
+const requireIcon = name =>
+  require('@svgr/webpack?-svgo,+titleProp,+ref[path]!./icomoon/SVG/' +
+    name +
+    '.svg')
 
 const DEFAULT_ICON_SIZE = '2rem'
 
@@ -48,7 +47,7 @@ const Icon = React.forwardRef(
 
     let IconComponent
     try {
-      IconComponent = requireIcon('./' + glyph + '.svg').ReactComponent
+      IconComponent = requireIcon(glyph).ReactComponent
     } catch (e) {}
 
     if (!IconComponent) {

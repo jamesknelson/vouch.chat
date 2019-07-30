@@ -1,5 +1,10 @@
 import React from 'react'
-import { View, useCurrentRoute, NotFoundBoundary } from 'react-navi'
+import {
+  View,
+  useCurrentRoute,
+  useLoadingRoute,
+  NotFoundBoundary,
+} from 'react-navi'
 import Layout from 'components/layout'
 import NotFound from 'components/notFound'
 import { CurrentUserContext, CurrentLanguageContext } from 'context'
@@ -8,6 +13,9 @@ import { ControlIdProvider } from 'hooks/useControlId'
 function App({ navigationContext = {} }) {
   let currentUser = navigationContext.currentUser
   let currentRoute = useCurrentRoute()
+  let loadingRoute = useLoadingRoute()
+  let isLoading =
+    loadingRoute && loadingRoute.url.pathname !== currentRoute.url.pathname
   let {
     minimalLayout: minimal = false,
     layoutIndexHeaderActions: indexHeaderActions = null,
@@ -29,6 +37,7 @@ function App({ navigationContext = {} }) {
             indexHeaderActions={indexHeaderActions}
             indexHeaderTitle={indexHeaderTitle}
             indexPathname={indexPathname}
+            isLoading={isLoading}
             headerActions={headerActions}
             headerTitle={headerTitle}
             showHistoryBack={showHistoryBack}

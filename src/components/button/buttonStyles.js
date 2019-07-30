@@ -100,13 +100,20 @@ export const StyledIconButton = styled.button`
   text-decoration: none;
   transition: color 300ms ${easings.easeOut}, opacity 200ms ${easings.easeOut},
     text-shadow 200ms ${easings.easeOut};
-  min-width: 3rem;
-  min-height: 3rem;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+
+  ${props =>
+    props.outline &&
+    css`
+      border: 1px solid ${props.outline};
+      border-radius: 9999px;
+    `}
 
   > * {
     position: relative;
   }
-  ${focusRing('> *::after', { radius: '9999px', padding: '0.5rem' })}
+  ${focusRing('> *::after', { radius: '9999px', padding: '0.625rem' })}
 
   ${props =>
     props.disabled &&
@@ -123,6 +130,7 @@ export const IconButton = React.forwardRef(
     {
       color = colors.control.icon.default,
       glyph,
+      outline,
       size = '1.5rem',
       tooltip,
       tooltipPlacement = 'top',
@@ -130,8 +138,11 @@ export const IconButton = React.forwardRef(
     },
     ref,
   ) => {
+    if (outline && typeof outline !== 'string') {
+      outline = color
+    }
     let button = (
-      <StyledIconButton size={size} ref={ref} {...rest}>
+      <StyledIconButton size={size} ref={ref} {...rest} outline={outline}>
         <Icon color={color} glyph={glyph} size={size} />
       </StyledIconButton>
     )
@@ -149,7 +160,7 @@ export const IconButton = React.forwardRef(
 )
 
 export const StyledOutlineButton = styled(StyledButtonBase)`
-  background-color: ${colors.structure.bg};
+  background-color: transparent;
   ${props =>
     props.disabled
       ? css`

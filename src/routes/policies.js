@@ -35,7 +35,7 @@ function Policies(props) {
       <P>
         We’re just a small team.
         <br />
-        Anything else could happen.
+        Anything could happen so
         <br />
         Sorry. Deal with it.
       </P>

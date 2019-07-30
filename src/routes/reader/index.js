@@ -34,15 +34,15 @@ import {
   ListItemImage,
   ListItemText,
 } from 'components/list'
-import { Log } from 'components/log'
+import { Log, LogDivider } from 'components/log'
 import { MenuItem } from 'components/menu'
 import { PopupProvider, PopupMenu, PopupTrigger } from 'components/popup'
 import SearchForm from 'components/searchForm'
 import { Section } from 'components/sections'
+import { useCurrentUser } from 'context'
+import useLatestStoreState from 'hooks/useLatestStoreState'
 import { colors, mediaQueries } from 'theme'
 import mountByMedia from 'utils/mountByMedia'
-import useLatestStoreState from 'hooks/useLatestStoreState'
-import { useCurrentUser } from 'context'
 
 // Use a redux store to keep track of state that is shared across the index
 // header and its body, as they can mounted in different parts of the tree.
@@ -85,8 +85,8 @@ function Read(props) {
                     <LogoImage size="2.25rem" />
                   </ListItemImage>
                   <ListItemText
-                    title="Recent Vouches"
-                    description="From people and topics you've vouched for."
+                    title="Vouched by vouched"
+                    description="Recent vouches by people you've vouched."
                     meta="7 minutes ago"
                   />
                 </ListItemLink>
@@ -170,7 +170,11 @@ function ReadingListSearch(props) {
       }}
       onChange={setQuery}
       onSubmit={() => {
-        navigation.navigate('/search?q=' + encodeURIComponent(query))
+        if (/^\s*@[a-zA-Z0-9_]+\s*$/.test(query)) {
+          navigation.navigate('/' + query.trim().slice(1))
+        } else {
+          navigation.navigate('/search?q=' + encodeURIComponent(query))
+        }
       }}
     />
   )
@@ -263,26 +267,53 @@ export default compose(
       view: <div />,
     }),
     '/recent': route({
-      title: 'Recent Activity',
-      getView: ({ context }) => (
-        <>
-          <LayoutHeaderSection />
-          <Section>
-            {context.currentUser && (
+      title: 'Vouched by vouched',
+      getView: async ({ context }) => {
+        let { backend } = context
+
+        let query1 = backend.db
+          .collection('members')
+          .where('username', '==', 'jkn')
+          .limit(1)
+        let query1Snapshot = await query1.get()
+        let member1 = query1Snapshot.docs[0].data()
+
+        let query2 = backend.db
+          .collection('members')
+          .where('username', '==', 'frontarm')
+          .limit(1)
+        let query2Snapshot = await query2.get()
+        let member2 = query2Snapshot.docs[0].data()
+
+        return (
+          <>
+            <LayoutHeaderSection />
+            <Section paddingTop="1.5rem" paddingBottom="1.5rem">
               <Log
-                padding="1rem"
+                paddingX="1rem"
                 log={{
                   id: 1,
                   publishedAt: new Date(),
-                  text: "Hello world! I'm a test log.",
-                  member: context.currentUser,
-                  vouchedBy: [context.currentUser],
+                  text: "Look at me I'm saying silly things",
+                  member: member1,
+                  vouchedBy: [member1, member2],
                 }}
               />
-            )}
-          </Section>
-        </>
-      ),
+              <LogDivider />
+              <Log
+                paddingX="1rem"
+                log={{
+                  id: 2,
+                  publishedAt: new Date(),
+                  text: "Hello world! I'm a test log.",
+                  member: member2,
+                  vouchedBy: [member1, member2],
+                }}
+              />
+            </Section>
+          </>
+        )
+      },
     }),
   }),
 )

@@ -121,7 +121,7 @@ function Log(props) {
       <ListCard>
         <ListItem paddingX="1rem">
           <ListItemIcon glyph="stamp" width="3rem" paddingRight="0.5rem" />
-          <ListItemText description="Increase visibility" />
+          <ListItemText description="Vouch to increase visibility" />
           <Button busy={false} size="small" outline>
             Vouch
           </Button>

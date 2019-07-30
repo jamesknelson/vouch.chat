@@ -3,9 +3,9 @@ import React from 'react'
 import styled, { css } from 'styled-components/macro'
 
 import { UserAvatar } from 'components/avatar'
-import { ButtonLink } from 'components/button'
+import Button, { ButtonLink, IconButton } from 'components/button'
 import { Log, LogDivider } from 'components/log'
-import { Box, Text, Title } from 'components/responsive'
+import { Box, Text, Title, FlexBox } from 'components/responsive'
 import { Section } from 'components/sections'
 import { useCurrentUser } from 'context'
 import { colors, dimensions } from 'theme'
@@ -61,7 +61,7 @@ function Profile({ member, username }) {
           }}
         />
       </Header>
-      {currentUser && (
+      {currentUser && currentUser.username === member.username ? (
         <ButtonLink
           href="/settings/profile"
           outline
@@ -72,6 +72,34 @@ function Profile({ member, username }) {
           `}>
           Edit Profile
         </ButtonLink>
+      ) : (
+        <FlexBox
+          alignItems="center"
+          css={css`
+            position: absolute;
+            right: 1rem;
+            margin-top: 9rem;
+          `}>
+          <IconButton
+            color={colors.control.icon.default}
+            glyph="glasses"
+            marginRight="0.5rem"
+            outline
+            size="1.25rem"
+            tooltip="Add to reading list"
+          />
+          <Button
+            color={colors.control.icon.default}
+            glyph="stamp"
+            href="/settings/profile"
+            outline
+            css={css`
+              font-weight: 600;
+              font-size: 0.85rem;
+            `}>
+            Vouch
+          </Button>
+        </FlexBox>
       )}
       <Box
         marginLeft={{
@@ -90,7 +118,7 @@ function Profile({ member, username }) {
           @{member.username}
         </Text>
       </Box>
-      <Section paddingTop="1rem" paddingBottom="1rem">
+      <Section paddingTop="1.5rem" paddingBottom="1.5rem" marginBottom="1rem">
         <Log
           paddingX={{
             default: '0.5rem',

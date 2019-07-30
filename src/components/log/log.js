@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
-import { Link } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 import { space, typography } from 'styled-system'
 
-import { UserAvatar } from 'components/avatar'
+import { UserAvatarLink } from 'components/avatar'
 import Button, { IconButton } from 'components/button'
 import { MenuItem } from 'components/menu'
 import { PopupProvider, PopupTrigger, PopupMenu } from 'components/popup'
 import { Box, Strong, Text } from 'components/responsive'
-import { colors, focusRing } from 'theme'
+import { colors } from 'theme'
 import Tooltip from 'components/tooltip'
 
 export const LogDivider = styled.div`
@@ -31,7 +30,8 @@ const StyledHeader = styled.header`
 `
 
 const StyledDisplayName = styled.span`
-  font-weight: 600;
+  color: ${colors.text.default};
+  font-weight: 700;
 `
 
 const StyledUsername = styled.span`
@@ -77,9 +77,7 @@ export function Log({ log, ...rest }) {
 
   return (
     <StyledLog {...rest}>
-      <Link href={`/${member.username}`}>
-        <UserAvatar user={member} />
-      </Link>
+      <UserAvatarLink user={member} />
       <Box flex="1" marginLeft="0.5rem">
         <StyledHeader
           fontSize={{
@@ -137,28 +135,21 @@ export function Log({ log, ...rest }) {
                   {vouchedBy.length === 1 ? 'vouch' : 'vouches'}
                 </>
               ) : (
-                'vouch?'
+                'Vouch'
               )}
             </Button>
           </Tooltip>
           {vouchedBy.map(member => (
-            <Link
-              href={'/' + member.username}
+            <UserAvatarLink
               css={css`
+                border: 1px solid ${colors.structure.bg};
                 margin-right: -3px;
-                position: relative;
-                display: inline-block;
-                ${focusRing('::after', { radius: '9999px' })}
-              `}>
-              <UserAvatar
-                key={member.username}
-                css={css`
-                  border: 1px solid ${colors.structure.bg};
-                `}
-                size="1.375rem"
-                user={member}
-              />
-            </Link>
+              `}
+              inline
+              key={member.username}
+              size="1.375rem"
+              user={member}
+            />
           ))}
         </StyledFooter>
       </Box>

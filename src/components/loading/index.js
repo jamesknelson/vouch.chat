@@ -24,7 +24,7 @@ const loadingBarKeyframes = keyframes`
 export const LoadingBar = styled.div`
   height: 2px;
   width: 100%;
-  background-color: ${props => props.color || colors.ink.black};
+  background-color: ${props => props.color || colors.ink.mid};
   background-size: 35px 35px;
   z-index: 9999;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) inset;

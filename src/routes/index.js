@@ -19,7 +19,7 @@ let logout = map(async ({ context, params }) => {
 })
 
 let routes = mount({
-  '*': lazy(() => import('./readingList')),
+  '*': lazy(() => import('./reader')),
 
   '/notifications': lazy(() => import('./notifications')),
   '/log': lazy(() => import('./log')),
