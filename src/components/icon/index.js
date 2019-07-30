@@ -13,7 +13,7 @@ const requireIcon = require.context(
 const DEFAULT_ICON_SIZE = '2rem'
 
 const StyledIconContainer = styled.div`
-  display: inline-block;
+  display: ${props => props.display};
   height: ${props => props.size};
   width: ${props => props.size};
   text-align: center;
@@ -35,6 +35,7 @@ const StyledIcon = styled.div`
 const Icon = React.forwardRef(
   (
     {
+      display = 'inline-block',
       glyph,
       label,
       size = DEFAULT_ICON_SIZE,
@@ -64,7 +65,7 @@ const Icon = React.forwardRef(
     }
 
     return (
-      <StyledIconContainer {...props}>
+      <StyledIconContainer display={display} {...props}>
         <StyledIcon
           size={size}
           color={color}

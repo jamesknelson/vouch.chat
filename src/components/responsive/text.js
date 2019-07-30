@@ -3,6 +3,12 @@ import { color, space, typography } from 'styled-system'
 
 import { colors } from 'theme'
 
+export const Text = styled.div`
+  ${space}
+  ${typography}
+  ${color}
+`
+
 export const P = styled.p`
   ${space}
   ${typography}

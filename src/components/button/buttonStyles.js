@@ -3,6 +3,8 @@ import React from 'react'
 import { Link } from 'react-navi'
 import { animated, useSpring, useTransition } from 'react-spring'
 import styled, { css } from 'styled-components/macro'
+import { layout, space } from 'styled-system'
+
 import { colors, easings, focusRing, radii, shadows, media } from 'theme'
 import Icon from 'components/icon'
 import { Spinner } from 'components/loading'
@@ -27,7 +29,6 @@ export const StyledLink = styled(Link)`
 export const StyledAnimatedButtonGlyph = styled(animated.div)`
   position: absolute;
   left: 0rem;
-  margin-top: 0.125rem;
 `
 
 export const StyledAnimatedButtonLabel = styled(animated.span)`
@@ -40,7 +41,12 @@ export const StyledButtonBase = styled.button`
   cursor: pointer;
   display: ${props => (props.inline ? 'inline-flex' : 'flex')};
   font-weight: 500;
-  padding: 0 ${props => (props.leaveGlyphSpace ? '1.825rem' : '1rem')};
+  padding: 0 ${props =>
+    props.leaveGlyphSpace
+      ? props.size === 'small'
+        ? '1.25rem'
+        : '1.825rem'
+      : '1rem'};
   position: relative;
   text-align: center;
   text-decoration: none;
@@ -54,16 +60,11 @@ export const StyledButtonBase = styled.button`
   ${focusRing('::after', { radius: '9999px' })}
 
   ${props =>
-    props.width &&
-    css`
-      width: ${props.width};
-    `}
-
-  ${props =>
     props.size === 'small'
       ? css`
-          font-size: 0.8rem;
-          height: 1.75rem;
+          font-size: 11px;
+          height: 1.5rem;
+          line-height: 1.5rem;
         `
       : css`
           font-size: 0.9rem;
@@ -80,18 +81,15 @@ export const StyledButtonBase = styled.button`
       cursor: default;
       opacity: 0.5;
     `}
+  
+  ${layout};
+  ${space};
 `
 
 export const StyledIconButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-
-  ${props => css`
-    color: ${props.color};
-    text-shadow: 0 0 9px ${rgba(props.color, 0.4)},
-      0 0 2px ${rgba(props.color, 0.2)};
-  `};
 
   align-items: center;
   background-color: transparent;
@@ -116,12 +114,14 @@ export const StyledIconButton = styled.button`
       cursor: default;
       opacity: 0.5;
     `}
+
+  ${space}
 `
 
 export const IconButton = React.forwardRef(
   (
     {
-      color = colors.ink.mid,
+      color = colors.control.icon.default,
       glyph,
       size = '1.5rem',
       tooltip,
@@ -131,8 +131,8 @@ export const IconButton = React.forwardRef(
     ref,
   ) => {
     let button = (
-      <StyledIconButton color={color} size={size} ref={ref} {...rest}>
-        <Icon glyph={glyph} size={size} />
+      <StyledIconButton size={size} ref={ref} {...rest}>
+        <Icon color={color} glyph={glyph} size={size} />
       </StyledIconButton>
     )
 
@@ -187,6 +187,14 @@ export const StyledSolidButton = styled(StyledButtonBase)`
   `}
 `
 
+export const StyledTextButton = styled(StyledButtonBase)`
+  ${props => css`
+    background-color: transparent;
+    color: ${props.color};
+    font-weight: 600;
+  `}
+`
+
 export const Button = React.forwardRef(
   (
     {
@@ -199,15 +207,24 @@ export const Button = React.forwardRef(
       inline = false,
       type = 'button',
       outline = false,
+      text = false,
       width = undefined,
       ...props
     },
     ref,
   ) => {
-    let StyledButton = outline ? StyledOutlineButton : StyledSolidButton
+    let StyledButton = outline
+      ? StyledOutlineButton
+      : text
+      ? StyledTextButton
+      : StyledSolidButton
 
     if (!glyphColor) {
-      glyphColor = outline ? rgba(color, 0.85) : colors.structure.bg
+      glyphColor = outline
+        ? rgba(color, 0.85)
+        : text
+        ? colors.control.icon.default
+        : colors.structure.bg
     }
     if (!spinnerColor) {
       spinnerColor = glyphColor
@@ -223,7 +240,11 @@ export const Button = React.forwardRef(
       leave: { t: 0 },
     })
     let labelStyleSpring = useSpring({
-      to: { transform: glyph ? 'translateX(0.75rem)' : 'translateX(0rem)' },
+      to: {
+        transform: glyph
+          ? 'translateX(' + (props.size === 'small' ? 0.625 : 0.75) + 'rem)'
+          : 'translateX(0rem)',
+      },
     })
 
     return (
@@ -242,18 +263,26 @@ export const Button = React.forwardRef(
               <StyledAnimatedButtonGlyph
                 key={key}
                 style={{
-                  transform: t.interpolate(t => `translateX(${t}rem)`),
+                  transform: t.interpolate(
+                    t =>
+                      `translateX(${props.size === 'small' ? 0.5 * t : t}rem)`,
+                  ),
                   opacity: t,
                 }}>
                 {item === 'busy' ? (
                   <Spinner
                     color={spinnerColor}
                     backgroundColor={outline ? colors.structure.bg : color}
-                    size="1.25rem"
+                    size="1rem"
                     active
                   />
                 ) : (
-                  <Icon color={glyphColor} size="1rem" glyph={item} />
+                  <Icon
+                    color={glyphColor}
+                    display="block"
+                    size="1rem"
+                    glyph={item}
+                  />
                 )}
               </StyledAnimatedButtonGlyph>
             ),

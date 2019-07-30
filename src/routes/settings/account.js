@@ -46,7 +46,7 @@ function Account() {
     emailMessage = 'Verification email sent. Please check your inbox.'
   }
 
-  const profileURL = user.username && PublicURL + '@' + user.username
+  const profileURL = user.username && PublicURL + user.username
 
   return (
     <>

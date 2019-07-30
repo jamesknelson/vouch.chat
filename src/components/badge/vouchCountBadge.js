@@ -31,20 +31,20 @@ export const VouchCountBadge = ({
       `}
     />
     <Icon
+      color={colors.structure.bg}
       glyph="stamp"
       size={size}
       css={css`
-        color: ${colors.structure.bg};
         position: absolute;
         left: 0;
         transform: scale(1.25);
       `}
     />
     <Icon
+      color={colors.ink.black}
       glyph="stamp"
       size={size}
       css={css`
-        color: ${colors.ink.black};
         text-shadow: 2px 2px 8px ${rgba(colors.ink.black, 0.1)};
         position: absolute;
         left: 0;

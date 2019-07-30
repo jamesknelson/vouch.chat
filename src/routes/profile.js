@@ -3,9 +3,12 @@ import React from 'react'
 import styled, { css } from 'styled-components/macro'
 
 import { UserAvatar } from 'components/avatar'
+import { ButtonLink } from 'components/button'
+import { Log, LogDivider } from 'components/log'
+import { Box, Text, Title } from 'components/responsive'
+import { Section } from 'components/sections'
 import { useCurrentUser } from 'context'
 import { colors, dimensions } from 'theme'
-import { ButtonLink } from 'components/button'
 
 const Header = styled.header`
   background-color: ${colors.ink.black};
@@ -51,8 +54,11 @@ function Profile({ member, username }) {
           css={css`
             border: 0.25rem solid ${colors.structure.bg};
             margin-top: 4rem;
-            margin-left: 1rem;
           `}
+          marginLeft={{
+            default: '0.5rem',
+            tabletPlus: '1rem',
+          }}
         />
       </Header>
       {currentUser && (
@@ -67,25 +73,52 @@ function Profile({ member, username }) {
           Edit Profile
         </ButtonLink>
       )}
-      <h1
-        css={css`
-          color: ${colors.text.default};
-          font-size: 1.2rem;
-          font-weight: 800;
-          margin-left: 1rem;
-          margin-top: 5rem;
-        `}>
-        {member.displayName}
-      </h1>
-      <p
-        css={css`
-          color: ${colors.text.tertiary};
-          font-size: 0.9rem;
-          font-weight: 400;
-          margin-left: 1rem;
-        `}>
-        @{member.username}
-      </p>
+      <Box
+        marginLeft={{
+          default: '0.5rem',
+          tabletPlus: '1rem',
+        }}
+        marginBottom="1rem">
+        <Title
+          fontSize="1.2rem"
+          fontWeight="800"
+          marginTop="5rem"
+          marginBottom="0">
+          {member.displayName}
+        </Title>
+        <Text color={colors.text.tertiary} fontSize="0.9rem">
+          @{member.username}
+        </Text>
+      </Box>
+      <Section paddingTop="1rem" paddingBottom="1rem">
+        <Log
+          paddingX={{
+            default: '0.5rem',
+            tabletPlus: '1rem',
+          }}
+          log={{
+            id: 1,
+            publishedAt: new Date(),
+            text: "Look at me I'm saying silly things",
+            member: member,
+            vouchedBy: [member, member],
+          }}
+        />
+        <LogDivider />
+        <Log
+          paddingX={{
+            default: '0.5rem',
+            tabletPlus: '1rem',
+          }}
+          log={{
+            id: 1,
+            publishedAt: new Date(),
+            text: "Hello world! I'm a test log.",
+            member: member,
+            vouchedBy: [],
+          }}
+        />
+      </Section>
     </>
   )
 }

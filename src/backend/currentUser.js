@@ -47,7 +47,10 @@ export default class CurrentUser {
   }
 
   getCurrentValue() {
-    return this._currentUser || this._currentUserDeferred.promise
+    return (
+      this._currentUser ||
+      (this._currentUserDeferred && this._currentUserDeferred.promise)
+    )
   }
 
   subscribe(callback) {

@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import emojiMartCSS from '!raw-loader!emoji-mart/css/emoji-mart.css'
+
 import { createGlobalStyle } from 'styled-components/macro'
 import { colors, dimensions } from 'theme'
 
@@ -37,4 +40,6 @@ export default createGlobalStyle`
     height: 100%;
     min-height: 100%;
   }
+
+  ${emojiMartCSS}
 `

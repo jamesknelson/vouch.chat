@@ -32,7 +32,6 @@ const StyledSectionHeader = styled.header`
 `
 
 const StyledSectionBody = styled.div`
-  ${space};
   background-color: ${colors.structure.bg};
   border-top: 1px solid ${colors.structure.border};
   position: relative;
@@ -49,6 +48,8 @@ const StyledSectionBody = styled.div`
     box-shadow: ${shadows.card(colors.ink.mid)};
     border-bottom: 1px solid ${colors.structure.border};
   `}
+
+  ${space};
 `
 
 /* Create a vertical shadow, without escaping the section boundaries horizontally. */

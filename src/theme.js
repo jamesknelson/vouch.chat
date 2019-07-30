@@ -7,8 +7,7 @@ export const breakpoints = []
 
 breakpoints.mediumPhonePlus = '360px'
 breakpoints.tabletPlus = '768px'
-breakpoints.laptopPlus = '1100px'
-breakpoints.widescreenPlus = '1240px'
+breakpoints.dualColumnPlus = '1100px'
 
 export const colors = {
   structure: {
@@ -92,16 +91,14 @@ export const mediaQueries = {
   phoneOnly: `(max-width: calc(${breakpoints.tabletPlus} - 1px))`,
   mediumPhonePlus: `(min-width: ${breakpoints.mediumPhonePlus})`,
   tabletPlus: `(min-width: ${breakpoints.tabletPlus})`,
-  laptopPlus: `(min-width: ${breakpoints.laptopPlus})`,
-  widescreenPlus: `(min-width: ${breakpoints.widescreenPlus})`,
+  dualColumnPlus: `(min-width: ${breakpoints.dualColumnPlus})`,
 }
 export const media = {
   smallPhoneOnly: mediaFactory(mediaQueries.smallPhoneOnly),
   phoneOnly: mediaFactory(mediaQueries.phoneOnly),
   mediumPhonePlus: mediaFactory(mediaQueries.mediumPhonePlus),
   tabletPlus: mediaFactory(mediaQueries.tabletPlus),
-  laptopPlus: mediaFactory(mediaQueries.laptopPlus),
-  widescreenPlus: mediaFactory(mediaQueries.widescreenPlus),
+  laptopPdualColumnPluslus: mediaFactory(mediaQueries.dualColumnPlus),
 }
 
 export const messages = {

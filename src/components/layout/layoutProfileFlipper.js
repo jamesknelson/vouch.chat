@@ -91,12 +91,11 @@ const ProfileFlipper = React.forwardRef(
       <NavLink
         hideActiveIndicator
         href={
-          '#'
-          // currentUser
-          //   ? currentUser.username
-          //     ? `/${currentUser.username}`
-          //     : `/`
-          //   : '/login'
+          currentUser
+            ? currentUser.username
+              ? `/${currentUser.username}`
+              : `/`
+            : '/login'
         }
         focusRingSize={`${sizeRem - 0.25}rem`}
         onTouchStart={() => {

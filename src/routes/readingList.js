@@ -34,6 +34,7 @@ import {
   ListItemImage,
   ListItemText,
 } from 'components/list'
+import { Log } from 'components/log'
 import { MenuItem } from 'components/menu'
 import { PopupProvider, PopupMenu, PopupTrigger } from 'components/popup'
 import SearchForm from 'components/searchForm'
@@ -84,7 +85,7 @@ function Read(props) {
                     <LogoImage size="2.25rem" />
                   </ListItemImage>
                   <ListItemText
-                    title="Recent Activity"
+                    title="Recent Vouches"
                     description="From people and topics you've vouched for."
                     meta="7 minutes ago"
                   />
@@ -95,7 +96,7 @@ function Read(props) {
               <List>
                 <ListItemLink href="/jkn">
                   <ListItemImage>
-                    <UnreadBadgeWrapper count={3}>
+                    <UnreadBadgeWrapper count={2}>
                       <UserAvatar
                         size="2.25rem"
                         user={{
@@ -204,7 +205,11 @@ function ReadingListHeaderActions() {
       <PopupTrigger>
         {ref => (
           <IconButton
-            color={currentUser !== null ? colors.ink.black : colors.ink.light}
+            color={
+              currentUser !== null
+                ? colors.control.icon.default
+                : colors.ink.light
+            }
             glyph="settings"
             ref={ref}
             size="1.5rem"
@@ -259,10 +264,23 @@ export default compose(
     }),
     '/recent': route({
       title: 'Recent Activity',
-      view: (
+      getView: ({ context }) => (
         <>
           <LayoutHeaderSection />
-          Test
+          <Section>
+            {context.currentUser && (
+              <Log
+                padding="1rem"
+                log={{
+                  id: 1,
+                  publishedAt: new Date(),
+                  text: "Hello world! I'm a test log.",
+                  member: context.currentUser,
+                  vouchedBy: [context.currentUser],
+                }}
+              />
+            )}
+          </Section>
         </>
       ),
     }),

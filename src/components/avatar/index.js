@@ -1,5 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components/macro'
+import { space } from 'styled-system'
 
 import { Spinner } from 'components/loading'
 import defaultProfilePicture from 'media/defaultProfilePicture.svg'
@@ -9,8 +10,8 @@ import addDefaultRemUnits from 'utils/addDefaultRemUnits'
 
 const StyledAvatarImage = styled.img`
   border-radius: 9999px;
-  max-height: 100%;
-  max-width: 100%;
+  height: 100%;
+  width: 100%;
   position: relative;
 
   ${props =>
@@ -31,6 +32,8 @@ const StyledAvatarContainer = styled.span`
   position: relative;
   user-select: none;
 
+  ${space};
+
   ${props =>
     props.tabIndex !== undefined && focusRing('::after', { radius: '9999px' })}
 `
@@ -46,6 +49,13 @@ export const Avatar = React.forwardRef(
       tabIndex,
       photoURL,
       size,
+      margin,
+      marginX,
+      marginY,
+      marginTop,
+      marginBottom,
+      marginLeft,
+      marginRight,
       ...props
     },
     ref,
@@ -58,6 +68,15 @@ export const Avatar = React.forwardRef(
         size={size}
         style={style}
         tabIndex={tabIndex}
+        {...{
+          margin,
+          marginX,
+          marginY,
+          marginTop,
+          marginBottom,
+          marginLeft,
+          marginRight,
+        }}
         ref={ref}>
         {busy && (
           <Spinner

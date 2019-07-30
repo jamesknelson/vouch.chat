@@ -27,10 +27,10 @@ const StyledNavIcon = styled(Icon)`
   justify-content: center;
 
   color: ${props => (props.faded ? colors.ink.light : colors.ink.black)};
-  text-shadow: 0 0 9px
-      ${props => rgba(props.faded ? colors.ink.light : colors.ink.black, 0.3)},
-    0 0 2px
-      ${props => rgba(props.faded ? colors.ink.light : colors.ink.black, 0.15)};
+  filter: drop-shadow(
+    0px 0px 9px
+      ${props => rgba(props.faded ? colors.ink.light : colors.ink.black, 0.3)}
+  );
   line-height: 1.5rem;
   position: relative;
   transition: color 500ms ${easings.easeOut};
