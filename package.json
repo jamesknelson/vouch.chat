@@ -44,9 +44,9 @@
   ],
   "scripts": {
     "start:api": "firebase serve --only functions:api",
-    "start:app": "PUBLIC_URL=http://localhost:3000/ && react-scripts start",
+    "start:app": "PUBLIC_URL=http://localhost:3000/ react-scripts start",
     "start": "npm-run-all --parallel start:*",
-    "build": "PUBLIC_URL=https://beta.vouch.chat/ && react-scripts build",
+    "build": "PUBLIC_URL=https://beta.vouch.chat/ react-scripts build",
     "deploy:api": "rimraf functions/renderer.tgz && firebase deploy --only functions:api",
     "deploy:app": "npm run deploy -- --only hosting,functions:renderer",
     "deploy": "firebase deploy",
