@@ -129,7 +129,7 @@ function Profile({ member, username }) {
             publishedAt: new Date(),
             text: "Look at me I'm saying silly things",
             member: member,
-            vouchedBy: [member, member],
+            vouchedBy: [member],
           }}
         />
         <LogDivider />

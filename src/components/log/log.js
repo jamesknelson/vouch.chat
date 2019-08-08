@@ -113,10 +113,7 @@ export function Log({ log, ...rest }) {
           {text}
         </Text>
         <StyledFooter>
-          <Tooltip
-            content={vouchError}
-            enabled={!!vouchError}
-            placement="bottom-start">
+          <Tooltip content={vouchError} placement="bottom-start">
             <Button
               busy={isVouching}
               color={colors.control.icon.default}

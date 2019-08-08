@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-navi'
+import { useLinkProps } from 'react-navi'
 import styled, { css } from 'styled-components/macro'
 import { space } from 'styled-system'
 
@@ -118,12 +118,17 @@ export const TagAvatar = React.forwardRef(({ tag, ...props }, ref) => (
   <Avatar ref={ref} photoURL={(tag && tag.photoURL) || hash} {...props} />
 ))
 
-export const UserAvatarLink = ({ tabIndex = 0, user, ...props }) => (
-  <UserAvatar
-    as={Link}
-    href={'/' + user.username}
-    tabIndex={tabIndex}
-    user={user}
-    {...props}
-  />
-)
+export const UserAvatarLink = ({ href, tabIndex = 0, user, ...props }) => {
+  let linkProps = useLinkProps({ href })
+
+  return (
+    <UserAvatar
+      as="a"
+      href={'/' + user.username}
+      tabIndex={tabIndex}
+      user={user}
+      {...linkProps}
+      {...props}
+    />
+  )
+}
