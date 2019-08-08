@@ -7,5 +7,13 @@
 if (process.env.NODE_ENV === 'production') {
   module.exports = require('app').default
 } else {
-  module.exports = require('../build/node').default
+  try {
+    module.exports = require('../build/node').default
+  } catch (error) {
+    // The development server includes its own renderer, so we probably
+    // won't use this anyway.
+    module.exports = () => {
+      throw error
+    }
+  }
 }
