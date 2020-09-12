@@ -3,41 +3,17 @@ vouch.chat
 
 **The responsible social network.**
 
-This repository contains the source code for [Vouch](https://vouch.chat) -- a social network that is:
+This repository contains the source code for [Vouch](https://beta.vouch.chat) -- a social network that is:
 
 - Ad free
 - Member supported, and
 - 100% open source
 
-You probably already know why [it's crucial that a responsible social network is ad-free and member supported](). But why should it be open source?
-
-
-Building an ad-free internet
-----------------------------
-
-Vouch's mission is to move the world towards an ad-free internet, and the vouch.chat social network is just one small part of that. To get to our goal, there're thousands of other member supported services which need to be built, and business cases that need to be closed. We can't do this all on our own, but what we *can* do is to give *you* the support that you need to build your own member-supported service -- and hopefully help you make some serious bacon on the side.
-
-That's why we're releasing the Vouch source code -- it's a foundation for you to build on. It has everything you need to spin up an app that can accept real payments, with a simple serverless architecture that's built on:
-
-- Create React App,
-- Firebase, and
-- Stripe
-
-We *want* you to make bacon with this -- and that's why the source is MIT-licensed. If you're familiar with these tools, then all you need to do is `git clone` and get going.
-
-```
-git clone https://github.com/frontarm/vouch.chat
-```
-
-But say you'd like a little more help figuring it all out?
-
 
 React, Firebase & Bacon
 -----------------------
 
-Along with the source code, the Vouch team is also developing a course with a goal of walking you through the construction and architecture of this codebase -- from `npm init` through to credit card payments.
-
-The course, like this repository, is a living document. It receives regular updates, with new content prioritized based on member feedback. For less than the cost of a latte a month, you'll gain access to all exclusive content, along with a members-only slack room. If you're serious about makin' bacon, then you owe it to yourself to [try out React, Firebase & Bacon](https://frontarm.com/bacon).
+Along with the source code, the Vouch team is also developing a [course](https://frontarm.com/bacon) with a goal of walking you through the construction and architecture of this codebase -- from `npm init` through to credit card payments. It's still in-progress, and currently completely free.
 
 
 Running and Deploying Vouch
